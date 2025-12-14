@@ -32,5 +32,3 @@
   - 打包前自动执行 `cargo build --release`，确保始终使用最新 Release 二进制；
   - 从 `target\release\DigYourWindows_Rust.exe` 拷贝可执行文件，从 `src` 拷贝模板 HTML，以减少手工同步步骤；
   - 简化输出日志，分三步显示编译 / 生成目录 / 压缩 ZIP 的进度，保持一键运行体验。
-
-
