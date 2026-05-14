@@ -27,7 +27,7 @@ import { useData } from 'vitepress'
 const { lang } = useData()
 
 const isZh = computed(() => lang.value === 'zh-CN')
-const repoUrl = 'https://github.com/LessUp/dig-your-windows'
+const repoUrl = 'https://github.com/AICL-Lab/dig-your-windows'
 
 const stars = ref('')
 const forks = ref('')
@@ -36,7 +36,7 @@ const downloads = ref('')
 async function fetchStats() {
   try {
     // Fetch repo stats
-    const repoResponse = await fetch('https://api.github.com/repos/LessUp/dig-your-windows')
+    const repoResponse = await fetch('https://api.github.com/repos/AICL-Lab/dig-your-windows')
     if (repoResponse.ok) {
       const repoData = await repoResponse.json()
       stars.value = formatNumber(repoData.stargazers_count)
@@ -44,7 +44,7 @@ async function fetchStats() {
     }
 
     // Fetch releases for download count
-    const releasesResponse = await fetch('https://api.github.com/repos/LessUp/dig-your-windows/releases')
+    const releasesResponse = await fetch('https://api.github.com/repos/AICL-Lab/dig-your-windows/releases')
     if (releasesResponse.ok) {
       const releases = await releasesResponse.json()
       let totalDownloads = 0

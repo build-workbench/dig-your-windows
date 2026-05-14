@@ -10,16 +10,17 @@
   },
   "devDependencies": {
     "@sindresorhus/slugify": "^2.2.1",
-    "@vite-pwa/vitepress": "^0.5.3",
     "critters": "^0.0.25",
     "markdown-it-anchor": "^9.2.0",
     "markdown-it-attrs": "^4.3.1",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-task-lists": "^2.1.1",
+    "mermaid": "^11.12.2",
     "sharp": "^0.33.5",
     "svgo": "^3.3.2",
     "vitepress": "^1.6.3",
-    "workbox-window": "^7.3.0"
+    "vitepress-plugin-llms": "^1.10.0",
+    "vitepress-plugin-mermaid": "^2.0.17"
   },
   "dependencies": {
     "@vueuse/core": "^12.5.0",

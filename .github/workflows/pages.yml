@@ -31,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 20
           cache: npm
 
       - name: Setup Pages
@@ -91,7 +91,7 @@ jobs:
 
       - name: Verify deployment
         run: |
-          SITE_URL="https://lessup.github.io/dig-your-windows/"
+          SITE_URL="https://aicl-lab.github.io/dig-your-windows/"
           echo "Checking $SITE_URL..."
           
           # Check HTTP status
