@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { fileURLToPath, URL } from 'node:url'
-import { withPwa } from '@vite-pwa/vitepress'
-import { pwaConfig } from './pwa.config'
+import { withMermaid } from 'vitepress-plugin-mermaid'
+import llmstxt from 'vitepress-plugin-llms'
 
 const baseConfig = defineConfig({
   // GitHub Pages deployment
@@ -34,7 +34,7 @@ const baseConfig = defineConfig({
 
   // Sitemap configuration
   sitemap: {
-    hostname: 'https://lessup.github.io/dig-your-windows/',
+    hostname: 'https://aicl-lab.github.io/dig-your-windows/',
     lastmodDateOnly: false,
     changefreq: 'weekly',
     priority: 0.7,
@@ -64,7 +64,7 @@ const baseConfig = defineConfig({
     ['meta', { name: 'color-scheme', content: 'light dark' }],
     ['meta', { name: 'theme-color', content: '#0078d4', media: '(prefers-color-scheme: light)' }],
     ['meta', { name: 'theme-color', content: '#0078d4', media: '(prefers-color-scheme: dark)' }],
-    ['link', { rel: 'canonical', href: 'https://lessup.github.io/dig-your-windows/' }],
+    ['link', { rel: 'canonical', href: 'https://aicl-lab.github.io/dig-your-windows/' }],
     ['link', { rel: 'icon', href: '/favicon.ico', sizes: 'any' }],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
     ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }],
@@ -72,7 +72,7 @@ const baseConfig = defineConfig({
     ['link', { rel: 'dns-prefetch', href: 'https://api.github.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-    ['meta', { name: 'author', content: 'LessUp' }],
+    ['meta', { name: 'author', content: 'AICL-Lab' }],
     ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }],
     ['meta', { name: 'googlebot', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' }],
     ['meta', { name: 'bingbot', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' }],
@@ -83,8 +83,8 @@ const baseConfig = defineConfig({
     ['meta', { property: 'og:locale:alternate', content: 'en_US' }],
     ['meta', { property: 'og:title', content: 'DigYourWindows - Windows Deep Diagnostics Tool' }],
     ['meta', { property: 'og:description', content: 'One-click hardware info collection, event log analysis, reliability records, system health scoring, and optimization recommendations.' }],
-    ['meta', { property: 'og:url', content: 'https://lessup.github.io/dig-your-windows/' }],
-    ['meta', { property: 'og:image', content: 'https://lessup.github.io/dig-your-windows/og-image.png' }],
+    ['meta', { property: 'og:url', content: 'https://aicl-lab.github.io/dig-your-windows/' }],
+    ['meta', { property: 'og:image', content: 'https://aicl-lab.github.io/dig-your-windows/og-image.png' }],
     ['meta', { property: 'og:image:width', content: '1200' }],
     ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:image:alt', content: 'DigYourWindows - Windows Deep Diagnostics Tool' }],
@@ -92,7 +92,7 @@ const baseConfig = defineConfig({
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:title', content: 'DigYourWindows - Windows Deep Diagnostics Tool' }],
     ['meta', { name: 'twitter:description', content: 'One-click hardware info collection, event log analysis, reliability records, system health scoring, and optimization recommendations.' }],
-    ['meta', { name: 'twitter:image', content: 'https://lessup.github.io/dig-your-windows/og-image.png' }],
+    ['meta', { name: 'twitter:image', content: 'https://aicl-lab.github.io/dig-your-windows/og-image.png' }],
     // Mobile App
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }],
@@ -116,16 +116,16 @@ const baseConfig = defineConfig({
       applicationCategory: 'UtilitiesApplication',
       operatingSystem: 'Windows 10, Windows 11',
       softwareVersion: '1.2.0',
-      license: 'https://github.com/LessUp/dig-your-windows/blob/master/LICENSE',
-      url: 'https://lessup.github.io/dig-your-windows/',
-      downloadUrl: 'https://github.com/LessUp/dig-your-windows/releases/latest',
-      codeRepository: 'https://github.com/LessUp/dig-your-windows',
+      license: 'https://github.com/AICL-Lab/dig-your-windows/blob/master/LICENSE',
+      url: 'https://aicl-lab.github.io/dig-your-windows/',
+      downloadUrl: 'https://github.com/AICL-Lab/dig-your-windows/releases/latest',
+      codeRepository: 'https://github.com/AICL-Lab/dig-your-windows',
       programmingLanguage: ['C#', '.NET', 'WPF'],
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-      author: { '@type': 'Organization', name: 'LessUp', url: 'https://github.com/LessUp' },
-      publisher: { '@type': 'Organization', name: 'LessUp', logo: { '@type': 'ImageObject', url: 'https://lessup.github.io/dig-your-windows/logo.png' } },
-      sameAs: ['https://github.com/LessUp/dig-your-windows'],
-      image: 'https://lessup.github.io/dig-your-windows/og-image.png',
+      author: { '@type': 'Organization', name: 'AICL-Lab', url: 'https://github.com/AICL-Lab' },
+      publisher: { '@type': 'Organization', name: 'AICL-Lab', logo: { '@type': 'ImageObject', url: 'https://aicl-lab.github.io/dig-your-windows/logo.png' } },
+      sameAs: ['https://github.com/AICL-Lab/dig-your-windows'],
+      image: 'https://aicl-lab.github.io/dig-your-windows/og-image.png',
       featureList: ['Hardware information collection', 'Real-time CPU/GPU monitoring', 'Event log analysis', 'Windows reliability records', 'System health scoring', 'SMART data reading'],
       aggregateRating: {
         '@type': 'AggregateRating',
@@ -138,11 +138,11 @@ const baseConfig = defineConfig({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'DigYourWindows',
-      url: 'https://lessup.github.io/dig-your-windows/',
+      url: 'https://aicl-lab.github.io/dig-your-windows/',
       inLanguage: ['zh-CN', 'en-US'],
       potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://lessup.github.io/dig-your-windows/search?q={search_term_string}',
+        target: 'https://aicl-lab.github.io/dig-your-windows/search?q={search_term_string}',
         'query-input': 'required name=search_term_string'
       }
     })],
@@ -150,10 +150,10 @@ const baseConfig = defineConfig({
     ['script', { type: 'application/ld+json' }, JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'LessUp',
-      url: 'https://github.com/LessUp',
-      logo: 'https://lessup.github.io/dig-your-windows/logo.png',
-      sameAs: ['https://github.com/LessUp']
+      name: 'AICL-Lab',
+      url: 'https://github.com/AICL-Lab',
+      logo: 'https://aicl-lab.github.io/dig-your-windows/logo.png',
+      sameAs: ['https://github.com/AICL-Lab']
     })],
   ],
 
@@ -176,7 +176,7 @@ const baseConfig = defineConfig({
     optimizeDeps: {
       include: ['vue', '@vueuse/core'],
     },
-    plugins: [],
+    plugins: [llmstxt()],
   },
 
   // Theme configuration
@@ -237,15 +237,15 @@ const baseConfig = defineConfig({
       },
     },
     editLink: {
-      pattern: 'https://github.com/LessUp/dig-your-windows/edit/master/docs/:path',
+      pattern: 'https://github.com/AICL-Lab/dig-your-windows/edit/master/docs/:path',
       text: 'Edit this page on GitHub',
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/LessUp/dig-your-windows' },
+      { icon: 'github', link: 'https://github.com/AICL-Lab/dig-your-windows' },
     ],
     footer: {
-      message: 'Released under the <a href="https://github.com/LessUp/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>.',
-      copyright: 'Copyright © 2025-2026 <a href="https://github.com/LessUp" target="_blank" rel="noopener">LessUp</a>',
+      message: 'Released under the <a href="https://github.com/AICL-Lab/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>.',
+      copyright: 'Copyright © 2025-2026 <a href="https://github.com/AICL-Lab" target="_blank" rel="noopener">AICL-Lab</a>',
     },
     outline: {
       level: [2, 3],
@@ -274,12 +274,14 @@ const baseConfig = defineConfig({
       themeConfig: {
         nav: [
           { text: '首页', link: '/zh-CN/' },
-          { 
-            text: '下载',
-            link: 'https://github.com/LessUp/dig-your-windows/releases/latest',
-            target: '_blank',
-            rel: 'noopener'
-          },
+          { text: '技术白皮书', link: '/zh-CN/whitepaper/', activeMatch: '/zh-CN/whitepaper/' },
+          { text: '架构设计', items: [
+            { text: '架构概览', link: '/zh-CN/architecture/' },
+            { text: '服务层设计', link: '/zh-CN/architecture/services' },
+            { text: '数据流设计', link: '/zh-CN/architecture/data-flow' },
+          ]},
+          { text: 'OpenSpec', link: '/zh-CN/openspec/', activeMatch: '/zh-CN/openspec/' },
+          { text: '健康评分', link: '/zh-CN/scoring/', activeMatch: '/zh-CN/scoring/' },
           { text: '指南', items: [
             { text: '快速开始', link: '/zh-CN/guide/getting-started' },
             { text: '项目架构', link: '/zh-CN/guide/architecture' },
@@ -287,12 +289,23 @@ const baseConfig = defineConfig({
             { text: '贡献指南', link: '/zh-CN/guide/contributing' },
             { text: 'FAQ', link: '/zh-CN/guide/faq' },
           ]},
-          { text: '参考', items: [
-            { text: '数据 Schema', link: '/zh-CN/reference/data-schema' },
-          ]},
-          { text: '变更日志', link: '/zh-CN/changelog' },
+          { text: 'GitHub', link: 'https://github.com/AICL-Lab/dig-your-windows', target: '_blank', rel: 'noopener' },
         ],
         sidebar: {
+          '/zh-CN/whitepaper/': [{ text: '技术白皮书', collapsed: false, items: [
+            { text: '概览', link: '/zh-CN/whitepaper/' },
+          ]}],
+          '/zh-CN/architecture/': [{ text: '架构设计', collapsed: false, items: [
+            { text: '架构概览', link: '/zh-CN/architecture/' },
+            { text: '服务层设计', link: '/zh-CN/architecture/services' },
+            { text: '数据流设计', link: '/zh-CN/architecture/data-flow' },
+          ]}],
+          '/zh-CN/openspec/': [{ text: 'OpenSpec 规范', collapsed: false, items: [
+            { text: '概览', link: '/zh-CN/openspec/' },
+          ]}],
+          '/zh-CN/scoring/': [{ text: '健康评分算法', collapsed: false, items: [
+            { text: '评分系统概览', link: '/zh-CN/scoring/' },
+          ]}],
           '/zh-CN/guide/': [{ text: '指南', collapsed: false, items: [
             { text: '快速开始', link: '/zh-CN/guide/getting-started' },
             { text: '项目架构', link: '/zh-CN/guide/architecture' },
@@ -313,12 +326,14 @@ const baseConfig = defineConfig({
       themeConfig: {
         nav: [
           { text: 'Home', link: '/en-US/' },
-          { 
-            text: 'Download',
-            link: 'https://github.com/LessUp/dig-your-windows/releases/latest',
-            target: '_blank',
-            rel: 'noopener'
-          },
+          { text: 'Whitepaper', link: '/en-US/whitepaper/', activeMatch: '/en-US/whitepaper/' },
+          { text: 'Architecture', items: [
+            { text: 'Overview', link: '/en-US/architecture/' },
+            { text: 'Service Layer', link: '/en-US/architecture/services' },
+            { text: 'Data Flow', link: '/en-US/architecture/data-flow' },
+          ]},
+          { text: 'OpenSpec', link: '/en-US/openspec/', activeMatch: '/en-US/openspec/' },
+          { text: 'Scoring', link: '/en-US/scoring/', activeMatch: '/en-US/scoring/' },
           { text: 'Guide', items: [
             { text: 'Getting Started', link: '/en-US/guide/getting-started' },
             { text: 'Architecture', link: '/en-US/guide/architecture' },
@@ -326,12 +341,23 @@ const baseConfig = defineConfig({
             { text: 'Contributing', link: '/en-US/guide/contributing' },
             { text: 'FAQ', link: '/en-US/guide/faq' },
           ]},
-          { text: 'Reference', items: [
-            { text: 'Data Schema', link: '/en-US/reference/data-schema' },
-          ]},
-          { text: 'Changelog', link: '/en-US/changelog' },
+          { text: 'GitHub', link: 'https://github.com/AICL-Lab/dig-your-windows', target: '_blank', rel: 'noopener' },
         ],
         sidebar: {
+          '/en-US/whitepaper/': [{ text: 'Whitepaper', collapsed: false, items: [
+            { text: 'Overview', link: '/en-US/whitepaper/' },
+          ]}],
+          '/en-US/architecture/': [{ text: 'Architecture', collapsed: false, items: [
+            { text: 'Overview', link: '/en-US/architecture/' },
+            { text: 'Service Layer', link: '/en-US/architecture/services' },
+            { text: 'Data Flow', link: '/en-US/architecture/data-flow' },
+          ]}],
+          '/en-US/openspec/': [{ text: 'OpenSpec', collapsed: false, items: [
+            { text: 'Overview', link: '/en-US/openspec/' },
+          ]}],
+          '/en-US/scoring/': [{ text: 'Scoring', collapsed: false, items: [
+            { text: 'Overview', link: '/en-US/scoring/' },
+          ]}],
           '/en-US/guide/': [{ text: 'Guide', collapsed: false, items: [
             { text: 'Getting Started', link: '/en-US/guide/getting-started' },
             { text: 'Architecture', link: '/en-US/guide/architecture' },
@@ -348,4 +374,4 @@ const baseConfig = defineConfig({
   },
 })
 
-export default withPwa(baseConfig, pwaConfig)
+export default withMermaid(baseConfig)

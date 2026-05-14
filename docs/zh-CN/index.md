@@ -1,210 +1,156 @@
 ---
 layout: home
-
-hero:
-  name: DigYourWindows
-  text: Windows 深度诊断工具
-  tagline: 一键采集硬件信息、事件日志、可靠性记录，生成系统健康评分与优化建议
-  actions:
-    - theme: brand
-      text: ⬇️ 立即下载
-      link: https://github.com/LessUp/dig-your-windows/releases/latest
-    - theme: alt
-      text: 📖 使用文档
-      link: /zh-CN/guide/getting-started
-    - theme: alt
-      text: ⭐ GitHub
-      link: https://github.com/LessUp/dig-your-windows
-
-features:
-  - icon: 🖥️
-    title: 硬件信息采集
-    details: 全面采集 CPU、GPU、内存、磁盘（含 SMART）、网络适配器、USB 设备信息
-  - icon: 📊
-    title: 实时监控
-    details: CPU/GPU 温度、负载、频率，网络流量实时追踪，ScottPlot 可视化
-  - icon: 📋
-    title: 事件日志分析
-    details: 自动提取 System/Application 错误和警告，结构化 XML 查询高效检索
-  - icon: 📈
-    title: 可靠性记录
-    details: Windows 可靠性监视器数据可视化，追踪系统稳定性趋势
-  - icon: ✅
-    title: 系统健康评分
-    details: 综合评估稳定性、性能、内存、磁盘，生成 0-100 健康评分
-  - icon: 💡
-    title: 智能优化建议
-    details: 基于分析结果自动生成针对性系统优化建议
-  - icon: 📄
-    title: 报告导出
-    details: 支持 HTML/JSON 格式导出，HTML 报告自包含无需网络
-  - icon: 🎨
-    title: 主题切换
-    details: 深色/浅色主题一键切换，Fluent Design 现代 UI
 ---
 
-<!-- GitHub Stats -->
-<div class="stats-section">
-  <GitHubStats />
+<!-- Home Header -->
+<div class="home-header">
+  <div class="home-header-left">
+    <div class="home-logo">DYW</div>
+    <div>
+      <span class="home-title">DigYourWindows</span>
+      <span class="home-subtitle">Windows 深度诊断工具</span>
+    </div>
+  </div>
+  <div class="home-nav">
+    <a href="./whitepaper/">技术白皮书</a>
+    <a href="./architecture/">架构设计</a>
+    <a href="./openspec/">OpenSpec</a>
+    <a href="https://github.com/AICL-Lab/dig-your-windows">GitHub</a>
+    <a href="../en-US/">English</a>
+  </div>
 </div>
 
-<!-- Download Section -->
-<div class="download-section-container vp-doc">
-  <h2>🚀 立即开始使用</h2>
-  <DownloadButtons />
+<!-- Intro + Stats -->
+<div class="home-intro-row">
+  <div class="home-intro">
+    DigYourWindows 是一款 Windows 深度诊断工具，采用 .NET 10 + WPF 构建，基于 OpenSpec 规范驱动开发，提供硬件监控、事件日志分析、系统健康评分等功能。
+  </div>
+  <div class="home-stats">
+    <span><strong>.NET 10</strong></span>
+    <span><strong>WPF</strong></span>
+    <span><strong>OpenSpec</strong></span>
+  </div>
+</div>
+
+## 核心能力
+
+<div class="feature-map">
+  <div class="feature-card">
+    <div class="feature-card-title">🏗️ 架构设计</div>
+    <div class="feature-card-desc">
+      双层架构：Core 业务逻辑层 + UI 展示层，16 个核心服务，清晰的职责边界。
+    </div>
+    <div class="feature-tags">
+      <a href="./architecture/" class="feature-tag">架构概览</a>
+      <a href="./architecture/services" class="feature-tag">服务详解</a>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-card-title">📋 OpenSpec 规范</div>
+    <div class="feature-card-desc">
+      Spec-Driven Development，先规范后代码，验收驱动开发，确保代码质量。
+    </div>
+    <div class="feature-tags">
+      <a href="./openspec/" class="feature-tag">规范概览</a>
+      <a href="https://github.com/AICL-Lab/dig-your-windows/tree/master/openspec/specs" class="feature-tag">源码</a>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-card-title">📊 健康评分算法</div>
+    <div class="feature-card-desc">
+      综合稳定性、性能、内存、磁盘四维度，生成 0-100 系统健康评分。
+    </div>
+    <div class="feature-tags">
+      <a href="./scoring/" class="feature-tag">算法详解</a>
+      <a href="./scoring/#阈值定义" class="feature-tag">阈值设计</a>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-card-title">🔧 硬件监控</div>
+    <div class="feature-card-desc">
+      基于 LibreHardwareMonitor，支持 CPU/GPU 温度、负载、频率实时监控。
+    </div>
+    <div class="feature-tags">
+      <a href="./architecture/" class="feature-tag">技术选型</a>
+      <a href="https://github.com/AICL-Lab/dig-your-windows/releases/latest" class="feature-tag">下载</a>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-card-title">🧪 测试覆盖</div>
+    <div class="feature-card-desc">
+      xUnit 单元测试 + FsCheck 属性测试，80%+ 代码覆盖率要求。
+    </div>
+    <div class="feature-tags">
+      <a href="./guide/testing" class="feature-tag">测试指南</a>
+      <a href="https://github.com/AICL-Lab/dig-your-windows/actions" class="feature-tag">CI/CD</a>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-card-title">📄 报告导出</div>
+    <div class="feature-card-desc">
+      支持 HTML/JSON 格式导出，HTML 报告自包含，无需网络即可查看。
+    </div>
+    <div class="feature-tags">
+      <a href="./reference/data-schema" class="feature-tag">数据 Schema</a>
+      <a href="https://aicl-lab.github.io/dig-your-windows/data-schema.json" class="feature-tag">JSON Schema</a>
+    </div>
+  </div>
 </div>
 
 <!-- Quick Start -->
-<div class="quick-start-section vp-doc">
-
-## ⚡ 快速安装
-
-### 方式一：下载安装程序（推荐）
-
-点击上方下载按钮获取最新版本，支持三种分发形式：
-
-| 版本类型 | 大小 | 说明 |
-|---------|------|------|
-| Setup 安装程序 | ~5 MB | 自动下载 .NET 运行时 |
-| FDD 框架依赖版 | ~60 MB | 需预先安装 .NET 10 Runtime |
-| SCD 独立部署版 | ~180 MB | 无需任何依赖 |
-
-### 方式二：命令行一键安装
-
-::: code-group
-
-```powershell [PowerShell]
-# 克隆仓库
-git clone https://github.com/LessUp/dig-your-windows.git
-cd dig-your-windows
-
-# 构建并运行
-dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj
-```
-
-```bash [Bash/WSL]
-# 克隆仓库
-git clone https://github.com/LessUp/dig-your-windows.git
-cd dig-your-windows
-
-# 构建并运行
-dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj
-```
-
-:::
-
-</div>
-
-<!-- System Requirements -->
-<div class="requirements-section vp-doc">
-
-## 🖥️ 系统要求
-
-| 组件 | 最低要求 | 说明 |
-|------|---------|------|
-| 操作系统 | Windows 10/11 | Build 19041+ (20H1) |
-| .NET 运行时 | 10.0.x | 仅 FDD 版本需要 |
-| 运行权限 | 管理员（推荐） | GPU 监控、SMART 数据需管理员 |
-| 磁盘空间 | 200 MB | SCD 版本需求 |
-
-::: tip 💡 提示
-部分高级功能（GPU 温度监控、磁盘 SMART 数据）需要以管理员身份运行才能获取完整数据。
-:::
-
+<div class="quick-start">
+  <div class="quick-start-title">快速开始</div>
+  <div class="quick-start-content">
+    <div class="command-block">
+      <code>git clone https://github.com/AICL-Lab/dig-your-windows.git</code>
+    </div>
+    克隆仓库后，运行 <code>dotnet run --project src/DigYourWindows.UI</code> 即可启动应用。
+  </div>
 </div>
 
 <!-- Tech Stack -->
 <div class="tech-stack-section vp-doc">
 
-## 📊 技术栈
+## 技术栈
 
-<table class="tech-table">
-  <tr>
-    <th>组件</th>
-    <th>技术选型</th>
-    <th>说明</th>
-  </tr>
-  <tr>
-    <td>运行框架</td>
-    <td><strong>.NET 10.0 + WPF</strong></td>
-    <td>桌面应用开发框架</td>
-  </tr>
-  <tr>
-    <td>UI 组件库</td>
-    <td><strong>WPF-UI 4.0</strong></td>
-    <td>Fluent Design 风格组件</td>
-  </tr>
-  <tr>
-    <td>MVVM 框架</td>
-    <td><strong>CommunityToolkit.Mvvm 8.4</strong></td>
-    <td>数据绑定与命令</td>
-  </tr>
-  <tr>
-    <td>图表库</td>
-    <td><strong>ScottPlot 5.1</strong></td>
-    <td>实时性能趋势可视化</td>
-  </tr>
-  <tr>
-    <td>硬件监控</td>
-    <td><strong>LibreHardwareMonitor 0.9</strong></td>
-    <td>CPU/GPU 温度与负载</td>
-  </tr>
-</table>
-
-</div>
-
-<!-- Use Cases -->
-<div class="use-cases-section vp-doc">
-
-## 🎯 适用场景
-
-<div class="use-cases-grid">
-  <div class="use-case-card">
-    <div class="use-case-icon">🔧</div>
-    <h4>系统维护</h4>
-    <p>快速诊断系统问题，识别性能瓶颈，排查故障根源</p>
-  </div>
-  <div class="use-case-card">
-    <div class="use-case-icon">💻</div>
-    <h4>硬件升级</h4>
-    <p>全面评估当前硬件状态，科学规划升级方案</p>
-  </div>
-  <div class="use-case-card">
-    <div class="use-case-icon">📊</div>
-    <h4>IT 资产管理</h4>
-    <p>批量采集设备信息，生成标准化诊断报告</p>
-  </div>
-  <div class="use-case-card">
-    <div class="use-case-icon">🎯</div>
-    <h4>技术支持</h4>
-    <p>远程诊断辅助，快速定位问题，提升支持效率</p>
-  </div>
-</div>
+| 组件 | 技术选型 | 说明 |
+|------|----------|------|
+| 运行框架 | **.NET 10 + WPF** | 桌面应用开发框架 |
+| UI 组件库 | **WPF-UI 4.0** | Fluent Design 风格组件 |
+| MVVM 框架 | **CommunityToolkit.Mvvm 8.4** | 数据绑定与命令 |
+| 图表库 | **ScottPlot 5.1** | 实时性能趋势可视化 |
+| 硬件监控 | **LibreHardwareMonitorLib 0.9** | CPU/GPU 温度与负载 |
+| 测试框架 | **xUnit 2.9 + FsCheck 2.16** | 单元测试 + 属性测试 |
 
 </div>
 
 <!-- Documentation Links -->
 <div class="docs-section vp-doc">
 
-## 📚 使用指南
+## 使用指南
 
 <div class="docs-grid">
-  <a href="/zh-CN/guide/getting-started" class="doc-card">
+  <a href="./guide/getting-started" class="doc-card">
     <div class="doc-icon">🚀</div>
     <h4>快速开始</h4>
     <p>环境搭建、构建运行、首次使用指南</p>
   </a>
-  <a href="/zh-CN/guide/architecture" class="doc-card">
+  <a href="./whitepaper/" class="doc-card">
+    <div class="doc-icon">📕</div>
+    <h4>技术白皮书</h4>
+    <p>项目概述、技术定位、架构亮点</p>
+  </a>
+  <a href="./architecture/" class="doc-card">
     <div class="doc-icon">🏗️</div>
-    <h4>项目架构</h4>
-    <p>技术选型、架构设计、核心实现原理</p>
+    <h4>架构设计</h4>
+    <p>双层架构、核心服务、数据流设计</p>
   </a>
-  <a href="/zh-CN/guide/testing" class="doc-card">
-    <div class="doc-icon">🧪</div>
-    <h4>测试指南</h4>
-    <p>单元测试、属性测试、CI/CD 集成</p>
-  </a>
-  <a href="/zh-CN/guide/faq" class="doc-card">
+  <a href="./guide/faq" class="doc-card">
     <div class="doc-icon">❓</div>
     <h4>常见问题</h4>
     <p>常见问题解答与故障排除</p>
@@ -213,158 +159,250 @@ dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj
 
 </div>
 
-<!-- Security -->
-<div class="security-section vp-doc">
-
-## 🔒 安全与隐私
-
-DigYourWindows 完全在本地运行，您的数据安全得到充分保障：
-
-- ✅ **完全离线运行** - 无需网络连接
-- ✅ **数据不上传** - 所有诊断数据保存在本地
-- ✅ **本地文件系统** - 仅使用本地目录进行数据存储
-- ✅ **开源可审计** - 代码完全开源，可自由审查
-
-</div>
-
 <!-- License -->
 <div class="license-section vp-doc">
 
-## 📄 开源许可
+## 开源许可
 
-本项目采用 <a href="https://github.com/LessUp/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener"><strong>MIT License</strong></a> 开源协议
+本项目采用 <a href="https://github.com/AICL-Lab/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener"><strong>MIT License</strong></a> 开源协议
 
-Copyright © 2025-2026 <a href="https://github.com/LessUp" target="_blank" rel="noopener">LessUp</a>
+Copyright © 2025-2026 <a href="https://github.com/AICL-Lab" target="_blank" rel="noopener">AICL-Lab</a>
 
 </div>
 
 <style scoped>
-/* Stats Section */
-.stats-section {
-  max-width: 600px;
-  margin: 1rem auto 2rem;
-  padding: 0 1.5rem;
+/* Home Header */
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--vp-c-divider);
 }
 
-/* Download Section */
-.download-section-container {
-  text-align: center;
-  padding: 2rem 1.5rem;
+.home-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.home-logo {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--vp-c-brand-1) 0%, var(--dyw-accent-purple, #8764b8) 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.home-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--vp-c-text-1);
+}
+
+.home-subtitle {
+  color: var(--vp-c-text-2);
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+
+.home-nav {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.home-nav a {
+  color: var(--vp-c-text-2);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.home-nav a:hover {
+  color: var(--vp-c-brand-1);
+}
+
+/* Intro + Stats */
+.home-intro-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.home-intro {
+  flex: 1;
+  color: var(--vp-c-text-2);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.home-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--vp-c-text-2);
+  flex-shrink: 0;
+}
+
+.home-stats strong {
+  color: var(--vp-c-brand-1);
+}
+
+/* Feature Map */
+.feature-map {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.feature-card {
   background: var(--vp-c-bg-soft);
-  border-radius: 16px;
-  margin: 2rem auto;
-  max-width: 800px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
 }
 
-.download-section-container h2 {
-  margin-top: 0;
-  margin-bottom: 1.5rem;
+.feature-card:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 120, 212, 0.1);
+}
+
+.feature-card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--vp-c-text-1);
+  margin-bottom: 0.5rem;
+}
+
+.feature-card-desc {
+  font-size: 0.85rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.feature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.feature-tag {
+  font-size: 0.75rem;
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  background: var(--vp-c-brand-soft);
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.feature-tag:hover {
+  background: var(--vp-c-brand-1);
+  color: white;
 }
 
 /* Quick Start */
-.quick-start-section {
-  max-width: 800px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
+.quick-start {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
 }
 
-/* Requirements */
-.requirements-section {
-  max-width: 800px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
+.quick-start-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-1);
+  margin-bottom: 0.5rem;
 }
 
-.requirements-section table {
-  width: 100%;
+.quick-start-content {
+  color: var(--vp-c-text-2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.quick-start-content code {
+  background: var(--vp-c-bg);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--vp-c-brand-1);
+}
+
+.command-block {
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+}
+
+.command-block code {
+  background: transparent;
+  padding: 0;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  color: var(--vp-c-text-1);
 }
 
 /* Tech Stack */
 .tech-stack-section {
-  max-width: 900px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
+  margin: 2rem 0;
 }
 
-.tech-table {
+.tech-stack-section table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
 }
 
-.tech-table th {
+.tech-stack-section th {
   background: var(--vp-c-bg-soft);
   font-weight: 600;
   text-align: left;
   padding: 0.75rem 1rem;
+  font-size: 0.85rem;
 }
 
-.tech-table td {
+.tech-stack-section td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--vp-c-divider);
-}
-
-.tech-table tr:hover td {
-  background: var(--vp-c-bg-soft);
-}
-
-/* Use Cases */
-.use-cases-section {
-  max-width: 1000px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
-}
-
-.use-cases-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-.use-case-card {
-  text-align: center;
-  padding: 1.5rem;
-  background: var(--vp-c-bg-soft);
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.use-case-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.15);
-  border-color: var(--vp-c-brand-1);
-}
-
-.use-case-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.use-case-card h4 {
-  margin: 0 0 0.5rem;
-  color: var(--vp-c-text-1);
-}
-
-.use-case-card p {
-  margin: 0;
   font-size: 0.9rem;
-  color: var(--vp-c-text-2);
+}
+
+.tech-stack-section tr:last-child td {
+  border-bottom: none;
+}
+
+.tech-stack-section tr:hover td {
+  background: var(--vp-c-bg-soft);
 }
 
 /* Documentation */
 .docs-section {
-  max-width: 1000px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
+  margin: 2rem 0;
 }
 
 .docs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .doc-card {
@@ -389,41 +427,58 @@ Copyright © 2025-2026 <a href="https://github.com/LessUp" target="_blank" rel="
 }
 
 .doc-card h4 {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.25rem;
   color: var(--vp-c-brand-1);
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .doc-card p {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--vp-c-text-2);
 }
 
-/* Security & License */
-.security-section,
+/* License */
 .license-section {
-  max-width: 800px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
   text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--vp-c-divider);
 }
 
-.license-section {
-  padding-bottom: 2rem;
-}
-
-@media (max-width: 640px) {
-  .download-section-container {
-    margin: 1.5rem;
+/* Responsive */
+@media (max-width: 959px) {
+  .feature-map {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .use-cases-grid {
+
+  .docs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .home-intro-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .feature-map {
     grid-template-columns: 1fr;
   }
-  
+
   .docs-grid {
     grid-template-columns: 1fr;
+  }
+
+  .home-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .home-nav {
+    flex-wrap: wrap;
   }
 }
 </style>
