@@ -37,8 +37,6 @@ public partial class App : Application
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IConfigurationService, ConfigurationService>();
-
         // History store (SQLite-backed persistence)
         services.AddSingleton<IHistoryStoreService>(sp =>
         {
