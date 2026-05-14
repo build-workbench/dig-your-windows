@@ -26,14 +26,6 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private DiagnosticData? _currentData;
     private bool _reloadRequested;
 
-    private const int NetworkHistoryCapacity = 60;
-    private long? _lastNetworkBytesReceived;
-    private long? _lastNetworkBytesSent;
-    private DateTimeOffset? _lastNetworkSampleTime;
-    private readonly Queue<DateTime> _networkHistoryTimes = new();
-    private readonly Queue<double> _networkHistoryDownload = new();
-    private readonly Queue<double> _networkHistoryUpload = new();
-
     [ObservableProperty]
     private HardwareData? _hardwareInfo;
 
@@ -126,96 +118,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     private void UpdateNetworkTraffic()
     {
-        try
-        {
-            var now = DateTimeOffset.Now;
-            var (bytesReceived, bytesSent) = _networkMonitorService.GetTotalBytes();
-
-            if (TryInitializeNetworkSample(now, bytesReceived, bytesSent))
-            {
-                return;
-            }
-
-            if (!TryCalculateNetworkRates(now, bytesReceived, bytesSent, out var downloadMBps, out var uploadMBps))
-            {
-                return;
-            }
-
-            NetworkDownloadMBps = downloadMBps;
-            NetworkUploadMBps = uploadMBps;
-            UpdateNetworkSampleState(now, bytesReceived, bytesSent);
-            AppendNetworkHistory(now.LocalDateTime, downloadMBps, uploadMBps);
-            UpdateNetworkTrafficPlot();
-        }
-        catch (Exception ex)
-        {
-            _log.Warn($"更新网络流量失败: {ex.Message}");
-        }
-    }
-
-    private bool TryInitializeNetworkSample(DateTimeOffset now, long bytesReceived, long bytesSent)
-    {
-        if (_lastNetworkSampleTime is not null && _lastNetworkBytesReceived is not null && _lastNetworkBytesSent is not null)
-        {
-            return false;
-        }
-
-        UpdateNetworkSampleState(now, bytesReceived, bytesSent);
-        NetworkDownloadMBps = 0d;
-        NetworkUploadMBps = 0d;
-        AppendNetworkHistory(now.LocalDateTime, 0d, 0d);
+        _networkMonitorService.Update();
+        NetworkDownloadMBps = _networkMonitorService.DownloadMBps;
+        NetworkUploadMBps = _networkMonitorService.UploadMBps;
         UpdateNetworkTrafficPlot();
-        return true;
-    }
-
-    private bool TryCalculateNetworkRates(
-        DateTimeOffset now,
-        long bytesReceived,
-        long bytesSent,
-        out double downloadMBps,
-        out double uploadMBps)
-    {
-        downloadMBps = 0d;
-        uploadMBps = 0d;
-
-        if (_lastNetworkSampleTime is null || _lastNetworkBytesReceived is null || _lastNetworkBytesSent is null)
-        {
-            return false;
-        }
-
-        var dtSeconds = (now - _lastNetworkSampleTime.Value).TotalSeconds;
-        if (dtSeconds <= 0)
-        {
-            return false;
-        }
-
-        var deltaReceived = Math.Max(0L, bytesReceived - _lastNetworkBytesReceived.Value);
-        var deltaSent = Math.Max(0L, bytesSent - _lastNetworkBytesSent.Value);
-
-        downloadMBps = deltaReceived / dtSeconds / 1024d / 1024d;
-        uploadMBps = deltaSent / dtSeconds / 1024d / 1024d;
-        return true;
-    }
-
-    private void UpdateNetworkSampleState(DateTimeOffset now, long bytesReceived, long bytesSent)
-    {
-        _lastNetworkSampleTime = now;
-        _lastNetworkBytesReceived = bytesReceived;
-        _lastNetworkBytesSent = bytesSent;
-    }
-
-    private void AppendNetworkHistory(DateTime time, double downloadMBps, double uploadMBps)
-    {
-        _networkHistoryTimes.Enqueue(time);
-        _networkHistoryDownload.Enqueue(downloadMBps);
-        _networkHistoryUpload.Enqueue(uploadMBps);
-
-        while (_networkHistoryTimes.Count > NetworkHistoryCapacity)
-        {
-            _networkHistoryTimes.Dequeue();
-            _networkHistoryDownload.Dequeue();
-            _networkHistoryUpload.Dequeue();
-        }
     }
 
     private void UpdateNetworkTrafficPlot()
@@ -228,15 +134,16 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
         ApplyPlotTheme(plot);
 
-        if (_networkHistoryTimes.Count == 0)
+        var historyTimes = _networkMonitorService.HistoryTimes;
+        if (historyTimes.Count == 0)
         {
             NetworkTrafficPlot.Refresh();
             return;
         }
 
-        var xs = _networkHistoryTimes.Select(time => time.ToOADate()).ToArray();
-        var downYs = _networkHistoryDownload.ToArray();
-        var upYs = _networkHistoryUpload.ToArray();
+        var xs = historyTimes.Select(time => time.ToOADate()).ToArray();
+        var downYs = _networkMonitorService.HistoryDownload.ToArray();
+        var upYs = _networkMonitorService.HistoryUpload.ToArray();
 
         var downScatter = plot.Add.Scatter(xs, downYs);
         downScatter.LegendText = "下载";
@@ -257,9 +164,6 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _loadCts?.Cancel();
         _loadCts?.Dispose();
         // WpfPlot does not implement IDisposable, so no explicit disposal needed
-        _networkHistoryTimes.Clear();
-        _networkHistoryDownload.Clear();
-        _networkHistoryUpload.Clear();
         GC.SuppressFinalize(this);
     }
 
