@@ -107,7 +107,6 @@ dig-your-windows/
 │   └── testing/                 # 测试策略和 BDD 规范
 ├── docs/                        # VitePress 文档站点
 │   ├── zh-CN/                   # 中文文档
-│   ├── en-US/                   # 英文文档
 │   ├── public/                  # 静态资源（图片、图标）
 │   └── .vitepress/              # VitePress 配置
 ├── installer/                   # Inno Setup 安装脚本

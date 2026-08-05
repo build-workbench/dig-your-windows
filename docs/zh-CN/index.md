@@ -16,7 +16,6 @@ layout: home
     <a href="./architecture/">架构设计</a>
     <a href="./openspec/">OpenSpec</a>
     <a href="https://github.com/AICL-Lab/dig-your-windows">GitHub</a>
-    <a href="../en-US/">English</a>
   </div>
 </div>
 

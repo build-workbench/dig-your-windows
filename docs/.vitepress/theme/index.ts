@@ -1,5 +1,5 @@
 import { h, watch } from 'vue'
-import { useData, useRoute } from 'vitepress'
+import { useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 import './styles/custom.css'
@@ -52,34 +52,20 @@ export default {
   
   setup() {
     const route = useRoute()
-    const { lang } = useData()
-    
+
     // Watch for route changes to update page metadata
     watch(
       () => route.path,
       () => {
         if (typeof window !== 'undefined') {
-          const currentLang = route.path.startsWith('/en-US') ? 'en' : 'zh-CN'
-          document.documentElement.lang = currentLang
-          
-          // Update Open Graph locale
-          const ogLocale = document.querySelector('meta[property="og:locale"]')
-          if (ogLocale) {
-            ogLocale.setAttribute('content', currentLang === 'zh-CN' ? 'zh_CN' : 'en_US')
-          }
-          
+          document.documentElement.lang = 'zh-CN'
+
           // Update canonical URL
           const canonical = document.querySelector('link[rel="canonical"]')
           if (canonical) {
             const baseUrl = 'https://lessup.github.io/dig-your-windows'
             const cleanPath = route.path.replace(/\.html$/, '').replace(/\/index$/, '/')
             canonical.setAttribute('href', `${baseUrl}${cleanPath}`)
-          }
-          
-          // Update document title language
-          const title = document.title
-          if (currentLang === 'zh-CN' && !title.includes('中文')) {
-            // Title already in Chinese or generic
           }
         }
       },

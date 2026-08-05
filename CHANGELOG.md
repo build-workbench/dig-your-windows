@@ -9,6 +9,15 @@ For Chinese version, see [docs/zh-CN/changelog.md](docs/zh-CN/changelog.md).
 
 ---
 
+## [Unreleased]
+
+### Changed
+- **Repository convergence**: removed non-core methodology assets to reduce maintenance burden
+  - Deleted `.claude/skills/` (42 BMad skills, ~2.3MB) — unrelated to the Windows diagnostics tool
+  - Deleted `docs/methodology/bmad-framework/` and `docs/superpowers/` — unreferenced
+- **Docs site collapsed to single language (zh-CN)**: removed `docs/en-US/` and all English locale config in VitePress
+- **AI instructions consolidated**: `CLAUDE.md` and `.github/copilot-instructions.md` are now thin shims pointing to `AGENTS.md` as the single source of truth
+
 ## [1.2.0] - 2026-04-27
 
 ### Fixed
