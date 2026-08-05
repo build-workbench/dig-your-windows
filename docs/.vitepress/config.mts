@@ -41,7 +41,7 @@ const baseConfig = defineConfig({
     transformItems: (items) => {
       return items.map((item) => {
         // Root and language homepages get highest priority
-        if (item.url === '' || item.url === 'zh-CN/' || item.url === 'en-US/') {
+        if (item.url === '' || item.url === 'zh-CN/') {
           return { ...item, priority: 1.0, changefreq: 'daily' }
         }
         // Getting started guide
@@ -80,7 +80,6 @@ const baseConfig = defineConfig({
     ['meta', { property: 'og:site_name', content: 'DigYourWindows' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'zh_CN' }],
-    ['meta', { property: 'og:locale:alternate', content: 'en_US' }],
     ['meta', { property: 'og:title', content: 'DigYourWindows - Windows Deep Diagnostics Tool' }],
     ['meta', { property: 'og:description', content: 'One-click hardware info collection, event log analysis, reliability records, system health scoring, and optimization recommendations.' }],
     ['meta', { property: 'og:url', content: 'https://aicl-lab.github.io/dig-your-windows/' }],
@@ -139,7 +138,7 @@ const baseConfig = defineConfig({
       '@type': 'WebSite',
       name: 'DigYourWindows',
       url: 'https://aicl-lab.github.io/dig-your-windows/',
-      inLanguage: ['zh-CN', 'en-US'],
+      inLanguage: 'zh-CN',
       potentialAction: {
         '@type': 'SearchAction',
         target: 'https://aicl-lab.github.io/dig-your-windows/search?q={search_term_string}',
@@ -212,23 +211,6 @@ const baseConfig = defineConfig({
                   navigateText: '切换', navigateUpKeyAriaLabel: '向上箭头',
                   navigateDownKeyAriaLabel: '向下箭头', closeText: '关闭',
                   closeKeyAriaLabel: 'Esc键',
-                },
-              },
-            },
-          },
-          'en-US': {
-            translations: {
-              button: { buttonText: 'Search Documentation', buttonAriaLabel: 'Search Documentation' },
-              modal: {
-                displayDetails: 'Display detailed list',
-                resetButtonTitle: 'Clear query',
-                backButtonTitle: 'Close search',
-                noResultsText: 'No results found',
-                footer: {
-                  selectText: 'to select', selectKeyAriaLabel: 'Enter',
-                  navigateText: 'to navigate', navigateUpKeyAriaLabel: 'Up arrow',
-                  navigateDownKeyAriaLabel: 'Down arrow', closeText: 'to close',
-                  closeKeyAriaLabel: 'Escape',
                 },
               },
             },
@@ -315,58 +297,6 @@ const baseConfig = defineConfig({
           ]}],
           '/zh-CN/reference/': [{ text: '参考', collapsed: false, items: [
             { text: '数据 Schema', link: '/zh-CN/reference/data-schema' },
-          ]}],
-        },
-      },
-    },
-    'en-US': {
-      label: 'English',
-      lang: 'en-US',
-      link: '/en-US/',
-      themeConfig: {
-        nav: [
-          { text: 'Home', link: '/en-US/' },
-          { text: 'Whitepaper', link: '/en-US/whitepaper/', activeMatch: '/en-US/whitepaper/' },
-          { text: 'Architecture', items: [
-            { text: 'Overview', link: '/en-US/architecture/' },
-            { text: 'Service Layer', link: '/en-US/architecture/services' },
-            { text: 'Data Flow', link: '/en-US/architecture/data-flow' },
-          ]},
-          { text: 'OpenSpec', link: '/en-US/openspec/', activeMatch: '/en-US/openspec/' },
-          { text: 'Scoring', link: '/en-US/scoring/', activeMatch: '/en-US/scoring/' },
-          { text: 'Guide', items: [
-            { text: 'Getting Started', link: '/en-US/guide/getting-started' },
-            { text: 'Architecture', link: '/en-US/guide/architecture' },
-            { text: 'Testing Guide', link: '/en-US/guide/testing' },
-            { text: 'Contributing', link: '/en-US/guide/contributing' },
-            { text: 'FAQ', link: '/en-US/guide/faq' },
-          ]},
-          { text: 'GitHub', link: 'https://github.com/AICL-Lab/dig-your-windows', target: '_blank', rel: 'noopener' },
-        ],
-        sidebar: {
-          '/en-US/whitepaper/': [{ text: 'Whitepaper', collapsed: false, items: [
-            { text: 'Overview', link: '/en-US/whitepaper/' },
-          ]}],
-          '/en-US/architecture/': [{ text: 'Architecture', collapsed: false, items: [
-            { text: 'Overview', link: '/en-US/architecture/' },
-            { text: 'Service Layer', link: '/en-US/architecture/services' },
-            { text: 'Data Flow', link: '/en-US/architecture/data-flow' },
-          ]}],
-          '/en-US/openspec/': [{ text: 'OpenSpec', collapsed: false, items: [
-            { text: 'Overview', link: '/en-US/openspec/' },
-          ]}],
-          '/en-US/scoring/': [{ text: 'Scoring', collapsed: false, items: [
-            { text: 'Overview', link: '/en-US/scoring/' },
-          ]}],
-          '/en-US/guide/': [{ text: 'Guide', collapsed: false, items: [
-            { text: 'Getting Started', link: '/en-US/guide/getting-started' },
-            { text: 'Architecture', link: '/en-US/guide/architecture' },
-            { text: 'Testing Guide', link: '/en-US/guide/testing' },
-            { text: 'Contributing', link: '/en-US/guide/contributing' },
-            { text: 'FAQ', link: '/en-US/guide/faq' },
-          ]}],
-          '/en-US/reference/': [{ text: 'Reference', collapsed: false, items: [
-            { text: 'Data Schema', link: '/en-US/reference/data-schema' },
           ]}],
         },
       },

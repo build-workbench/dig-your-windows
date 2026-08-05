@@ -50,7 +50,6 @@ outline: deep
 ## 完整变更日志
 
 - [中文完整版 →](/zh-CN/changelog)
-- [English Version →](/en-US/changelog)
 - [GitHub Releases →](https://github.com/LessUp/dig-your-windows/releases)
 
 ## 版本规范

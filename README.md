@@ -105,7 +105,6 @@ dig-your-windows/
 │   └── changes/                 # Active change proposals
 ├── docs/                        # VitePress documentation site
 │   ├── zh-CN/                   # Chinese documentation (primary)
-│   ├── en-US/                   # English documentation
 │   ├── public/                  # Static assets (images, icons)
 │   └── .vitepress/              # VitePress configuration & theme
 ├── installer/                   # Inno Setup scripts
@@ -140,16 +139,16 @@ dotnet test --filter "FullyQualifiedName~ReportServiceTests"
 
 ## 📚 Documentation
 
-- [📖 Getting Started Guide](https://lessup.github.io/dig-your-windows/en-US/guide/getting-started)
-- [🏗️ Architecture Documentation](https://lessup.github.io/dig-your-windows/en-US/guide/architecture)
-- [🧪 Testing Guide](https://lessup.github.io/dig-your-windows/en-US/guide/testing)
-- [📊 Data Schema Reference](https://lessup.github.io/dig-your-windows/en-US/reference/data-schema)
-- [❓ FAQ](https://lessup.github.io/dig-your-windows/en-US/guide/faq)
+- [📖 Getting Started Guide](https://lessup.github.io/dig-your-windows/zh-CN/guide/getting-started)
+- [🏗️ Architecture Documentation](https://lessup.github.io/dig-your-windows/zh-CN/guide/architecture)
+- [🧪 Testing Guide](https://lessup.github.io/dig-your-windows/zh-CN/guide/testing)
+- [📊 Data Schema Reference](https://lessup.github.io/dig-your-windows/zh-CN/reference/data-schema)
+- [❓ FAQ](https://lessup.github.io/dig-your-windows/zh-CN/guide/faq)
 - [📝 Changelog](CHANGELOG.md)
 
 > 💡 **Offline Access**: Documentation is also available in the `/docs` directory of this repository.
 
-Documentation is available in **English** and **简体中文**.
+Documentation is available in **简体中文**.
 
 ## 🤝 Contributing
 

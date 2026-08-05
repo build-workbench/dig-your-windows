@@ -10,11 +10,8 @@ hero:
       text: ⬇️ Download
       link: https://github.com/AICL-Lab/dig-your-windows/releases/latest
     - theme: alt
-      text: 🇨🇳 中文
+      text: 🇨🇳 进入中文站
       link: /zh-CN/
-    - theme: alt
-      text: 🇺🇸 English
-      link: /en-US/
 
 features:
   - icon: 🖥️
@@ -33,8 +30,8 @@ features:
 
 <!-- Language Selection Section -->
 <div class="language-selection vp-doc">
-  <h2 style="text-align: center; margin-bottom: 2rem;">Choose Your Language / 选择语言</h2>
-  
+  <h2 style="text-align: center; margin-bottom: 2rem;">选择语言</h2>
+
   <div class="lang-grid">
     <!-- Chinese Entry -->
     <a href="/zh-CN/" class="lang-card">
@@ -43,16 +40,6 @@ features:
         <h3>简体中文</h3>
         <p>Windows 深度诊断工具</p>
         <span class="lang-link">进入中文站 →</span>
-      </div>
-    </a>
-    
-    <!-- English Entry -->
-    <a href="/en-US/" class="lang-card">
-      <div class="lang-flag">🇺🇸</div>
-      <div class="lang-info">
-        <h3>English</h3>
-        <p>Windows Deep Diagnostics Tool</p>
-        <span class="lang-link">Enter English Site →</span>
       </div>
     </a>
   </div>

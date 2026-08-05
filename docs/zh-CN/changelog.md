@@ -4,6 +4,15 @@ outline: deep
 
 # 变更日志
 
+## 未发布
+
+### 变更
+- **仓库收敛**：移除与项目核心无关的方法论资产，降低维护负担
+  - 删除 `.claude/skills/`（42 个 BMad skills，约 2.3MB）—— 与 Windows 诊断工具无关
+  - 删除 `docs/methodology/bmad-framework/` 与 `docs/superpowers/` —— 无引用
+- **文档站收敛为单语（zh-CN）**：移除 `docs/en-US/` 及 VitePress 中所有英文 locale 配置
+- **AI 指令合并**：`CLAUDE.md` 与 `.github/copilot-instructions.md` 改为薄壳，统一指向 `AGENTS.md` 作为唯一权威
+
 ## 最新版本
 
 ### [1.2.0] - 2026-04-27
@@ -69,7 +78,6 @@ outline: deep
 ## 完整变更日志
 
 - [中文完整版 →](/zh-CN/changelog)
-- [English Version →](/en-US/changelog)
 - [GitHub Releases →](https://github.com/LessUp/dig-your-windows/releases)
 
 ## 版本规范
