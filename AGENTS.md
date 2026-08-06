@@ -1,8 +1,7 @@
 # DigYourWindows — AI Agent Reference
 
-**Project**: Windows深度诊断工具 | .NET 10 WPF | Spec-Driven Development (OpenSpec)
+**Project**: Windows 深度诊断工具 | .NET 10 WPF | **Status**: v1.2.0 归档稳定版
 **Repo**: `LessUp/dig-your-windows` | **Docs**: `https://lessup.github.io/dig-your-windows/`
-**Status**: v1.2.0 Archive-Ready — 稳定、功能完整、维护模式
 
 ---
 
@@ -29,8 +28,8 @@ DigYourWindows.Tests       →  xUnit 2.9 + FsCheck 2.16 (Unit/ PropertyTests/ I
 | `ReportService` | HTML + JSON export | `System.Text.Json` |
 | `DiagnosticCollectorService` | Orchestrates all collection with progress+cancellation | All above |
 | `HardwareMonitorProvider` | Thread-safe singleton wrapping `LibreHardwareMonitor.Computer` | `LibreHardwareMonitorLib 0.9.4` |
-| `ConfigurationService` | JSON app settings persistence | `System.Text.Json` |
-| `FileLogService` / `LogService` | Buffered file logging | `StreamWriter` |
+| `SqliteHistoryStoreService` | Diagnostic history persistence | `Microsoft.Data.Sqlite` |
+| `LogService` | Buffered file logging with rotation | `StreamWriter` |
 
 ## Data Models (DigYourWindows.Core/Models/)
 
@@ -41,8 +40,10 @@ DigYourWindows.Tests       →  xUnit 2.9 + FsCheck 2.16 (Unit/ PropertyTests/ I
 | `DiskModels.cs` | `DiskInfoData`, `DiskSmartData`, `SmartAttribute` |
 | `ComputeModels.cs` | `CpuData`, `GpuInfoData` |
 | `EventModels.cs` | `LogEvent`, `ReliabilityRecord` |
+| `DeviceModels.cs` | Network/USB device info |
 | `PerformanceAnalysisData.cs` | `PerformanceAnalysisData`, `Recommendation` |
 | `CollectionModels.cs` | `DiagnosticCollectionResult`, `DiagnosticCollectionProgress` |
+| `DiagnosticHistoryRecord.cs` / `DiagnosticHistorySummary.cs` | History store records |
 
 ## Custom Exceptions (DigYourWindows.Core/Exceptions/)
 
@@ -61,21 +62,6 @@ dotnet test DigYourWindows.slnx -c Release --no-restore
 dotnet test --filter "Category=Unit"
 dotnet test --collect:"XPlat Code Coverage"
 ```
-
-## OpenSpec Workflow (MANDATORY before coding)
-
-```bash
-# 1. Check relevant spec
-cat openspec/specs/<domain>/spec.md
-# domains: architecture | data | export | hardware | features | testing | workflow
-
-# 2. For changes to existing features
-# Edit delta spec in openspec/changes/<name>/specs/<domain>/spec.md
-
-# 3. For bugs — no proposal needed, just fix and update spec status if relevant
-```
-
-**Rule**: No code without a matching spec. No features beyond spec. No gold-plating.
 
 ## Code Conventions
 
@@ -100,22 +86,10 @@ public sealed class HardwareMonitorProvider : IHardwareMonitorProvider, IDisposa
 
 ```
 <type>(<scope>): <description>
-types: feat fix docs refactor test chore specs
-scopes: core ui tests docs openspec build
+types: feat fix docs refactor test chore
+scopes: core ui tests docs build
 ```
 
-## Maintenance Mode
+## Archive Status
 
-- ✅ Bug fixes only (no new features)
-- ✅ Security updates as needed
-- ✅ Documentation corrections
-- ❌ No new features or architecture changes
-
-## Final Status
-
-**v1.2.0** is the stable release. Project is in maintenance mode.
-- All planned features implemented
-- All known bugs fixed
-- Test coverage meets 80% threshold
-- Documentation complete and synchronized
-
+**v1.2.0** 是稳定归档版本。项目不再积极开发，仅保留 bug 修复。

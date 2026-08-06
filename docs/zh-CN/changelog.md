@@ -7,11 +7,14 @@ outline: deep
 ## 未发布
 
 ### 变更
-- **仓库收敛**：移除与项目核心无关的方法论资产，降低维护负担
-  - 删除 `.claude/skills/`（42 个 BMad skills，约 2.3MB）—— 与 Windows 诊断工具无关
-  - 删除 `docs/methodology/bmad-framework/` 与 `docs/superpowers/` —— 无引用
-- **文档站收敛为单语（zh-CN）**：移除 `docs/en-US/` 及 VitePress 中所有英文 locale 配置
-- **AI 指令合并**：`CLAUDE.md` 与 `.github/copilot-instructions.md` 改为薄壳，统一指向 `AGENTS.md` 作为唯一权威
+- **归档轻量化重构**：彻底精简项目结构，降低维护负担
+  - 删除 `openspec/` 整个规范体系（19 文件）—— 归档项目不再需要 spec-driven 流程
+  - 删除 `CLAUDE.md`、`.github/copilot-instructions.md` —— AI 指令统一收敛至 `AGENTS.md`
+  - 删除 `CONTRIBUTING.md`、`CHANGELOG.md`、`README.zh-CN.md` —— 根目录文档精简
+  - 删除 `.github/workflows/pages.yml`、`scripts/pre-commit.sh`、`scripts/setup-hooks.sh` —— CI/脚本精简
+  - 删除 `omnisharp.json` —— 过时配置
+  - 删除 `docs/zh-CN/openspec/` 及英文文档入口 —— 文档站纯中文化
+  - 修复架构文档死链接（services/data-flow 页面不存在）
 
 ## 最新版本
 

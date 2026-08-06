@@ -14,7 +14,7 @@ layout: home
   <div class="home-nav">
     <a href="./whitepaper/">技术白皮书</a>
     <a href="./architecture/">架构设计</a>
-    <a href="./openspec/">OpenSpec</a>
+    <a href="./scoring/">健康评分</a>
     <a href="https://github.com/AICL-Lab/dig-your-windows">GitHub</a>
   </div>
 </div>
@@ -22,12 +22,12 @@ layout: home
 <!-- Intro + Stats -->
 <div class="home-intro-row">
   <div class="home-intro">
-    DigYourWindows 是一款 Windows 深度诊断工具，采用 .NET 10 + WPF 构建，基于 OpenSpec 规范驱动开发，提供硬件监控、事件日志分析、系统健康评分等功能。
+    DigYourWindows 是一款 Windows 深度诊断工具，采用 .NET 10 + WPF 构建，提供硬件监控、事件日志分析、系统健康评分等功能。
   </div>
   <div class="home-stats">
     <span><strong>.NET 10</strong></span>
     <span><strong>WPF</strong></span>
-    <span><strong>OpenSpec</strong></span>
+    <span><strong>开源</strong></span>
   </div>
 </div>
 
@@ -41,18 +41,6 @@ layout: home
     </div>
     <div class="feature-tags">
       <a href="./architecture/" class="feature-tag">架构概览</a>
-      <a href="./architecture/services" class="feature-tag">服务详解</a>
-    </div>
-  </div>
-
-  <div class="feature-card">
-    <div class="feature-card-title">📋 OpenSpec 规范</div>
-    <div class="feature-card-desc">
-      Spec-Driven Development，先规范后代码，验收驱动开发，确保代码质量。
-    </div>
-    <div class="feature-tags">
-      <a href="./openspec/" class="feature-tag">规范概览</a>
-      <a href="https://github.com/AICL-Lab/dig-your-windows/tree/master/openspec/specs" class="feature-tag">源码</a>
     </div>
   </div>
 
