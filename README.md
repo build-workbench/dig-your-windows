@@ -1,208 +1,118 @@
 # DigYourWindows
 
 [![CI](https://github.com/LessUp/dig-your-windows/actions/workflows/ci.yml/badge.svg)](https://github.com/LessUp/dig-your-windows/actions/workflows/ci.yml)
-[![Docs](https://github.com/LessUp/dig-your-windows/actions/workflows/pages.yml/badge.svg)](https://github.com/LessUp/dig-your-windows/actions/workflows/pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Release](https://img.shields.io/github/v/release/LessUp/dig-your-windows)](https://github.com/LessUp/dig-your-windows/releases)
-[![Downloads](https://img.shields.io/github/downloads/LessUp/dig-your-windows/total)](https://github.com/LessUp/dig-your-windows/releases)
-[![Tests](https://img.shields.io/badge/Tests-passing-green)](https://github.com/LessUp/dig-your-windows/actions/workflows/ci.yml)
 
-English | [简体中文](README.zh-CN.md)
+> 📖 **文档站**: [https://lessup.github.io/dig-your-windows/](https://lessup.github.io/dig-your-windows/)
 
-> 📖 **Documentation**: [https://lessup.github.io/dig-your-windows/](https://lessup.github.io/dig-your-windows/)
+**Windows 深度诊断工具** — 一键采集硬件信息、分析事件日志、查看可靠性记录、计算系统健康评分并给出优化建议。
 
-**Windows Deep Diagnostics Tool** — One-click hardware information collection, event log analysis, reliability records, system health scoring, and optimization recommendations.
+## 功能
 
-## 📸 Screenshots
+| 功能 | 说明 |
+|------|------|
+| 🔍 硬件检测 | CPU、GPU、内存、磁盘（含 SMART）、网卡、USB 设备 |
+| 📊 实时监控 | CPU 温度/负载/频率、GPU 温度/负载/显存、网络流量 |
+| 📋 事件日志分析 | 自动提取 System/Application 错误与警告 |
+| 📈 可靠性记录 | Windows 可靠性监视器数据与趋势可视化 |
+| ✅ 健康评分 | 综合稳定性、性能、内存、磁盘四维度 0-100 评分 |
+| 💡 智能建议 | 基于分析结果的针对性优化建议 |
+| 📄 报告导出 | HTML / JSON 格式，HTML 报告自包含可离线查看 |
+| 🗃️ 历史记录 | SQLite 存储诊断历史，支持趋势对比 |
+| 🎨 主题切换 | 深色/浅色主题即时切换 |
 
-![DigYourWindows Overview](https://raw.githubusercontent.com/LessUp/dig-your-windows/master/docs/public/screenshot-overview.png)
+## 快速开始
 
-## ✨ Features
+### 系统要求
 
-| Feature | Description |
-|---------|-------------|
-| 🔍 **Hardware Detection** | Collect CPU, GPU, RAM, Disk (with SMART), Network adapters, USB devices |
-| 📊 **Real-Time Monitoring** | CPU temp/load/frequency, GPU temp/load/VRAM, network traffic |
-| 📋 **Event Log Analysis** | Auto-extract System/Application errors and warnings |
-| 📈 **Reliability Records** | Windows Reliability Monitor data with trend visualization |
-| ✅ **Health Scoring** | Comprehensive stability, performance, memory, disk assessment |
-| 💡 **Smart Recommendations** | Rule-based intelligent optimization suggestions |
-| 📄 **Report Export** | HTML and JSON formats with offline viewing |
-| 🎨 **Theme Support** | Dark/Light theme instant toggle |
+| 组件 | 最低 | 推荐 |
+|------|------|------|
+| 操作系统 | Windows 10 (Build 19041+) | Windows 11 |
+| 内存 | 4 GB | 8 GB+ |
+| 磁盘 | 200 MB 可用空间 | 500 MB+ |
+| 权限 | 标准用户 | 管理员（完整硬件访问） |
 
-## 🚀 Quick Start
+### 安装
 
-### System Requirements
+**方式一：下载发布版（推荐）**
 
-| Component | Minimum | Recommended |
-|-----------|---------|-------------|
-| OS | Windows 10 (Build 19041+) | Windows 11 |
-| RAM | 4 GB | 8 GB+ |
-| Disk | 200 MB free space | 500 MB+ |
-| Display | 1280x720 | 1920x1080+ |
-| Privileges | Standard user | Administrator (for full hardware access) |
+从 [Releases](https://github.com/LessUp/dig-your-windows/releases) 下载安装包：
 
-### Prerequisites
+| 版本 | 大小 | 说明 |
+|------|------|------|
+| `DigYourWindows_Setup.exe` | ~5MB | 需要时自动下载 .NET |
+| FDD 便携版 | ~60MB | 需预装 .NET 10 运行时 |
+| SCD 独立版 | ~180MB | 无任何依赖 |
 
-- Windows 10/11 (Build 19041+)
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) (for building)
-
-### Installation
-
-#### Option 1: Download Release (Recommended)
-
-Download the latest installer from [Releases](https://github.com/LessUp/dig-your-windows/releases):
-
-| Version | Size | Requirements |
-|---------|------|--------------|
-| `DigYourWindows_Setup.exe` | ~5MB | Downloads .NET if needed |
-| FDD (Framework-Dependent) | ~60MB | Requires .NET 10 Runtime |
-| SCD (Self-Contained) | ~180MB | No dependencies |
-
-#### Option 2: Build from Source
+**方式二：源码构建**
 
 ```powershell
-# Clone repository
 git clone https://github.com/LessUp/dig-your-windows.git
 cd dig-your-windows
-
-# Build and run
 dotnet restore
 dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj
 ```
 
-> ⚠️ **Note**: Some features (GPU monitoring, SMART data) require administrator privileges.
+> ⚠️ GPU 监控、SMART 数据读取等功能需要管理员权限。
 
-### First Run
+### 首次使用
 
-1. Launch `DigYourWindows.UI.exe` (or run via `dotnet run`)
-2. Click "Run Diagnostics" to collect system information
-3. View real-time hardware monitoring on the dashboard
-4. Export reports via JSON or HTML format
+1. 启动 `DigYourWindows.UI.exe`
+2. 点击"运行诊断"采集系统信息
+3. 在仪表盘查看实时硬件监控
+4. 导出 JSON 或 HTML 报告
 
-## 🏗️ Tech Stack
+## 技术栈
 
-| Component | Technology | Version | Purpose |
-|-----------|------------|---------|---------|
-| Runtime | .NET + WPF | 10.0 | Desktop application framework |
-| UI Library | WPF-UI | 4.0 | Fluent Design components |
-| MVVM | CommunityToolkit.Mvvm | 8.4 | Data binding & commands |
-| Charts | ScottPlot | 5.1 | Performance visualization |
-| Hardware | LibreHardwareMonitor | 0.9 | CPU/GPU temp, load, frequency |
-| Testing | xUnit + FsCheck | 2.9 / 2.16 | Unit & property-based tests |
+| 组件 | 技术 | 版本 | 用途 |
+|------|------|------|------|
+| 运行时 | .NET + WPF | 10.0 | 桌面应用框架 |
+| UI 库 | WPF-UI | 4.0 | Fluent Design 组件 |
+| MVVM | CommunityToolkit.Mvvm | 8.4 | 数据绑定与命令 |
+| 图表 | ScottPlot | 5.1 | 性能趋势可视化 |
+| 硬件监控 | LibreHardwareMonitor | 0.9 | CPU/GPU 温度、负载、频率 |
+| 测试 | xUnit + FsCheck | 2.9 / 2.16 | 单元测试 + 属性测试 |
 
-## 📁 Project Structure
+## 项目结构
 
 ```
 dig-your-windows/
 ├── src/
-│   ├── DigYourWindows.Core/     # Core business logic (services, models, exceptions)
-│   └── DigYourWindows.UI/       # WPF user interface (MVVM, converters, XAML)
+│   ├── DigYourWindows.Core/     # 核心业务逻辑（服务、模型、异常）
+│   └── DigYourWindows.UI/       # WPF 用户界面（MVVM、转换器、XAML）
 ├── tests/
-│   └── DigYourWindows.Tests/    # Unit, Property (FsCheck), Integration tests
-├── openspec/                    # OpenSpec specification documents (source of truth)
-│   ├── specs/                   # Domain specifications (architecture, hardware, export…)
-│   └── changes/                 # Active change proposals
-├── docs/                        # VitePress documentation site
-│   ├── zh-CN/                   # Chinese documentation (primary)
-│   ├── public/                  # Static assets (images, icons)
-│   └── .vitepress/              # VitePress configuration & theme
-├── installer/                   # Inno Setup scripts
-└── scripts/                     # Build & release scripts
+│   └── DigYourWindows.Tests/    # 单元测试 + 属性测试 + 集成测试
+├── docs/                        # VitePress 文档站（中文）
+├── installer/                   # Inno Setup 安装脚本
+└── scripts/                     # 构建与发布脚本
 ```
 
-## 🧪 Testing
+## 测试
 
 ```powershell
-# Run all tests
 dotnet test DigYourWindows.slnx
-
-# Run with coverage
 dotnet test --collect:"XPlat Code Coverage"
-
-# Filter specific tests
 dotnet test --filter "FullyQualifiedName~ReportServiceTests"
 ```
 
-## 🗺️ Roadmap
+## 发布
 
-- [x] Hardware information collection (CPU, GPU, RAM, Disk, Network)
-- [x] Real-time monitoring dashboard with charts
-- [x] Event log analysis and reliability records
-- [x] System health scoring algorithm
-- [x] HTML/JSON report export
-- [x] Dark/Light theme support
-- [ ] Command-line interface (CLI) mode
-- [ ] ~~Portable mode~~ (superseded by FDD release)
-- [ ] Multi-language report export
-- [ ] Performance benchmark comparison
-
-## 📚 Documentation
-
-- [📖 Getting Started Guide](https://lessup.github.io/dig-your-windows/zh-CN/guide/getting-started)
-- [🏗️ Architecture Documentation](https://lessup.github.io/dig-your-windows/zh-CN/guide/architecture)
-- [🧪 Testing Guide](https://lessup.github.io/dig-your-windows/zh-CN/guide/testing)
-- [📊 Data Schema Reference](https://lessup.github.io/dig-your-windows/zh-CN/reference/data-schema)
-- [❓ FAQ](https://lessup.github.io/dig-your-windows/zh-CN/guide/faq)
-- [📝 Changelog](CHANGELOG.md)
-
-> 💡 **Offline Access**: Documentation is also available in the `/docs` directory of this repository.
-
-Documentation is available in **简体中文**.
-
-## 🤝 Contributing
-
-We welcome contributions! This project follows **Spec-Driven Development (SDD)** workflow.
-
-### Quick Start
-
-1. Read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines
-2. Review existing [specifications](openspec/specs/) before starting work
-3. Create or update specs for new features
-4. Submit a Pull Request following conventional commits
-
-### Contributing Process
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Review/create specs** in `/openspec/specs/` directory
-4. Implement according to specs
-5. Write tests based on acceptance criteria
-6. Commit changes (`git commit -m 'feat: add amazing feature'`)
-7. Push to branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the complete guide including SDD workflow instructions.
-
-## 📦 Release Process
-
-Push a `v*` tag to trigger automatic release:
+推送 `v*` 标签触发自动发布：
 
 ```powershell
-git tag v1.1.0
-git push origin v1.1.0
+git tag v1.2.0
+git push origin v1.2.0
 ```
 
-GitHub Actions will automatically build and publish the release with bilingual release notes.
+GitHub Actions 自动构建并发布 FDD 便携版和 SCD 独立版。
 
-## 🔒 Security
+## 安全
 
-This tool:
-- ✅ Runs entirely offline
-- ✅ Does not upload any data to external servers
-- ✅ Uses local file system for all operations
-- ✅ Is open source and auditable
+- ✅ 完全离线运行，不上传任何数据
+- ✅ 所有操作仅使用本地文件系统
+- ✅ 开源可审计
 
-## ⭐ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=LessUp/dig-your-windows&type=Date)](https://star-history.com/#LessUp/dig-your-windows&Date)
-
-## 📄 License
+## 许可证
 
 [MIT License](LICENSE) - Copyright © 2025-2026 LessUp
-
----
-
-<p align="center">
-  Made with ❤️ by <a href="https://github.com/LessUp">LessUp</a>
-</p>

@@ -1,6 +1,6 @@
 # 技术白皮书
 
-DigYourWindows 是一款 Windows 深度诊断工具，采用 .NET 10 + WPF 构建，基于 OpenSpec 规范驱动开发。
+DigYourWindows 是一款 Windows 深度诊断工具，采用 .NET 10 + WPF 构建。
 
 ## 概述
 
@@ -47,16 +47,7 @@ graph TB
     DiagnosticCollector --> HardwareMonitor
 ```
 
-## 开发规范
-
-项目采用 **Spec-Driven Development (SDD)** 开发模式：
-
-1. **先规范，后代码** - 所有功能在 `openspec/specs/` 中定义
-2. **验收驱动** - 使用 Given/When/Then 格式定义验收标准
-3. **测试覆盖** - 要求 80% 以上的代码覆盖率
-
 ## 文档导航
 
 - [架构设计](/zh-CN/architecture/) - 双层架构、服务层设计、数据流
-- [OpenSpec 规范](/zh-CN/openspec/) - Spec-Driven Development 工作流
 - [健康评分算法](/zh-CN/scoring/) - 评分权重、阈值设计

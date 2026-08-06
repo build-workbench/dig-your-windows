@@ -128,7 +128,7 @@ dig-your-windows/
 
 ## 测试指南
 
-详细的测试指南请参考 [Contributing Guide](https://github.com/LessUp/dig-your-windows/blob/main/CONTRIBUTING.md)。
+详细的测试指南请参考 [测试指南](./testing)。
 
 ### 运行测试
 
@@ -146,13 +146,12 @@ dotnet test --collect:"XPlat Code Coverage"
 ## 发布流程
 
 1. 更新 `Directory.Build.props` 中的版本号
-2. 更新 `CHANGELOG.md`
-3. 创建并推送 Git tag
+2. 创建并推送 Git tag
    ```powershell
    git tag v1.x.x
    git push origin v1.x.x
    ```
-4. GitHub Actions 自动构建并发布
+3. GitHub Actions 自动构建并发布
 
 ## 获取帮助
 

@@ -221,5 +221,4 @@ AI 生成的建议包括：
 
 - 🏗️ 阅读 [项目架构](./architecture.md)
 - 🧪 了解 [测试指南](./testing.md)
-- 🤝 查看 [贡献指南](https://github.com/LessUp/dig-your-windows/blob/main/CONTRIBUTING.md)
-- 📋 查看 [规范文档](https://github.com/LessUp/dig-your-windows/tree/main/specs)
+- 🤝 查看 [贡献指南](./contributing.md)

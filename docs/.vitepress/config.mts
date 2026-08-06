@@ -173,7 +173,7 @@ const baseConfig = defineConfig({
       chunkSizeWarningLimit: 1000,
     },
     optimizeDeps: {
-      include: ['vue', '@vueuse/core'],
+      include: ['vue'],
     },
     plugins: [llmstxt()],
   },
@@ -257,12 +257,7 @@ const baseConfig = defineConfig({
         nav: [
           { text: '首页', link: '/zh-CN/' },
           { text: '技术白皮书', link: '/zh-CN/whitepaper/', activeMatch: '/zh-CN/whitepaper/' },
-          { text: '架构设计', items: [
-            { text: '架构概览', link: '/zh-CN/architecture/' },
-            { text: '服务层设计', link: '/zh-CN/architecture/services' },
-            { text: '数据流设计', link: '/zh-CN/architecture/data-flow' },
-          ]},
-          { text: 'OpenSpec', link: '/zh-CN/openspec/', activeMatch: '/zh-CN/openspec/' },
+          { text: '架构设计', link: '/zh-CN/architecture/', activeMatch: '/zh-CN/architecture/' },
           { text: '健康评分', link: '/zh-CN/scoring/', activeMatch: '/zh-CN/scoring/' },
           { text: '指南', items: [
             { text: '快速开始', link: '/zh-CN/guide/getting-started' },
@@ -279,11 +274,6 @@ const baseConfig = defineConfig({
           ]}],
           '/zh-CN/architecture/': [{ text: '架构设计', collapsed: false, items: [
             { text: '架构概览', link: '/zh-CN/architecture/' },
-            { text: '服务层设计', link: '/zh-CN/architecture/services' },
-            { text: '数据流设计', link: '/zh-CN/architecture/data-flow' },
-          ]}],
-          '/zh-CN/openspec/': [{ text: 'OpenSpec 规范', collapsed: false, items: [
-            { text: '概览', link: '/zh-CN/openspec/' },
           ]}],
           '/zh-CN/scoring/': [{ text: '健康评分算法', collapsed: false, items: [
             { text: '评分系统概览', link: '/zh-CN/scoring/' },
