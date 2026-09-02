@@ -14,8 +14,11 @@
 
             <!-- Standard Converters -->
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <conv:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
             <conv:StringToBrushConverter x:Key="StringToBrushConverter"/>
+            <conv:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+            <conv:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
 
             <!-- Null-Safe Converters -->
             <conv:NullToEmptyStringConverter x:Key="NullToEmptyStringConverter"/>

@@ -25,6 +25,11 @@ public sealed class SqliteHistoryStoreService : IHistoryStoreService
 
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
+        if (_connection != null)
+        {
+            return;
+        }
+
         try
         {
             var connectionString = new SqliteConnectionStringBuilder
@@ -198,7 +203,7 @@ public sealed class SqliteHistoryStoreService : IHistoryStoreService
                     if (await reader.ReadAsync(cancellationToken))
                     {
                         var summary = ReadSummaryFromReader(reader);
-                        var snapshotJson = reader.GetString(12);
+                        var snapshotJson = reader.GetString(13);
                         var diagnosticData = JsonSerializer.Deserialize<DiagnosticData>(snapshotJson);
 
                         if (diagnosticData != null)

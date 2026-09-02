@@ -104,11 +104,23 @@ public class DiagnosticCollectorService : IDiagnosticCollectorService
         };
 
         // Attempt to persist to history (non-blocking failure)
-        var saved = await _historyStoreService.SaveAsync(data, cancellationToken);
-        if (!saved)
+        try
         {
-            warnings.Add("Failed to save diagnostic to local history. The result is still available in memory.");
-            _log.Warn("History save failed; warning added to result");
+            var saved = await _historyStoreService.SaveAsync(data, cancellationToken);
+            if (!saved)
+            {
+                warnings.Add("Failed to save diagnostic to local history. The result is still available in memory.");
+                _log.Warn("History save failed; warning added to result");
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            warnings.Add($"Failed to save diagnostic to local history: {ex.Message}");
+            _log.LogError("History save threw unexpectedly; warning added to result", ex);
         }
 
         return new DiagnosticCollectionResult(data, warnings);

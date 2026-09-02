@@ -607,11 +607,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             if (record != null)
             {
                 // Apply the loaded diagnostic data to the current display
-                HardwareInfo = record.DiagnosticData.Hardware;
-                PerformanceAnalysis = record.DiagnosticData.Performance;
-                ReliabilityRecords = new ObservableCollection<ReliabilityRecordData>(record.DiagnosticData.Reliability);
-                EventLogEntries = new ObservableCollection<LogEventData>(record.DiagnosticData.Events);
-                UpdateReliabilityTrendPlot();
+                ApplyDiagnosticData(record.DiagnosticData);
                 StatusMessage = $"加载历史诊断: {record.Summary.CollectedAtUtc:G}";
             }
         }

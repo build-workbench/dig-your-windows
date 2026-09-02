@@ -54,6 +54,10 @@ public class ReliabilityService : IReliabilityService
                 }
             }
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             _log.LogError("获取可靠性记录失败", ex);
