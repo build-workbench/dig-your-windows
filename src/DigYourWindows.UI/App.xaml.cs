@@ -15,7 +15,7 @@ public partial class App : Application
 
     public IServiceProvider Services => _serviceProvider ?? throw new InvalidOperationException("Service provider not initialized.");
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
@@ -23,6 +23,21 @@ public partial class App : Application
         ConfigureServices(services);
 
         _serviceProvider = services.BuildServiceProvider();
+
+        // History store must be initialized before anything touches it.
+        // Per IHistoryStoreService contract, failures disable history features
+        // but must not prevent app startup.
+        try
+        {
+            var log = _serviceProvider.GetRequiredService<ILogService>();
+            await _serviceProvider.GetRequiredService<IHistoryStoreService>().InitializeAsync();
+            log.Info("History store ready.");
+        }
+        catch (Exception ex)
+        {
+            _serviceProvider.GetRequiredService<ILogService>().LogError(
+                $"History store initialization failed; history features disabled: {ex.Message}", ex);
+        }
 
         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
         MainWindow = mainWindow;

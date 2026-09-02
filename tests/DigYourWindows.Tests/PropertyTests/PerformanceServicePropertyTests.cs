@@ -76,7 +76,7 @@ public class PerformanceServicePropertyTests
     {
         // Arrange
         var service = CreateService();
-        var hardware = CreateHardware(cpuCores.Get, (ulong)memoryGB.Get * 1024UL * 1024UL * 1024UL);
+        var hardware = CreateHardware((uint)cpuCores.Get, (ulong)memoryGB.Get * 1024UL * 1024UL * 1024UL);
         var events = new List<LogEventData>();
         var reliability = new List<ReliabilityRecordData>();
 
@@ -246,9 +246,9 @@ public class PerformanceServicePropertyTests
         {
             records.Add(new ReliabilityRecordData
             {
-                EventTime = DateTime.UtcNow.AddDays(-i),
-                Source = "TestSource",
-                Description = "Test reliability record"
+                Timestamp = DateTime.UtcNow.AddDays(-i),
+                SourceName = "TestSource",
+                Message = "Test reliability record"
             });
         }
         return records;

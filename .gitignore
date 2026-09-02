@@ -49,5 +49,8 @@ CLAUDE.local.md
 # OMC (oh-my-claudecode) state
 .omc/
 
+# CommandCode state
+.commandcode/
+
 # Temporary audit files
 PHASE1_AUDIT_FINDINGS.md

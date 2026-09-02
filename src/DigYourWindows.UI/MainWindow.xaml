@@ -292,10 +292,16 @@
                 </ui:CardExpander>
 
                 <!-- GPU Monitoring -->
-                <ui:CardExpander Header="{Binding HardwareInfo.Gpus.Count, StringFormat='GPU 监控 - {0} 个设备'}"
-                                Icon="{ui:SymbolIcon ShieldTask24}"
+                <ui:CardExpander Icon="{ui:SymbolIcon ShieldTask24}"
                                 IsExpanded="True"
                                 Margin="0,10,0,0">
+                    <ui:CardExpander.Header>
+                        <TextBlock>
+                            <Run Text="GPU 监控 - "/>
+                            <Run Text="{Binding HardwareInfo.Gpus.Count}"/>
+                            <Run Text=" 个设备"/>
+                        </TextBlock>
+                    </ui:CardExpander.Header>
                     <ItemsControl ItemsSource="{Binding HardwareInfo.Gpus}" Margin="10">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>

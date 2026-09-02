@@ -31,6 +31,10 @@ public class EventLogService : IEventLogService
             // Application Log
             events.AddRange(ReadEventLog("Application", cutoffDate, cancellationToken));
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             _log.LogError("读取事件日志失败", ex);
@@ -80,9 +84,13 @@ public class EventLogService : IEventLogService
                 }
             }
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
-            _log.LogError($"读取事件日志 '{logName}' 失败", ex);
+            _log.LogError($"读取事件日志 '{logName}' 处理失败", ex);
         }
 
         return entries;

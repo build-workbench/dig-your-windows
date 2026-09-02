@@ -37,8 +37,8 @@ public class DiagnosticDataPropertyTests
                 CpuCores = (uint)(cpuCores.Get % 128),
                 TotalMemory = totalMemory,
                 Disks = new List<DiskInfoData>(),
-                NetworkAdapters = new List<NetworkAdapterInfo>(),
-                UsbDevices = new List<UsbDeviceInfo>(),
+                NetworkAdapters = new List<NetworkAdapterData>(),
+                UsbDevices = new List<UsbDeviceData>(),
                 Gpus = new List<GpuInfoData>()
             },
             Events = new List<LogEventData>(),
@@ -119,8 +119,8 @@ public class DiagnosticDataPropertyTests
                 CpuCores = 4,
                 TotalMemory = 8UL * 1024UL * 1024UL * 1024UL,
                 Disks = new List<DiskInfoData>(),
-                NetworkAdapters = new List<NetworkAdapterInfo>(),
-                UsbDevices = new List<UsbDeviceInfo>(),
+                NetworkAdapters = new List<NetworkAdapterData>(),
+                UsbDevices = new List<UsbDeviceData>(),
                 Gpus = new List<GpuInfoData>()
             },
             Events = new List<LogEventData>(),
@@ -154,8 +154,8 @@ public class DiagnosticDataPropertyTests
         NonNegativeInt availableGB)
     {
         // Arrange
-        var total = Math.Max(1L, (long)totalGB.Get) * 1024L * 1024L * 1024L;
-        var available = Math.Min((long)availableGB.Get * 1024L * 1024L * 1024L, total);
+        var total = (ulong)Math.Max(1L, (long)totalGB.Get) * 1024UL * 1024UL * 1024UL;
+        var available = (ulong)Math.Min((long)availableGB.Get * 1024L * 1024L * 1024L, (long)total);
 
         var data = new DiagnosticData
         {

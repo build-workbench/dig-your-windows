@@ -98,8 +98,8 @@ public class ReportServiceHtmlPropertyTests
         var html = service.GenerateHtmlReport(data, daysBackForEvents: 7);
 
         // Assert
-        Assert.Contains("系统健康", html); // Health section title
-        Assert.Contains(health.ToString("F1"), html); // Health score value
+        Assert.Contains("系统性能分析", html); // Health section title
+        Assert.Contains(health.ToString("F0"), html); // Health score value rendered as {0:F0}
     }
 
     [Property]
@@ -137,8 +137,8 @@ public class ReportServiceHtmlPropertyTests
                 CpuCores = 4,
                 TotalMemory = 8UL * 1024UL * 1024UL * 1024UL,
                 Disks = new List<DiskInfoData>(),
-                NetworkAdapters = new List<NetworkAdapterInfo>(),
-                UsbDevices = new List<UsbDeviceInfo>(),
+                NetworkAdapters = new List<NetworkAdapterData>(),
+                UsbDevices = new List<UsbDeviceData>(),
                 Gpus = new List<GpuInfoData>()
             },
             Events = new List<LogEventData>(),
@@ -178,10 +178,10 @@ public class ReportServiceHtmlPropertyTests
             events.Add(new LogEventData
             {
                 EventType = i % 2 == 0 ? "Error" : "Warning",
-                EventId = 1000 + i,
+                EventId = (uint)(1000 + i),
                 SourceName = "Application",
                 Message = $"Test event message {i}",
-                TimeCreated = DateTime.UtcNow.AddHours(-i)
+                TimeGenerated = DateTime.UtcNow.AddHours(-i)
             });
         }
 
@@ -207,8 +207,9 @@ public class ReportServiceHtmlPropertyTests
         // Act
         var html = service.GenerateHtmlReport(data, daysBackForEvents: 7, maxEvents: 100);
 
-        // Assert - Event section should exist
-        Assert.Contains("事件", html); // Events section
+        // Assert - Event section should exist (rendered under the "错误日志" heading)
+        Assert.Contains("错误日志", html);
+        Assert.Contains($"- {count} 条", html);
     }
 
     [Property]
@@ -250,7 +251,7 @@ public class ReportServiceHtmlPropertyTests
         var html = service.GenerateHtmlReport(data, daysBackForEvents: 7);
 
         // Assert
-        Assert.Contains("建议", html); // Recommendations section
+        Assert.Contains("优化建议", html); // Recommendations section heading
     }
 
     [Fact]

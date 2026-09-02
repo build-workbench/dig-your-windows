@@ -14,6 +14,7 @@ public class DiagnosticCollectorServiceTests
             new StubReliabilityService((_, _) => Array.Empty<ReliabilityRecordData>()),
             new StubEventLogService((_, _) => new List<LogEventData>()),
             new StubPerformanceService((_, _, _) => new PerformanceAnalysisData()),
+            new StubHistoryStoreService(),
             new SpyLogService());
 
         await Assert.ThrowsAsync<OperationCanceledException>(() => service.CollectAsync(3, cancellationToken: cts.Token));
@@ -40,6 +41,7 @@ public class DiagnosticCollectorServiceTests
                 Assert.Single(reliability);
                 return expectedAnalysis;
             }),
+            new StubHistoryStoreService(),
             new SpyLogService());
 
         var result = await service.CollectAsync(7);
@@ -60,6 +62,7 @@ public class DiagnosticCollectorServiceTests
             new StubReliabilityService((_, _) => Array.Empty<ReliabilityRecordData>()),
             new StubEventLogService((_, _) => new List<LogEventData>()),
             new StubPerformanceService((_, _, _) => throw new InvalidOperationException("analysis failed")),
+            new StubHistoryStoreService(),
             new SpyLogService());
 
         var result = await service.CollectAsync(3);
@@ -106,6 +109,7 @@ public class DiagnosticCollectorServiceTests
                 Assert.Equal(reliability, actualReliability);
                 return analysis;
             }),
+            new StubHistoryStoreService(),
             new SpyLogService());
 
         var result = await service.CollectAsync(3, progress);
@@ -164,6 +168,26 @@ public class DiagnosticCollectorServiceTests
         public void LogError(string message, Exception? exception = null)
         {
             Errors.Add((message, exception));
+        }
+    }
+
+    private sealed class StubHistoryStoreService : IHistoryStoreService
+    {
+        public Task InitializeAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<bool> SaveAsync(DiagnosticData data, CancellationToken cancellationToken = default) => Task.FromResult(true);
+
+        public Task<DiagnosticHistorySummary?> GetMostRecentSummaryAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<DiagnosticHistorySummary?>(null);
+
+        public Task<IReadOnlyList<DiagnosticHistorySummary>> ListSummariesAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<DiagnosticHistorySummary>>(Array.Empty<DiagnosticHistorySummary>());
+
+        public Task<DiagnosticHistoryRecord?> LoadByIdAsync(string historyId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<DiagnosticHistoryRecord?>(null);
+
+        public void Dispose()
+        {
         }
     }
 }
