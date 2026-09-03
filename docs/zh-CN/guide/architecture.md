@@ -40,8 +40,11 @@ dig-your-windows/
 │   │   │   ├── PerformanceService.cs
 │   │   │   ├── ReportService.cs
 │   │   │   ├── DiagnosticCollectorService.cs
+│   │   │   ├── ReliabilityTrendBuilder.cs   # 可靠性趋势纯计算
 │   │   │   ├── LogService.cs
 │   │   │   ├── HardwareMonitorProvider.cs
+│   │   │   ├── IHistoryStoreService.cs
+│   │   │   ├── SqliteHistoryStoreService.cs
 │   │   │   └── ScoringConfiguration.cs
 │   │   └── Exceptions/          # 自定义异常
 │   │       ├── ServiceException.cs
@@ -49,21 +52,27 @@ dig-your-windows/
 │   │       └── WmiException.cs
 │   └── DigYourWindows.UI/       # WPF 用户界面
 │       ├── ViewModels/          # MVVM 视图模型
-│       │   └── MainViewModel.cs
+│       │   ├── MainViewModel.cs
+│       │   └── HistoryListViewModel.cs
+│       ├── Views/               # 用户控件
+│       │   └── HistoryListView.xaml(.cs)
+│       ├── Services/            # 框架关注点包装（供 ViewModel 注入）
+│       │   ├── MonitorPlotService.cs
+│       │   ├── ApplicationThemeService.cs
+│       │   └── FileDialogService.cs
 │       ├── Converters/          # 值转换器
 │       │   ├── CountToVisibilityConverter.cs
 │       │   ├── NullConverters.cs
+│       │   ├── SensorConverters.cs
+│       │   ├── ObjectToVisibilityConverter.cs
 │       │   └── StringToBrushConverter.cs
 │       ├── App.xaml.cs          # 应用入口 + DI 组合根
 │       └── MainWindow.xaml.cs   # 主窗口
 ├── tests/
 │   └── DigYourWindows.Tests/    # 测试项目
 │       ├── Unit/                # 单元测试
-│       │   ├── ReportServiceTests.cs
-│       │   ├── DiagnosticCollectorServiceTests.cs
-│       │   └── PerformanceServiceTests.cs
-│       ├── Property/            # 属性测试
-│       │   └── ReportServicePropertyTests.cs
+│       ├── PropertyTests/       # FsCheck 属性测试
+│       ├── Integration/         # 集成测试
 │       ├── FsCheckConfig.cs     # FsCheck 配置
 │       └── Usings.cs            # 全局 using
 ├── docs/                        # VitePress 文档站
@@ -222,6 +231,7 @@ private static void ConfigureServices(IServiceCollection services)
     services.AddSingleton<MainViewModel>();
 
     // Core Services
+    services.AddSingleton<IHistoryStoreService>(...); // SQLite 历史存储（AppData 路径）
     services.AddSingleton<ILogService, FileLogService>();
     services.AddSingleton<IReportService, ReportService>();
     services.AddSingleton<IDiagnosticCollectorService, DiagnosticCollectorService>();
@@ -239,6 +249,12 @@ private static void ConfigureServices(IServiceCollection services)
     services.AddSingleton<IEventLogService, EventLogService>();
     services.AddSingleton<ISystemInfoProvider, WmiSystemInfoProvider>();
     services.AddSingleton<IPerformanceService, PerformanceService>();
+
+    // UI Services（框架关注点包装，ViewModel 保持可测试）
+    services.AddSingleton<IMonitorPlotService, MonitorPlotService>();
+    services.AddSingleton<IApplicationThemeService, ApplicationThemeService>();
+    services.AddSingleton<IFileDialogService, FileDialogService>();
+    services.AddSingleton<ViewModels.HistoryListViewModel>();
 }
 ```
 

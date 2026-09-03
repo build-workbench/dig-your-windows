@@ -59,7 +59,7 @@ dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj
 ### 首次使用
 
 1. 启动 `DigYourWindows.UI.exe`
-2. 点击"运行诊断"采集系统信息
+2. 点击"刷新数据"采集系统信息
 3. 在仪表盘查看实时硬件监控
 4. 导出 JSON 或 HTML 报告
 
