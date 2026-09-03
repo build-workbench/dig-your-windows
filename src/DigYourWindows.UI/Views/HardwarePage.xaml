@@ -1,0 +1,143 @@
+<Page x:Class="DigYourWindows.UI.Views.HardwarePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d" 
+      d:DesignHeight="1100" d:DesignWidth="1100"
+      Title="硬件详情与健康诊断">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,20,28,28">
+            <!-- Header Section -->
+            <TextBlock Text="硬件设备与健康详情" FontSize="24" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBlock Text="查看存储驱动器、NVMe/SATA SMART 健康诊断、网络接口与 USB 总线资产" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,20"/>
+
+            <!-- Disks Section -->
+            <ui:CardExpander Header="存储磁盘与驱动器" Icon="{ui:SymbolIcon HardDrive24}" IsExpanded="True" Margin="0,0,0,16">
+                <StackPanel Margin="10">
+                    <ItemsControl ItemsSource="{Binding HardwareInfo.Disks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ui:Card Margin="0,4" Padding="14">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Border Width="38" Height="38" CornerRadius="8" Background="#180078D4" Margin="0,0,12,0">
+                                                <ui:SymbolIcon Symbol="Storage24" FontSize="20" Foreground="#4CC2FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"/>
+                                                <TextBlock Text="{Binding FileSystem, StringFormat='{}{0} 文件系统'}" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="16,0">
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBlock Text="已用空间占比" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
+                                                <TextBlock Text="{Binding UsagePercentage, StringFormat='{}{0:F1}%', Mode=OneWay}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <ProgressBar Value="{Binding UsagePercentage, Mode=OneWay}" Maximum="100" Height="6"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" FontSize="13">
+                                            <Run Text="{Binding FreeSpaceGB, StringFormat='{}{0} GB', Mode=OneWay}" FontWeight="SemiBold"/>
+                                            <Run Text=" 可用 / " Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
+                                            <Run Text="{Binding TotalSizeGB, StringFormat='{}{0} GB', Mode=OneWay}"/>
+                                        </TextBlock>
+                                    </Grid>
+                                </ui:Card>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ui:CardExpander>
+
+            <!-- SMART Health Section -->
+            <ui:CardExpander Header="磁盘 SMART 健康诊断" Icon="{ui:SymbolIcon HeartPulse24}" IsExpanded="True" Margin="0,0,0,16"
+                             Visibility="{Binding HardwareInfo.DiskSmart.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                <Grid Margin="10">
+                    <DataGrid ItemsSource="{Binding HardwareInfo.DiskSmart}"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="True"
+                             HeadersVisibility="Column"
+                             GridLinesVisibility="Horizontal"
+                             MaxHeight="260">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="驱动器名称" Binding="{Binding FriendlyName}" Width="*"/>
+                            <DataGridTextColumn Header="介质" Binding="{Binding MediaTypeDescription}" Width="80"/>
+                            <DataGridTextColumn Header="接口" Binding="{Binding BusTypeDescription}" Width="80"/>
+                            <DataGridTextColumn Header="健康状态" Binding="{Binding HealthStatusDescription}" Width="90"/>
+                            <DataGridTextColumn Header="温度" Binding="{Binding Temperature, StringFormat='{}{0}°C'}" Width="80"/>
+                            <DataGridTextColumn Header="磨损度" Binding="{Binding Wear, StringFormat='{}{0}%'}" Width="80"/>
+                            <DataGridTextColumn Header="通电时长" Binding="{Binding PowerOnHours, StringFormat='{}{0}h'}" Width="90"/>
+                            <DataGridTextColumn Header="容量" Binding="{Binding SizeGB, StringFormat='{}{0} GB'}" Width="90"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </ui:CardExpander>
+
+            <!-- Network Adapters Section -->
+            <ui:CardExpander Header="网络适配器" Icon="{ui:SymbolIcon Router24}" IsExpanded="True" Margin="0,0,0,16">
+                <Grid Margin="10">
+                    <DataGrid ItemsSource="{Binding HardwareInfo.NetworkAdapters}"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="True"
+                             HeadersVisibility="Column"
+                             GridLinesVisibility="Horizontal"
+                             RowHeight="36">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="适配器名称" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="物理地址 (MAC)" Binding="{Binding MacAddress}" Width="160"/>
+                            <DataGridTextColumn Header="IP 地址" Binding="{Binding IpAddress}" Width="160"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </ui:CardExpander>
+
+            <!-- USB Controllers & Devices Section -->
+            <ui:CardExpander Header="USB 总线与连接设备" Icon="{ui:SymbolIcon UsbPlug24}" IsExpanded="True" Margin="0,0,0,16">
+                <StackPanel Margin="10">
+                    <!-- USB Controllers -->
+                    <TextBlock Text="USB 控制器" FontSize="14" FontWeight="SemiBold" Margin="0,4,0,8"/>
+                    <DataGrid ItemsSource="{Binding HardwareInfo.UsbControllers}"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="True"
+                             HeadersVisibility="Column"
+                             GridLinesVisibility="Horizontal"
+                             RowHeight="36"
+                             MaxHeight="200"
+                             Margin="0,0,0,16">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="制造商" Binding="{Binding Manufacturer}" Width="200"/>
+                            <DataGridTextColumn Header="协议版本" Binding="{Binding Protocol}" Width="110"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- USB Devices -->
+                    <TextBlock Text="已连接的 USB 设备" FontSize="14" FontWeight="SemiBold" Margin="0,4,0,8"/>
+                    <DataGrid ItemsSource="{Binding HardwareInfo.UsbDevices}"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="True"
+                             HeadersVisibility="Column"
+                             GridLinesVisibility="Horizontal"
+                             RowHeight="36"
+                             MaxHeight="260">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="设备名称" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="设备描述" Binding="{Binding Description}" Width="280"/>
+                            <DataGridTextColumn Header="制造商" Binding="{Binding Manufacturer}" Width="180"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </ui:CardExpander>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

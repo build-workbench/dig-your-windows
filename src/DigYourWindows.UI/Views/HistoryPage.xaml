@@ -1,0 +1,57 @@
+<Page x:Class="DigYourWindows.UI.Views.HistoryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:local="clr-namespace:DigYourWindows.UI.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1100"
+      Title="诊断历史记录">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,20,28,28">
+            <!-- Header Section -->
+            <TextBlock Text="系统诊断历史记录" FontSize="24" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBlock Text="回溯与管理本地保存的系统诊断快照档案" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,20"/>
+
+            <!-- Recent Diagnosis Card -->
+            <ui:Card Margin="0,0,0,20" Padding="16">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <ui:SymbolIcon Symbol="ClipboardClock24" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,8,0"/>
+                        <TextBlock Text="最近的诊断快照" FontSize="15" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding RecentHistoryEntry.ComputerName, FallbackValue='无可用快照记录', StringFormat='计算机: {0}'}" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding RecentHistoryEntry.CollectedAtUtc, FallbackValue='', StringFormat='采集时间: {0:G}'}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="重新加载此记录" 
+                                   Command="{Binding ReloadHistoryEntryCommand}"
+                                   CommandParameter="{Binding RecentHistoryEntry.Id}"
+                                   Icon="{ui:SymbolIcon ArrowRotateClockwise20}"
+                                   Appearance="Primary"
+                                   VerticalAlignment="Center"
+                                   Visibility="{Binding RecentHistoryEntry, Converter={StaticResource ObjectToVisibilityConverter}}"/>
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- History List Section -->
+            <ui:Card Padding="16">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <ui:SymbolIcon Symbol="DocumentBulletList24" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,8,0"/>
+                        <TextBlock Text="历史快照数据库" FontSize="15" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <local:HistoryListView DataContext="{Binding HistoryListViewModel}"/>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

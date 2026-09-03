@@ -1,580 +1,141 @@
-﻿<ui:FluentWindow x:Class="DigYourWindows.UI.MainWindow"
+<ui:FluentWindow x:Class="DigYourWindows.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        xmlns:local="clr-namespace:DigYourWindows.UI.Views"
+        xmlns:views="clr-namespace:DigYourWindows.UI.Views"
         mc:Ignorable="d"
         Title="DigYourWindows - Windows 深度诊断工具"
         Height="900" Width="1400"
+        MinWidth="1000" MinHeight="650"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
         ExtendsContentIntoTitleBar="True"
-        WindowBackdropType="Mica">
-    <Grid>
+        WindowBackdropType="Mica"
+        FontFamily="Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        TextOptions.TextHintingMode="Auto"
+        RenderOptions.ClearTypeHint="Enabled">
+    <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Title Bar -->
+        <!-- Clean Modern Windows 11 Title Bar -->
         <ui:TitleBar Grid.Row="0" Title="DigYourWindows">
             <ui:TitleBar.Header>
-                <StackPanel Orientation="Horizontal" Margin="10,0">
-                    <TextBlock Text="DigYourWindows" FontWeight="Bold" FontSize="14" VerticalAlignment="Center" Margin="0,0,16,0"/>
-                    <TextBlock Text="时间范围:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox ItemsSource="{Binding AvailableDays}"
-                             SelectedItem="{Binding SelectedDaysBack}"
-                             Width="80"
-                             Margin="0,0,10,0"/>
-                    <TextBlock Text="天" VerticalAlignment="Center" Margin="0,0,15,0"/>
-
-                    <ui:Button Content="刷新数据"
-                              Command="{Binding LoadDataCommand}"
-                              Icon="{ui:SymbolIcon ArrowRotateClockwise24}"
-                              Appearance="Primary"/>
-                    <ui:Button Content="导出报告"
-                              Command="{Binding ExportToHtmlCommand}"
-                              Icon="{ui:SymbolIcon DocumentArrowUp20}"
-                              Margin="10,0,0,0"/>
-                    <ui:Button Content="导出JSON"
-                              Command="{Binding ExportToJsonCommand}"
-                              Icon="{ui:SymbolIcon DocumentArrowUp20}"
-                              Margin="10,0,0,0"/>
-                    <ui:Button Content="导入JSON"
-                              Command="{Binding ImportFromJsonCommand}"
-                              Icon="{ui:SymbolIcon DocumentArrowDown24}"
-                              Margin="10,0,0,0"/>
-                    <ui:Button Content="切换主题"
-                              Command="{Binding ToggleThemeCommand}"
-                              Icon="{ui:SymbolIcon WeatherMoon24}"
-                              Margin="10,0,0,0"/>
-                    <ui:Button Content="设置"
-                              Click="OpenSettingsClicked"
-                              Icon="{ui:SymbolIcon Options24}"
-                              Margin="10,0,0,0"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <Border Background="{DynamicResource AccentFillColorDefaultBrush}" CornerRadius="8" Padding="6,1.5" Margin="0,0,10,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding AppVersion, FallbackValue='v1.2.0'}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
+                    </Border>
+                    <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="8,2" VerticalAlignment="Center">
+                        <TextBlock Text="深度系统诊断与健康评估平台" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    </Border>
                 </StackPanel>
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
-        <!-- Main Content -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <ScrollViewer.LayoutTransform>
+        <!-- Modern Windows 11 Fluent Navigation View -->
+        <ui:NavigationView Grid.Row="1"
+                           x:Name="RootNavigation"
+                           IsBackButtonVisible="Collapsed"
+                           IsPaneToggleVisible="True"
+                           PaneDisplayMode="Left"
+                           OpenPaneLength="220"
+                           CompactPaneLength="48">
+            <ui:NavigationView.LayoutTransform>
                 <ScaleTransform x:Name="ContentScale" ScaleX="1" ScaleY="1"/>
-            </ScrollViewer.LayoutTransform>
-            <StackPanel Margin="20">
+            </ui:NavigationView.LayoutTransform>
 
-                <!-- System Overview -->
-                <ui:CardExpander Header="系统概览" Icon="{ui:SymbolIcon System24}" IsExpanded="True">
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem
+                    Content="系统仪表盘"
+                    Icon="{ui:SymbolIcon Home24}"
+                    NavigationCacheMode="Required"
+                    TargetPageType="{x:Type views:DashboardPage}"/>
 
-                        <ui:Card Grid.Column="0" Margin="5">
-                            <StackPanel Margin="15">
-                                <TextBlock Text="计算机名" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="{Binding HardwareInfo.ComputerName, Converter={StaticResource NullToPlaceholderConverter}, ConverterParameter=未知}" FontSize="16" Margin="0,5"/>
-                            </StackPanel>
-                        </ui:Card>
+                <ui:NavigationViewItem
+                    Content="实时监控与走势"
+                    Icon="{ui:SymbolIcon ChartMultiple24}"
+                    NavigationCacheMode="Required"
+                    TargetPageType="{x:Type views:MonitoringPage}"/>
 
-                        <ui:Card Grid.Column="1" Margin="5">
-                            <StackPanel Margin="15">
-                                <TextBlock Text="CPU" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="{Binding HardwareInfo.CpuName, Converter={StaticResource NullToPlaceholderConverter}, ConverterParameter=未知}" FontSize="16" Margin="0,5" TextWrapping="Wrap"/>
-                                <TextBlock FontSize="12">
-                                    <Run Text="{Binding HardwareInfo.CpuCores, Mode=OneWay}"/>
-                                    <Run Text=" 核心"/>
-                                </TextBlock>
-                            </StackPanel>
-                        </ui:Card>
+                <ui:NavigationViewItem
+                    Content="事件与日志"
+                    Icon="{ui:SymbolIcon ErrorCircle24}"
+                    NavigationCacheMode="Required"
+                    TargetPageType="{x:Type views:LogsPage}">
+                    <ui:NavigationViewItem.InfoBadge>
+                        <ui:InfoBadge Value="{Binding PerformanceAnalysis.WarningsCount}" Severity="Caution"/>
+                    </ui:NavigationViewItem.InfoBadge>
+                </ui:NavigationViewItem>
 
-                        <ui:Card Grid.Column="2" Margin="5">
-                            <StackPanel Margin="15">
-                                <TextBlock Text="内存" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock FontSize="16" Margin="0,5">
-                                    <Run Text="{Binding HardwareInfo.TotalMemoryMB, Converter={StaticResource MegabytesToGigabytesConverter}, Mode=OneWay}"/>
-                                    <Run Text=" GB"/>
-                                </TextBlock>
-                            </StackPanel>
-                        </ui:Card>
+                <ui:NavigationViewItem
+                    Content="硬件设备详情"
+                    Icon="{ui:SymbolIcon HardDrive24}"
+                    NavigationCacheMode="Required"
+                    TargetPageType="{x:Type views:HardwarePage}"/>
 
-                        <ui:Card Grid.Column="3" Margin="5">
-                            <StackPanel Margin="15">
-                                <TextBlock Text="操作系统" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="{Binding HardwareInfo.OsVersion, Converter={StaticResource NullToPlaceholderConverter}, ConverterParameter=未知}" FontSize="14" Margin="0,5" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </ui:Card>
-                    </Grid>
-                </ui:CardExpander>
+                <ui:NavigationViewItem
+                    Content="诊断历史档案"
+                    Icon="{ui:SymbolIcon ClipboardClock24}"
+                    NavigationCacheMode="Required"
+                    TargetPageType="{x:Type views:HistoryPage}"/>
+            </ui:NavigationView.MenuItems>
 
-                <!-- Performance Analysis -->
-                <ui:CardExpander Header="系统性能分析" Icon="{ui:SymbolIcon Flash24}" IsExpanded="True" Margin="0,10,0,0">
-                    <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem
+                    Content="切换深浅主题"
+                    Icon="{ui:SymbolIcon WeatherMoon24}"
+                    Command="{Binding ToggleThemeCommand}"/>
 
-                        <!-- Performance Scores -->
-                        <Grid Grid.Row="0" Margin="0,0,0,15">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                <ui:NavigationViewItem
+                    Content="界面与字体设置"
+                    Icon="{ui:SymbolIcon Settings24}"
+                    Click="OpenSettingsClicked"/>
+            </ui:NavigationView.FooterMenuItems>
 
-                            <ui:Card Grid.Column="0" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="系统健康评分" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="{Binding PerformanceAnalysis.HealthColor, Converter={StaticResource StringToBrushConverter}}"/>
-                                            </Style>
-                                        </TextBlock.Style>
-                                        <Run Text="{Binding PerformanceAnalysis.SystemHealthScore, StringFormat='{}{0:F0}', Mode=OneWay}"/>
-                                        <Run Text="/100" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
-                                    </TextBlock>
-                                    <TextBlock Text="{Binding PerformanceAnalysis.HealthGrade}" HorizontalAlignment="Center" FontSize="12" Margin="0,2,0,0"/>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <ui:Card Grid.Column="1" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="稳定性评分" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5">
-                                        <Run Text="{Binding PerformanceAnalysis.StabilityScore, StringFormat='{}{0:F0}', Mode=OneWay}"/>
-                                        <Run Text="/100" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <ui:Card Grid.Column="2" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="性能评分" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5">
-                                        <Run Text="{Binding PerformanceAnalysis.PerformanceScore, StringFormat='{}{0:F0}', Mode=OneWay}"/>
-                                        <Run Text="/100" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <ui:Card Grid.Column="3" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="内存评分" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5">
-                                        <Run Text="{Binding PerformanceAnalysis.MemoryUsageScore, StringFormat='{}{0:F0}', Mode=OneWay}"/>
-                                        <Run Text="/100" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <ui:Card Grid.Column="4" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="磁盘健康" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5">
-                                        <Run Text="{Binding PerformanceAnalysis.DiskHealthScore, StringFormat='{}{0:F0}', Mode=OneWay}"/>
-                                        <Run Text="/100" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-                        </Grid>
-
-                        <!-- Additional Metrics -->
-                        <Grid Grid.Row="1" Margin="0,0,0,15">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <ui:Card Grid.Column="0" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="关键问题" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" Foreground="{DynamicResource SystemFillColorCriticalBrush}" HorizontalAlignment="Center" Margin="0,5">
-                                        <Run Text="{Binding PerformanceAnalysis.CriticalIssuesCount, StringFormat='{}{0}', Mode=OneWay}"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <ui:Card Grid.Column="1" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="警告数量" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" Foreground="{DynamicResource SystemFillColorCautionBrush}" HorizontalAlignment="Center" Margin="0,5">
-                                        <Run Text="{Binding PerformanceAnalysis.WarningsCount, StringFormat='{}{0}', Mode=OneWay}"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <ui:Card Grid.Column="2" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="系统运行时间" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5">
-                                        <Run Text="{Binding PerformanceAnalysis.SystemUptimeDays, Converter={StaticResource NullableDoubleToStringConverter}, ConverterParameter=F1, Mode=OneWay}"/>
-                                        <Run Text="天"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <!-- Placeholder for future metrics -->
-                            <ui:Card Grid.Column="3" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="CPU 实时" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5">
-                                        <TextBlock Text="{Binding CpuInfo.Temperature, Converter={StaticResource ZeroAsMissingConverter}, ConverterParameter=F1}" FontSize="20" FontWeight="Bold"/>
-                                        <TextBlock Text="°C" FontSize="14" VerticalAlignment="Bottom" Margin="2,0,0,2"/>
-                                    </StackPanel>
-                                    <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center">
-                                        <Run Text="负载 "/>
-                                        <Run Text="{Binding CpuInfo.Load, Converter={StaticResource NaNSafeConverter}, ConverterParameter=F0, Mode=OneWay}"/>
-                                        <Run Text="%  "/>
-                                        <Run Text="频率 "/>
-                                        <Run Text="{Binding CpuInfo.Clock, Converter={StaticResource NaNSafeConverter}, ConverterParameter=F0, Mode=OneWay}"/>
-                                        <Run Text=" MHz"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-                        </Grid>
-
-                        <!-- Recommendations -->
-                        <ui:Card Grid.Row="2" Margin="5" Visibility="{Binding PerformanceAnalysis.Recommendations.Count, Converter={StaticResource CountToVisibilityConverter}}">
-                            <StackPanel Margin="10">
-                                <TextBlock Text="优化建议" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,10"/>
-                                <ItemsControl ItemsSource="{Binding PerformanceAnalysis.Recommendations}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <ui:SymbolIcon Symbol="Info24" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,5,0" VerticalAlignment="Center"/>
-                                                <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </ui:Card>
-                    </Grid>
-                </ui:CardExpander>
-
-                <ui:CardExpander Header="网络流量监控"
-                                Icon="{ui:SymbolIcon ChartMultiple24}"
-                                IsExpanded="True"
-                                Margin="0,10,0,0">
-                    <StackPanel Margin="10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <ui:Card Grid.Column="0" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="下载" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" Margin="0,5,0,0">
-                                        <Run Text="{Binding NetworkDownloadMBps, StringFormat='{}{0:F2}', Mode=OneWay}"/>
-                                        <Run Text=" MB/s" FontSize="12"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <ui:Card Grid.Column="1" Margin="5">
-                                <StackPanel Margin="10">
-                                    <TextBlock Text="上传" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                    <TextBlock FontSize="20" FontWeight="Bold" Margin="0,5,0,0">
-                                        <Run Text="{Binding NetworkUploadMBps, StringFormat='{}{0:F2}', Mode=OneWay}"/>
-                                        <Run Text=" MB/s" FontSize="12"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </ui:Card>
-                        </Grid>
-
-                        <ContentControl Content="{Binding NetworkTrafficPlot, Mode=OneTime}" Height="220" Margin="5"/>
-                    </StackPanel>
-                </ui:CardExpander>
-
-                <!-- GPU Monitoring -->
-                <ui:CardExpander Icon="{ui:SymbolIcon ShieldTask24}"
-                                IsExpanded="True"
-                                Margin="0,10,0,0">
-                    <ui:CardExpander.Header>
-                        <TextBlock>
-                            <Run Text="GPU 监控 - "/>
-                            <Run Text="{Binding HardwareInfo.Gpus.Count, Mode=OneWay}"/>
-                            <Run Text=" 个设备"/>
-                        </TextBlock>
-                    </ui:CardExpander.Header>
-                    <ItemsControl ItemsSource="{Binding HardwareInfo.Gpus}" Margin="10">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ui:Card Margin="0,5">
-                                    <Grid Margin="15">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-
-                                        <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
-
-                                        <Grid Grid.Row="1">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <StackPanel Grid.Column="0">
-                                                <TextBlock Text="温度" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                                <TextBlock FontSize="18" FontWeight="Bold">
-                                                    <Run Text="{Binding Temperature, Converter={StaticResource ZeroAsMissingConverter}, ConverterParameter=F1, Mode=OneWay}"/>
-                                                    <Run Text="°C" FontSize="14"/>
-                                                </TextBlock>
-                                            </StackPanel>
-
-                                            <StackPanel Grid.Column="1">
-                                                <TextBlock Text="负载" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding Load, Converter={StaticResource NaNSafeConverter}, ConverterParameter=F1}" FontSize="18" FontWeight="Bold"/>
-                                                    <TextBlock Text="%" FontSize="14" VerticalAlignment="Bottom" Margin="2,0,0,2"/>
-                                                </StackPanel>
-                                            </StackPanel>
-
-                                            <StackPanel Grid.Column="2">
-                                                <TextBlock Text="显存使用" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                                <TextBlock FontSize="14" FontWeight="SemiBold">
-                                                    <Run Text="{Binding MemoryUsed, StringFormat='{}{0:F0}', Mode=OneWay}"/>
-                                                    <Run Text="/"/>
-                                                    <Run Text="{Binding MemoryTotal, StringFormat='{}{0:F0}', Mode=OneWay}"/>
-                                                    <Run Text=" MB" FontSize="12"/>
-                                                </TextBlock>
-                                            </StackPanel>
-
-                                            <StackPanel Grid.Column="3">
-                                                <TextBlock Text="功耗" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding Power, Converter={StaticResource ZeroAsMissingConverter}, ConverterParameter=F1}" FontSize="18" FontWeight="Bold"/>
-                                                    <TextBlock Text="W" FontSize="14" VerticalAlignment="Bottom" Margin="2,0,0,2"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </Grid>
-                                    </Grid>
-                                </ui:Card>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ui:CardExpander>
-
-                <!-- Reliability Trend -->
-                <ui:CardExpander Header="可靠性趋势"
-                                Icon="{ui:SymbolIcon ChartMultiple24}"
-                                IsExpanded="True"
-                                Margin="0,10,0,0">
-                    <Grid Margin="10">
-                        <ContentControl Content="{Binding ReliabilityTrendPlot, Mode=OneTime}" Height="220"/>
-                        <TextBlock Text="暂无可靠性数据"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontSize="14"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Visibility="{Binding ReliabilityRecords.Count, Converter={StaticResource InverseCountToVisibilityConverter}}"/>
-                    </Grid>
-                </ui:CardExpander>
-
-                <!-- Reliability Records -->
-                <ui:CardExpander Icon="{ui:SymbolIcon ChartMultiple24}"
-                                IsExpanded="False"
-                                Margin="0,10,0,0">
-                    <ui:CardExpander.Header>
-                        <TextBlock>
-                            <Run Text="可靠性记录 (最近"/>
-                            <Run Text="{Binding SelectedDaysBack, Mode=OneWay}"/>
-                            <Run Text="天) - "/>
-                            <Run Text="{Binding ReliabilityRecords.Count, Mode=OneWay}"/>
-                            <Run Text=" 条"/>
-                        </TextBlock>
-                    </ui:CardExpander.Header>
-                    <DataGrid ItemsSource="{Binding ReliabilityRecords}"
-                             AutoGenerateColumns="False"
-                             IsReadOnly="True"
-                             Height="300"
-                             Margin="10">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="时间" Binding="{Binding TimeGenerated, StringFormat='yyyy-MM-dd HH:mm'}" Width="140"/>
-                            <DataGridTextColumn Header="产品" Binding="{Binding ProductName}" Width="200"/>
-                            <DataGridTextColumn Header="类型" Binding="{Binding RecordTypeDescription}" Width="100"/>
-                            <DataGridTextColumn Header="消息" Binding="{Binding Message}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ui:CardExpander>
-
-                <!-- Event Logs -->
-                <ui:CardExpander Icon="{ui:SymbolIcon ErrorCircle24}"
-                                IsExpanded="True"
-                                Margin="0,10,0,0">
-                    <ui:CardExpander.Header>
-                        <TextBlock>
-                            <Run Text="错误日志 (最近"/>
-                            <Run Text="{Binding SelectedDaysBack, Mode=OneWay}"/>
-                            <Run Text="天) - "/>
-                            <Run Text="{Binding EventLogEntries.Count, Mode=OneWay}"/>
-                            <Run Text=" 条"/>
-                        </TextBlock>
-                    </ui:CardExpander.Header>
-                    <DataGrid ItemsSource="{Binding EventLogEntries}"
-                             AutoGenerateColumns="False"
-                             IsReadOnly="True"
-                             Height="300"
-                             Margin="10">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="时间" Binding="{Binding TimeGenerated, StringFormat='yyyy-MM-dd HH:mm'}" Width="140"/>
-                            <DataGridTextColumn Header="来源" Binding="{Binding Source}" Width="150"/>
-                            <DataGridTextColumn Header="类型" Binding="{Binding EventType}" Width="80"/>
-                            <DataGridTextColumn Header="消息" Binding="{Binding Message}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ui:CardExpander>
-
-                <!-- Hardware Details -->
-                <ui:CardExpander Header="硬件详情" Icon="{ui:SymbolIcon HardDrive24}" Margin="0,10,0,0">
-                    <StackPanel Margin="10">
-
-                        <!-- Disks -->
-                        <TextBlock Text="磁盘" FontSize="16" FontWeight="SemiBold" Margin="0,10,0,10"/>
-                        <ItemsControl ItemsSource="{Binding HardwareInfo.Disks}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ui:Card Margin="0,5">
-                                        <Grid Margin="10">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Grid.Column="0" Text="{Binding Name}" FontWeight="SemiBold" Margin="0,0,15,0"/>
-                                            <ProgressBar Grid.Column="1" Value="{Binding UsagePercentage, Mode=OneWay}" Maximum="100" Height="20"/>
-                                            <TextBlock Grid.Column="2" Margin="10,0,0,0">
-                                                <Run Text="{Binding FreeSpaceGB, StringFormat='{}{0} GB', Mode=OneWay}"/>
-                                                <Run Text=" / "/>
-                                                <Run Text="{Binding TotalSizeGB, StringFormat='{}{0} GB', Mode=OneWay}"/>
-                                                <Run Text=" 可用"/>
-                                            </TextBlock>
-                                        </Grid>
-                                    </ui:Card>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-                        <TextBlock Text="磁盘 SMART" FontSize="16" FontWeight="SemiBold" Margin="0,20,0,10"
-                                   Visibility="{Binding HardwareInfo.DiskSmart.Count, Converter={StaticResource CountToVisibilityConverter}}"/>
-                        <DataGrid ItemsSource="{Binding HardwareInfo.DiskSmart}"
-                                 AutoGenerateColumns="False"
-                                 IsReadOnly="True"
-                                 MaxHeight="250"
-                                 Visibility="{Binding HardwareInfo.DiskSmart.Count, Converter={StaticResource CountToVisibilityConverter}}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="名称" Binding="{Binding FriendlyName}" Width="*"/>
-                                <DataGridTextColumn Header="介质" Binding="{Binding MediaTypeDescription}" Width="70"/>
-                                <DataGridTextColumn Header="接口" Binding="{Binding BusTypeDescription}" Width="80"/>
-                                <DataGridTextColumn Header="健康" Binding="{Binding HealthStatusDescription}" Width="70"/>
-                                <DataGridTextColumn Header="温度" Binding="{Binding Temperature, StringFormat='{}{0}°C'}" Width="70"/>
-                                <DataGridTextColumn Header="磨损" Binding="{Binding Wear, StringFormat='{}{0}%'}" Width="70"/>
-                                <DataGridTextColumn Header="通电" Binding="{Binding PowerOnHours, StringFormat='{}{0}h'}" Width="70"/>
-                                <DataGridTextColumn Header="容量" Binding="{Binding SizeGB, StringFormat='{}{0} GB'}" Width="80"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <!-- Network Adapters -->
-                        <TextBlock Text="网络适配器" FontSize="16" FontWeight="SemiBold" Margin="0,20,0,10"/>
-                        <DataGrid ItemsSource="{Binding HardwareInfo.NetworkAdapters}"
-                                 AutoGenerateColumns="False"
-                                 IsReadOnly="True">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="*"/>
-                                <DataGridTextColumn Header="MAC 地址" Binding="{Binding MacAddress}" Width="150"/>
-                                <DataGridTextColumn Header="IP 地址" Binding="{Binding IpAddress}" Width="150"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <!-- USB Controllers -->
-                        <TextBlock Text="USB 控制器" FontSize="16" FontWeight="SemiBold" Margin="0,20,0,10"/>
-                        <DataGrid ItemsSource="{Binding HardwareInfo.UsbControllers}"
-                                 AutoGenerateColumns="False"
-                                 IsReadOnly="True">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="*"/>
-                                <DataGridTextColumn Header="制造商" Binding="{Binding Manufacturer}" Width="200"/>
-                                <DataGridTextColumn Header="协议" Binding="{Binding Protocol}" Width="100"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <!-- USB Devices -->
-                        <TextBlock Text="USB 设备" FontSize="16" FontWeight="SemiBold" Margin="0,20,0,10"/>
-                        <DataGrid ItemsSource="{Binding HardwareInfo.UsbDevices}"
-                                 AutoGenerateColumns="False"
-                                 IsReadOnly="True"
-                                 MaxHeight="300">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="*"/>
-                                <DataGridTextColumn Header="描述" Binding="{Binding Description}" Width="300"/>
-                                <DataGridTextColumn Header="制造商" Binding="{Binding Manufacturer}" Width="200"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </StackPanel>
-                </ui:CardExpander>
-
-                <!-- Diagnostic History -->
-                <ui:CardExpander Header="诊断历史" Icon="{ui:SymbolIcon ClipboardClock24}" Margin="0,10,0,0">
-                    <StackPanel Margin="10">
-                        <!-- Recent Entry -->
-                        <TextBlock Text="最近的诊断" FontWeight="Bold" FontSize="14" Margin="0,0,0,8"/>
-                        <Border Padding="8" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="4" Margin="0,0,0,16">
-                            <StackPanel>
-                                <TextBlock Text="{Binding RecentHistoryEntry.ComputerName, FallbackValue='无可用记录', StringFormat='计算机: {0}'}" />
-                                <TextBlock Text="{Binding RecentHistoryEntry.CollectedAtUtc, FallbackValue='', StringFormat='时间: {0:G}'}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                    <ui:Button Content="重新加载" 
-                                             Command="{Binding ReloadHistoryEntryCommand}"
-                                             CommandParameter="{Binding RecentHistoryEntry.Id}"
-                                             Margin="0,0,10,0"
-                                             Visibility="{Binding RecentHistoryEntry, Converter={StaticResource ObjectToVisibilityConverter}}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- History List -->
-                        <TextBlock Text="历史记录列表" FontWeight="Bold" FontSize="14" Margin="0,0,0,8"/>
-                        <local:HistoryListView DataContext="{Binding HistoryListViewModel}"/>
-                    </StackPanel>
-                </ui:CardExpander>
-
-            </StackPanel>
-        </ScrollViewer>
+            <ui:NavigationView.PaneFooter>
+                <Border Margin="12,0,12,6">
+                    <TextBlock Text="{Binding AppVersion, StringFormat='版本 {0}', FallbackValue='版本 v1.2.0'}"
+                               FontSize="11"
+                               Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                               HorizontalAlignment="Center"/>
+                </Border>
+            </ui:NavigationView.PaneFooter>
+        </ui:NavigationView>
 
         <!-- Status Bar -->
-        <ui:Card Grid.Row="2" Margin="0">
-            <Grid Height="35" Margin="10,0">
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+            <Grid Height="32" Margin="16,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <ui:ProgressRing IsIndeterminate="True"
-                                Width="20" Height="20"
+                <ui:ProgressRing Grid.Column="0"
+                                IsIndeterminate="True"
+                                Width="16" Height="16"
+                                Margin="0,0,8,0"
                                 Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <TextBlock Grid.Column="1"
                           Text="{Binding StatusMessage}"
                           VerticalAlignment="Center"
-                          Margin="10,0"/>
+                          FontSize="12"
+                          Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+
+                <TextBlock Grid.Column="2"
+                          Text="{Binding AppVersion, StringFormat='DigYourWindows {0}', FallbackValue='DigYourWindows v1.2.0'}"
+                          VerticalAlignment="Center"
+                          FontSize="11"
+                          Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
             </Grid>
-        </ui:Card>
+        </Border>
     </Grid>
 </ui:FluentWindow>

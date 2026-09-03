@@ -192,6 +192,86 @@ public class PerformanceServiceTests
         Assert.Null(analysis.SystemUptimeDays);
     }
 
+    [Fact]
+    public void AnalyzeSystemPerformance_BenignNoiseEvents_DoNotArtificiallyTankStabilityScore()
+    {
+        var service = CreateService();
+        var hardware = CreateHardware();
+
+        var noiseEvents = new List<LogEventData>();
+        for (var i = 0; i < 50; i++)
+        {
+            noiseEvents.Add(new LogEventData
+            {
+                EventType = "Error",
+                EventId = 10016,
+                SourceName = "DistributedCOM",
+                Message = "The application-specific permission settings do not grant Local Activation permission"
+            });
+        }
+        for (var i = 0; i < 20; i++)
+        {
+            noiseEvents.Add(new LogEventData
+            {
+                EventType = "Error",
+                EventId = 59,
+                SourceName = "SideBySide",
+                Message = "Activation context generation failed"
+            });
+        }
+
+        var analysis = service.AnalyzeSystemPerformance(hardware, noiseEvents, []);
+
+        Assert.True(analysis.StabilityScore >= 95d, $"Stability score should be >= 95, but was {analysis.StabilityScore}");
+        Assert.Equal((uint)0, analysis.CriticalIssuesCount);
+    }
+
+    [Fact]
+    public void AnalyzeSystemPerformance_AvailableMemoryRecorded_CalculatesUtilizationScore()
+    {
+        var service = CreateService();
+        var hardware = new HardwareData
+        {
+            CpuBrand = "Intel(R) Core(TM) i7-12700",
+            CpuCores = 8,
+            TotalMemory = 32UL * 1024UL * 1024UL * 1024UL,
+            AvailableMemory = 1UL * 1024UL * 1024UL * 1024UL,
+            Disks = [new DiskInfoData { Name = "C:", TotalSpace = 100UL, AvailableSpace = 60UL }]
+        };
+
+        var analysis = service.AnalyzeSystemPerformance(hardware, [], []);
+
+        Assert.Equal(62d, analysis.MemoryUsageScore);
+        Assert.Contains("系统可用内存偏低 (3%)，建议关闭不必要的后台程序", analysis.Recommendations);
+    }
+
+    [Fact]
+    public void AnalyzeSystemPerformance_DiskSmartFailure_AppliesSmartPenaltyAndRecommendation()
+    {
+        var service = CreateService();
+        var hardware = new HardwareData
+        {
+            CpuBrand = "Intel(R) Core(TM) i5-12400",
+            CpuCores = 4,
+            TotalMemory = 16UL * 1024UL * 1024UL * 1024UL,
+            Disks = [new DiskInfoData { Name = "C:", TotalSpace = 100UL, AvailableSpace = 60UL }],
+            DiskSmart =
+            [
+                new DiskSmartData
+                {
+                    DeviceId = "0",
+                    FriendlyName = "Samsung SSD 980",
+                    HealthStatus = 3
+                }
+            ]
+        };
+
+        var analysis = service.AnalyzeSystemPerformance(hardware, [], []);
+
+        Assert.Equal(50d, analysis.DiskHealthScore);
+        Assert.Contains("检测到磁盘 Samsung SSD 980 处于故障预警状态，请立即备份重要数据", analysis.Recommendations);
+    }
+
     private static HardwareData CreateHardware(int totalMemoryGb = 16, int diskFreePercent = 60)
     {
         return new HardwareData

@@ -28,6 +28,17 @@ public record HardwareData
     [JsonIgnore]
     public long TotalMemoryMB => (long)(TotalMemory / (1024UL * 1024UL));
 
+    [JsonPropertyName("availableMemory")]
+    public ulong AvailableMemory { get; init; }
+
+    [JsonIgnore]
+    public long AvailableMemoryMB => (long)(AvailableMemory / (1024UL * 1024UL));
+
+    [JsonIgnore]
+    public double MemoryUsagePercentage => TotalMemory > 0
+        ? (double)(TotalMemory - AvailableMemory) / TotalMemory * 100d
+        : 0d;
+
     [JsonPropertyName("disks")]
     public List<DiskInfoData> Disks { get; init; } = new();
 
