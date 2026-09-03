@@ -28,7 +28,7 @@
       "name": "下载最新版",
       "short_name": "下载",
       "description": "下载最新版本的 DigYourWindows",
-      "url": "https://github.com/AICL-Lab/dig-your-windows/releases/latest"
+      "url": "https://github.com/build-workbench/dig-your-windows/releases/latest"
     },
     {
       "name": "快速开始",
@@ -40,13 +40,13 @@
       "name": "GitHub",
       "short_name": "GitHub",
       "description": "访问 GitHub 仓库",
-      "url": "https://github.com/AICL-Lab/dig-your-windows"
+      "url": "https://github.com/build-workbench/dig-your-windows"
     }
   ],
   "related_applications": [
     {
       "platform": "windows",
-      "url": "https://github.com/AICL-Lab/dig-your-windows/releases"
+      "url": "https://github.com/build-workbench/dig-your-windows/releases"
     }
   ],
   "prefer_related_applications": false

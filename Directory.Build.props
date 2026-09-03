@@ -10,11 +10,11 @@
 
   <PropertyGroup>
     <Version>1.2.0</Version>
-    <Authors>LessUp</Authors>
+    <Authors>Build Workbench</Authors>
     <Product>DigYourWindows</Product>
     <Description>Windows 深度诊断工具</Description>
-    <Copyright>Copyright © LessUp 2025</Copyright>
-    <RepositoryUrl>https://github.com/LessUp/dig-your-windows</RepositoryUrl>
+    <Copyright>Copyright © Build Workbench 2025-2026</Copyright>
+    <RepositoryUrl>https://github.com/build-workbench/dig-your-windows</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 </Project>

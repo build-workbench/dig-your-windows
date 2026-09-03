@@ -14,12 +14,12 @@ import { useData } from 'vitepress'
 const { lang } = useData()
 
 const isZh = computed(() => lang.value === 'zh-CN')
-const releaseUrl = 'https://github.com/LessUp/dig-your-windows/releases/latest'
+const releaseUrl = 'https://github.com/build-workbench/dig-your-windows/releases/latest'
 const version = ref('')
 
 async function fetchVersion() {
   try {
-    const response = await fetch('https://api.github.com/repos/LessUp/dig-your-windows/releases/latest')
+    const response = await fetch('https://api.github.com/repos/build-workbench/dig-your-windows/releases/latest')
     if (response.ok) {
       const data = await response.json()
       version.value = data.tag_name
