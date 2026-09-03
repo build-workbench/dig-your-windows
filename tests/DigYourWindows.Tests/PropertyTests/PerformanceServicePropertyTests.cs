@@ -80,11 +80,11 @@ public class PerformanceServicePropertyTests
         var events = new List<LogEventData>();
         var reliability = new List<ReliabilityRecordData>();
 
-        // Act & Assert - should not throw
+        // Act & Assert - must not throw for any hardware spec; hardware-based
+        // recommendations (low memory/cores) are expected for weak generated specs.
         var result = service.AnalyzeSystemPerformance(hardware, events, reliability);
 
         Assert.NotNull(result);
-        Assert.Empty(result.Recommendations); // Empty events = no recommendations from events
     }
 
     [Property]
