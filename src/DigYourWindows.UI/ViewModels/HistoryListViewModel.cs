@@ -54,9 +54,20 @@ public sealed partial class HistoryListViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Raised when the user picks an entry in the list; the parent ViewModel loads it.
+    /// </summary>
+    public event Action<DiagnosticHistorySummary>? EntrySelected;
+
     [RelayCommand]
     public async Task SelectEntryAsync(DiagnosticHistorySummary? entry)
     {
         SelectedEntry = entry;
+        if (entry is not null)
+        {
+            EntrySelected?.Invoke(entry);
+        }
+
+        await Task.CompletedTask;
     }
 }
