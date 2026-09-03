@@ -9,7 +9,7 @@ namespace DigYourWindows.UI.Services;
 public sealed record AppSettings
 {
     /// <summary>UI font family name (a system-installed font).</summary>
-    public string FontFamily { get; init; } = "Microsoft YaHei UI";
+    public string FontFamily { get; init; } = "Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI";
 
     /// <summary>UI scale as a percentage: 100 = no scaling.</summary>
     public int ScalePercent { get; init; } = 100;

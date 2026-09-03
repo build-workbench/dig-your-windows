@@ -48,13 +48,19 @@ public static class ScoringConfiguration
     public const double MidTierCpuScore = 5d;
 
     // Stability scoring penalties
-    public const double ErrorPenaltyPerError = 2d;
-    public const double MaxErrorPenalty = 40d;
-    public const double WarningPenaltyPerWarning = 0.5d;
-    public const double MaxWarningPenalty = 20d;
-    public const double CriticalEventPenalty = 10d;
-    public const double MaxCriticalEventPenalty = 30d;
-    public const double HighReliabilityRecordPenalty = 10d;
+    public const double ErrorPenaltyPerError = 1.0d;
+    public const double MaxErrorPenalty = 30.0d;
+    public const double WarningPenaltyPerWarning = 0.25d;
+    public const double MaxWarningPenalty = 15.0d;
+    public const double CriticalEventPenalty = 8.0d;
+    public const double MaxCriticalEventPenalty = 30.0d;
+    public const double NoisePenaltyPerEvent = 0.05d;
+    public const double MaxNoisePenalty = 5.0d;
+    public const double HighReliabilityRecordPenalty = 10.0d;
+
+    // SMART health penalties
+    public const double SmartFailurePenalty = 40.0d;
+    public const double SmartWarningPenalty = 15.0d;
 
     // Health grade thresholds
     public const double ExcellentHealthThreshold = 90d;

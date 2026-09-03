@@ -26,7 +26,7 @@ public class HardwareService : IHardwareService
         cancellationToken.ThrowIfCancellationRequested();
         var cpuBrand = GetCpuName();
         cancellationToken.ThrowIfCancellationRequested();
-        var totalMemory = GetTotalMemoryBytes();
+        var (totalMemory, availableMemory) = GetMemoryBytes();
         cancellationToken.ThrowIfCancellationRequested();
         var disks = GetDisks();
         cancellationToken.ThrowIfCancellationRequested();
@@ -46,6 +46,7 @@ public class HardwareService : IHardwareService
             CpuBrand = cpuBrand,
             CpuCores = (uint)Environment.ProcessorCount,
             TotalMemory = totalMemory,
+            AvailableMemory = availableMemory,
             Disks = disks,
             DiskSmart = diskSmart,
             NetworkAdapters = networkAdapters,
@@ -67,7 +68,7 @@ public class HardwareService : IHardwareService
                 {
                     using (obj)
                     {
-                        return obj["Name"]?.ToString()?.Trim() ?? "Unknown";
+                        return obj["Name"]?.ToString()?.Trim() ?? "Unknown CPU";
                     }
                 }
 
@@ -75,23 +76,43 @@ public class HardwareService : IHardwareService
             });
     }
 
-    private ulong GetTotalMemoryBytes()
+    private (ulong totalBytes, ulong availableBytes) GetMemoryBytes()
     {
         return ExecuteSafely(
-            operationName: "获取总内存",
-            fallback: 0UL,
+            operationName: "获取内存信息",
+            fallback: (0UL, 0UL),
             action: () =>
             {
-                using var searcher = new ManagementObjectSearcher("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem");
-                foreach (var obj in searcher.Get())
+                var total = 0UL;
+                var available = 0UL;
+
+                using (var osSearcher = new ManagementObjectSearcher("SELECT FreePhysicalMemory, TotalVisibleMemorySize FROM Win32_OperatingSystem"))
                 {
-                    using (obj)
+                    foreach (var obj in osSearcher.Get())
                     {
-                        return Convert.ToUInt64(obj["TotalPhysicalMemory"] ?? 0UL, System.Globalization.CultureInfo.InvariantCulture);
+                        using (obj)
+                        {
+                            var freeKb = Convert.ToUInt64(obj["FreePhysicalMemory"] ?? 0UL, System.Globalization.CultureInfo.InvariantCulture);
+                            var totalKb = Convert.ToUInt64(obj["TotalVisibleMemorySize"] ?? 0UL, System.Globalization.CultureInfo.InvariantCulture);
+                            available = freeKb * 1024UL;
+                            total = totalKb * 1024UL;
+                        }
                     }
                 }
 
-                return 0UL;
+                if (total == 0UL)
+                {
+                    using var csSearcher = new ManagementObjectSearcher("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem");
+                    foreach (var obj in csSearcher.Get())
+                    {
+                        using (obj)
+                        {
+                            total = Convert.ToUInt64(obj["TotalPhysicalMemory"] ?? 0UL, System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                    }
+                }
+
+                return (total, available);
             });
     }
 

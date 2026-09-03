@@ -78,6 +78,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     public WpfPlot NetworkTrafficPlot => _plots.NetworkTrafficPlot;
 
+    [ObservableProperty]
+    private string _appVersion = $"v{typeof(MainViewModel).Assembly.GetName().Version?.ToString(3) ?? "1.2.0"}";
+
     public MainViewModel(
         IDiagnosticCollectorService collectorService,
         IReportService reportService,
@@ -101,6 +104,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _dialogs = dialogs;
         HistoryListViewModel = historyListViewModel;
         historyListViewModel.EntrySelected += OnHistoryEntrySelected;
+        _themeService.ThemeChanged += OnThemeChanged;
 
         _cpuMonitorTimer = new DispatcherTimer
         {
@@ -159,6 +163,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        _themeService.ThemeChanged -= OnThemeChanged;
         _cpuMonitorTimer.Stop();
         _cpuMonitorTimer.Tick -= CpuMonitorTimer_Tick;
         if (HistoryListViewModel is not null)
@@ -437,6 +442,24 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private void ToggleTheme()
     {
         CurrentTheme = _themeService.ToggleTheme();
+        UpdateReliabilityTrendPlot();
+        UpdateNetworkTrafficPlot();
+        StatusMessage = BuildThemeChangedStatus();
+    }
+
+    /// <summary>
+    /// Synchronizes current theme with the Windows operating system theme.
+    /// </summary>
+    public void ApplySystemTheme()
+    {
+        CurrentTheme = _themeService.ApplySystemTheme();
+        UpdateReliabilityTrendPlot();
+        UpdateNetworkTrafficPlot();
+    }
+
+    private void OnThemeChanged(ApplicationTheme newTheme)
+    {
+        CurrentTheme = newTheme;
         UpdateReliabilityTrendPlot();
         UpdateNetworkTrafficPlot();
         StatusMessage = BuildThemeChangedStatus();

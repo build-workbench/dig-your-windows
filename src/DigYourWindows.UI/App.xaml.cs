@@ -20,6 +20,9 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        // Synchronize application theme with Windows OS system theme
+        Wpf.Ui.Appearance.ApplicationThemeManager.ApplySystemTheme();
+
         var services = new ServiceCollection();
         ConfigureServices(services);
 
@@ -28,21 +31,95 @@ public partial class App : Application
         // History store must be initialized before anything touches it.
         // Per IHistoryStoreService contract, failures disable history features
         // but must not prevent app startup.
+        var log = _serviceProvider.GetRequiredService<ILogService>();
         try
         {
-            var log = _serviceProvider.GetRequiredService<ILogService>();
             await _serviceProvider.GetRequiredService<IHistoryStoreService>().InitializeAsync();
             log.Info("History store ready.");
         }
         catch (Exception ex)
         {
-            _serviceProvider.GetRequiredService<ILogService>().LogError(
+            log.LogError(
                 $"History store initialization failed; history features disabled: {ex.Message}", ex);
         }
 
-        var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-        MainWindow = mainWindow;
-        mainWindow.Show();
+        try
+        {
+            log.Info("Resolving MainWindow...");
+            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            MainWindow = mainWindow;
+            log.Info("Showing MainWindow...");
+            mainWindow.Show();
+            log.Info("MainWindow shown.");
+
+            if (e.Args.Contains("--capture-preview"))
+            {
+                var outputDir = e.Args.SkipWhile(a => a != "--capture-preview").Skip(1).FirstOrDefault()
+                                ?? @"C:\Users\shoum\.gemini\antigravity-cli\brain\ba672ece-91cf-4418-89fe-41c21c892539";
+                _ = CapturePreviewsAsync(mainWindow, outputDir, log);
+            }
+        }
+        catch (Exception ex)
+        {
+            log.LogError($"MainWindow creation failed: {ex.Message}", ex);
+            throw;
+        }
+    }
+
+    private async Task CapturePreviewsAsync(MainWindow mainWindow, string outputDir, ILogService log)
+    {
+        try
+        {
+            // Wait for initial data collection and UI rendering
+            await Task.Delay(4000);
+
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                Directory.CreateDirectory(outputDir);
+
+                SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "dashboard_preview.png"));
+                log.Info("Captured dashboard_preview.png");
+
+                // Switch to MonitoringPage
+                mainWindow.RootNavigation.Navigate(typeof(Views.MonitoringPage));
+                await Task.Delay(1000);
+                SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "monitoring_preview.png"));
+                log.Info("Captured monitoring_preview.png");
+
+                // Switch to LogsPage
+                mainWindow.RootNavigation.Navigate(typeof(Views.LogsPage));
+                await Task.Delay(1000);
+                SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "logs_preview.png"));
+                log.Info("Captured logs_preview.png");
+
+                // Switch to HardwarePage
+                mainWindow.RootNavigation.Navigate(typeof(Views.HardwarePage));
+                await Task.Delay(1000);
+                SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "hardware_preview.png"));
+                log.Info("Captured hardware_preview.png");
+
+                log.Info("All previews captured successfully. Shutting down.");
+                Shutdown();
+            });
+        }
+        catch (Exception ex)
+        {
+            log.LogError($"Failed to capture visual previews: {ex.Message}", ex);
+            Shutdown();
+        }
+    }
+
+    private static void SaveVisualSnapshot(FrameworkElement element, string filePath)
+    {
+        element.UpdateLayout();
+        var width = (int)Math.Max(element.ActualWidth > 0 ? element.ActualWidth : 1400, 1400);
+        var height = (int)Math.Max(element.ActualHeight > 0 ? element.ActualHeight : 900, 900);
+        var rtb = new System.Windows.Media.Imaging.RenderTargetBitmap(width, height, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+        rtb.Render(element);
+        var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
+        encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(rtb));
+        using var stream = File.Create(filePath);
+        encoder.Save(stream);
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -88,5 +165,13 @@ public partial class App : Application
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<IAppSettingsService, AppSettingsService>();
         services.AddSingleton<ViewModels.HistoryListViewModel>();
+
+        // Navigation page provider and page views
+        services.AddSingleton<Wpf.Ui.Abstractions.INavigationViewPageProvider, PageService>();
+        services.AddSingleton<Views.DashboardPage>();
+        services.AddSingleton<Views.MonitoringPage>();
+        services.AddSingleton<Views.LogsPage>();
+        services.AddSingleton<Views.HardwarePage>();
+        services.AddSingleton<Views.HistoryPage>();
     }
 }

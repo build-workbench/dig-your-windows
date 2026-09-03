@@ -51,7 +51,8 @@ public interface IPerformanceService
 
 public class PerformanceService : IPerformanceService
 {
-    private static readonly HashSet<uint> CriticalEventIds = new() { 41, 55, 57, 1003, 1073, 6008, 7034, 7036 };
+    private static readonly HashSet<uint> CriticalEventIds = new() { 41, 55, 57, 1001, 1003, 1073, 6008, 7034 };
+    private static readonly HashSet<uint> BenignNoiseEventIds = new() { 10016, 219, 59, 10002, 7036 };
 
     private readonly ISystemInfoProvider _systemInfo;
     private readonly ILogService _log;
@@ -70,12 +71,13 @@ public class PerformanceService : IPerformanceService
         var recommendations = new List<string>();
         var eventAnalysis = AnalyzeEvents(events);
         var totalMemoryGB = hardware.TotalMemory / 1024d / 1024d / 1024d;
-        var memoryUsageScore = CalculateMemoryScore(totalMemoryGB, recommendations);
-        var diskHealthScore = CalculateDiskScore(hardware.Disks, recommendations);
+        var memoryUsageScore = CalculateMemoryScore(hardware, recommendations);
+        var diskHealthScore = CalculateDiskScore(hardware, recommendations);
         var systemUptimeDays = _systemInfo.GetSystemUptimeDays();
         var stabilityScore = CalculateStabilityScore(
             eventAnalysis.ErrorCount,
             eventAnalysis.WarningCount,
+            eventAnalysis.NoiseCount,
             eventAnalysis.CriticalEvents.Count,
             reliability.Count,
             recommendations);
@@ -110,8 +112,47 @@ public class PerformanceService : IPerformanceService
         };
     }
 
-    private static double CalculateMemoryScore(double totalMemoryGB, List<string> recommendations)
+    private static double CalculateMemoryScore(HardwareData hardware, List<string> recommendations)
     {
+        var totalMemoryGB = hardware.TotalMemory / 1024d / 1024d / 1024d;
+
+        // If available memory is recorded (live system)
+        if (hardware.AvailableMemory > 0 && hardware.TotalMemory > 0)
+        {
+            var capacityScore = totalMemoryGB >= ScoringConfiguration.ExcellentMemoryThresholdGb ? 95d :
+                                totalMemoryGB >= ScoringConfiguration.GoodMemoryThresholdGb ? 85d :
+                                totalMemoryGB >= ScoringConfiguration.AcceptableMemoryThresholdGb ? 70d : 50d;
+
+            var freePercentage = (double)hardware.AvailableMemory / hardware.TotalMemory * 100d;
+            double utilizationScore;
+
+            if (freePercentage >= 40d)
+            {
+                utilizationScore = 95d;
+            }
+            else if (freePercentage >= 25d)
+            {
+                utilizationScore = 85d;
+            }
+            else if (freePercentage >= 10d)
+            {
+                utilizationScore = 70d;
+            }
+            else
+            {
+                AddRecommendation(recommendations, $"系统可用内存偏低 ({freePercentage:F0}%)，建议关闭不必要的后台程序");
+                utilizationScore = 40d;
+            }
+
+            if (totalMemoryGB < ScoringConfiguration.GoodMemoryThresholdGb)
+            {
+                AddRecommendation(recommendations, "内存容量较小，建议考虑升级到8GB或更多以提升性能");
+            }
+
+            return Math.Round(capacityScore * 0.4d + utilizationScore * 0.6d, 1);
+        }
+
+        // Backward-compatible fallback for unit tests and stubs
         if (totalMemoryGB >= ScoringConfiguration.ExcellentMemoryThresholdGb)
         {
             return ScoringConfiguration.ExcellentScore;
@@ -132,8 +173,9 @@ public class PerformanceService : IPerformanceService
         return ScoringConfiguration.PoorScore;
     }
 
-    private static double CalculateDiskScore(List<DiskInfoData> disks, List<string> recommendations)
+    private static double CalculateDiskScore(HardwareData hardware, List<string> recommendations)
     {
+        var disks = hardware.Disks;
         if (disks.Count == 0)
         {
             AddRecommendation(recommendations, "未检测到磁盘信息，请检查磁盘连接");
@@ -151,7 +193,27 @@ public class PerformanceService : IPerformanceService
             totalScore += GetDiskScore(disk, freePercentage, recommendations);
         }
 
-        return totalScore / disks.Count;
+        var score = totalScore / disks.Count;
+
+        // Check SMART health status if available
+        if (hardware.DiskSmart.Count > 0)
+        {
+            foreach (var smart in hardware.DiskSmart)
+            {
+                if (smart.HealthStatus == 3)
+                {
+                    score -= ScoringConfiguration.SmartFailurePenalty;
+                    AddRecommendation(recommendations, $"检测到磁盘 {smart.FriendlyName} 处于故障预警状态，请立即备份重要数据");
+                }
+                else if (smart.HealthStatus == 2)
+                {
+                    score -= ScoringConfiguration.SmartWarningPenalty;
+                    AddRecommendation(recommendations, $"检测到磁盘 {smart.FriendlyName} 存在健康警告，建议排查 SMART 指标");
+                }
+            }
+        }
+
+        return Math.Clamp(score, 0d, 100d);
     }
 
     private static double GetDiskScore(DiskInfoData disk, double freePercentage, List<string> recommendations)
@@ -179,6 +241,7 @@ public class PerformanceService : IPerformanceService
     private static double CalculateStabilityScore(
         int errorCount,
         int warningCount,
+        int noiseCount,
         int criticalEventsCount,
         int reliabilityRecordsCount,
         List<string> recommendations)
@@ -187,6 +250,7 @@ public class PerformanceService : IPerformanceService
 
         score -= Math.Min(ScoringConfiguration.MaxErrorPenalty, errorCount * ScoringConfiguration.ErrorPenaltyPerError);
         score -= Math.Min(ScoringConfiguration.MaxWarningPenalty, warningCount * ScoringConfiguration.WarningPenaltyPerWarning);
+        score -= Math.Min(ScoringConfiguration.MaxNoisePenalty, noiseCount * ScoringConfiguration.NoisePenaltyPerEvent);
         score -= Math.Min(ScoringConfiguration.MaxCriticalEventPenalty, criticalEventsCount * ScoringConfiguration.CriticalEventPenalty);
 
         if (reliabilityRecordsCount > ScoringConfiguration.HighReliabilityRecordThreshold)
@@ -375,22 +439,38 @@ public class PerformanceService : IPerformanceService
     {
         var errorCount = 0;
         var warningCount = 0;
+        var noiseCount = 0;
         var criticalEvents = new List<LogEventData>();
 
         foreach (var evt in events)
         {
-            switch (evt.EventType.ToLowerInvariant())
+            var eventType = evt.EventType.ToLowerInvariant();
+            if (eventType == "error")
             {
-                case "error":
+                if (IsCriticalError(evt))
+                {
                     errorCount++;
-                    if (IsCriticalError(evt))
-                    {
-                        criticalEvents.Add(evt);
-                    }
-                    break;
-                case "warning":
+                    criticalEvents.Add(evt);
+                }
+                else if (IsBenignNoise(evt))
+                {
+                    noiseCount++;
+                }
+                else
+                {
+                    errorCount++;
+                }
+            }
+            else if (eventType == "warning")
+            {
+                if (IsBenignNoise(evt))
+                {
+                    noiseCount++;
+                }
+                else
+                {
                     warningCount++;
-                    break;
+                }
             }
         }
 
@@ -398,8 +478,26 @@ public class PerformanceService : IPerformanceService
         {
             ErrorCount = errorCount,
             WarningCount = warningCount,
+            NoiseCount = noiseCount,
             CriticalEvents = criticalEvents
         };
+    }
+
+    private static bool IsBenignNoise(LogEventData evt)
+    {
+        if (BenignNoiseEventIds.Contains(evt.EventId))
+        {
+            return true;
+        }
+
+        var src = evt.SourceName;
+        if (src.Contains("DistributedCOM", StringComparison.OrdinalIgnoreCase) ||
+            src.Contains("SideBySide", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private static bool IsCriticalError(LogEventData evt)
@@ -449,6 +547,7 @@ public class PerformanceService : IPerformanceService
     {
         public int ErrorCount { get; init; }
         public int WarningCount { get; init; }
+        public int NoiseCount { get; init; }
         public List<LogEventData> CriticalEvents { get; init; } = new();
     }
 

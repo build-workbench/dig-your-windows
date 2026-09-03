@@ -43,7 +43,7 @@ public class AppSettingsServiceTests
         {
             var service = new AppSettingsService(dir);
 
-            Assert.Equal("Microsoft YaHei UI", service.Current.FontFamily);
+            Assert.Equal("Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI", service.Current.FontFamily);
             Assert.Equal(100, service.Current.ScalePercent);
         }
         finally
@@ -62,7 +62,7 @@ public class AppSettingsServiceTests
 
             var service = new AppSettingsService(dir);
 
-            Assert.Equal("Microsoft YaHei UI", service.Current.FontFamily);
+            Assert.Equal("Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI", service.Current.FontFamily);
             Assert.Equal(100, service.Current.ScalePercent);
         }
         finally
