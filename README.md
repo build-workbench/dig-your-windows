@@ -115,4 +115,4 @@ GitHub Actions 自动构建并发布 FDD 便携版和 SCD 独立版。
 
 ## 许可证
 
-[MIT License](LICENSE) - Copyright © 2025-2026 LessUp
+[MIT License](LICENSE) - Copyright © 2025-2026 Build Workbench

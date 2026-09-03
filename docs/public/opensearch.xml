@@ -9,9 +9,9 @@
   <Language>en-US</Language>
   <SyndicationRight>open</SyndicationRight>
   <Tags>Windows diagnostics hardware monitoring system health event log SMART</Tags>
-  <Contact>https://github.com/LessUp/dig-your-windows/issues</Contact>
-  <Url type="text/html" method="get" template="https://lessup.github.io/dig-your-windows/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://lessup.github.io/dig-your-windows/opensearch.xml"/>
-  <Image height="16" width="16" type="image/x-icon">https://lessup.github.io/dig-your-windows/favicon.ico</Image>
-  <Image height="64" width="64" type="image/png">https://lessup.github.io/dig-your-windows/icons/icon-64x64.png</Image>
+  <Contact>https://github.com/build-workbench/dig-your-windows/issues</Contact>
+  <Url type="text/html" method="get" template="https://build-workbench.github.io/dig-your-windows/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://build-workbench.github.io/dig-your-windows/opensearch.xml"/>
+  <Image height="16" width="16" type="image/x-icon">https://build-workbench.github.io/dig-your-windows/favicon.ico</Image>
+  <Image height="64" width="64" type="image/png">https://build-workbench.github.io/dig-your-windows/icons/icon-64x64.png</Image>
 </OpenSearchDescription>

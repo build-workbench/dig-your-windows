@@ -7,7 +7,7 @@
 #endif
 
 #ifndef AppPublisher
-  #define AppPublisher "LessUp"
+  #define AppPublisher "Build Workbench"
 #endif
 
 #ifndef AppExeName

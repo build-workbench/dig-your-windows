@@ -58,7 +58,7 @@ import { useData } from 'vitepress'
 const { lang } = useData()
 
 const isZh = computed(() => lang.value === 'zh-CN')
-const repoUrl = 'https://github.com/LessUp/dig-your-windows'
+const repoUrl = 'https://github.com/build-workbench/dig-your-windows'
 const releasesUrl = `${repoUrl}/releases`
 
 const loading = ref(true)
@@ -69,7 +69,7 @@ const portableUrl = ref('')
 
 async function fetchLatestRelease() {
   try {
-    const response = await fetch('https://api.github.com/repos/LessUp/dig-your-windows/releases/latest')
+    const response = await fetch('https://api.github.com/repos/build-workbench/dig-your-windows/releases/latest')
     if (!response.ok) throw new Error('Failed to fetch')
     
     const data = await response.json()

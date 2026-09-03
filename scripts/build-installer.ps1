@@ -2,7 +2,7 @@ param(
     [string]$Configuration = "Release",
     [string]$Runtime = "win-x64",
     [string]$AppName = "DigYourWindows",
-    [string]$AppPublisher = "LessUp"
+    [string]$AppPublisher = "Build Workbench"
 )
 
 $ErrorActionPreference = "Stop"
