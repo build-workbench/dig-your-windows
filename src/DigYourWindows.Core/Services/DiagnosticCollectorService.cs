@@ -109,7 +109,7 @@ public class DiagnosticCollectorService : IDiagnosticCollectorService
             var saved = await _historyStoreService.SaveAsync(data, cancellationToken);
             if (!saved)
             {
-                warnings.Add("Failed to save diagnostic to local history. The result is still available in memory.");
+                warnings.Add("诊断数据保存到本地历史失败，本次结果仍保留在内存中。");
                 _log.Warn("History save failed; warning added to result");
             }
         }
@@ -119,7 +119,7 @@ public class DiagnosticCollectorService : IDiagnosticCollectorService
         }
         catch (Exception ex)
         {
-            warnings.Add($"Failed to save diagnostic to local history: {ex.Message}");
+            warnings.Add($"诊断数据保存到本地历史失败: {ex.Message}");
             _log.LogError("History save threw unexpectedly; warning added to result", ex);
         }
 
