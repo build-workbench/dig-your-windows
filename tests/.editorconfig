@@ -1,0 +1,7 @@
+# Test projects only: CA1707 flags underscores in identifiers, but xUnit method
+# names intentionally follow the Method_Scenario_Expected convention.
+# See https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1707
+root = false
+
+[*.cs]
+dotnet_diagnostic.CA1707.severity = none

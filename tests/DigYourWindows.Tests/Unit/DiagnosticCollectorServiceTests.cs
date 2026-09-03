@@ -88,7 +88,9 @@ public class DiagnosticCollectorServiceTests
         };
         var analysis = new PerformanceAnalysisData { SystemHealthScore = 95d, HealthGrade = "优秀" };
         var progressItems = new List<DiagnosticCollectionProgress>();
-        var progress = new Progress<DiagnosticCollectionProgress>(item => progressItems.Add(item));
+        // Synchronous recorder: callbacks run inline, so order assertions are deterministic
+        // (Progress<T> would marshal through the sync context asynchronously).
+        var progress = new SyncProgressRecorder(item => progressItems.Add(item));
 
         var service = new DiagnosticCollectorService(
             new StubHardwareService(_ => hardware),
@@ -143,6 +145,11 @@ public class DiagnosticCollectorServiceTests
     {
         public List<LogEventData> GetErrorEvents(int daysBack = 3, CancellationToken cancellationToken = default) =>
             handler(daysBack, cancellationToken);
+    }
+
+    private sealed class SyncProgressRecorder(Action<DiagnosticCollectionProgress> callback) : IProgress<DiagnosticCollectionProgress>
+    {
+        public void Report(DiagnosticCollectionProgress value) => callback(value);
     }
 
     private sealed class StubPerformanceService(Func<HardwareData, List<LogEventData>, List<ReliabilityRecordData>, PerformanceAnalysisData> handler) : IPerformanceService

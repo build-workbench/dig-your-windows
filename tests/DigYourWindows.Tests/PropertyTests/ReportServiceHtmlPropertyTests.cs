@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Net;
 using DigYourWindows.Core.Models;
 using DigYourWindows.Core.Services;
 
@@ -31,10 +33,11 @@ public class ReportServiceHtmlPropertyTests
         // Act
         var html = service.GenerateHtmlReport(data, daysBackForEvents: 7);
 
-        // Assert
+        // Assert - user values are rendered through WebUtility.HtmlEncode, so compare
+        // against the encoded form; raw comparison fails whenever FsCheck emits <, >, &, " or '
         Assert.Contains("DigYourWindows", html);
-        Assert.Contains(computerName.Get, html);
-        Assert.Contains(osVersion.Get, html);
+        Assert.Contains(WebUtility.HtmlEncode(computerName.Get), html);
+        Assert.Contains(WebUtility.HtmlEncode(osVersion.Get), html);
         Assert.Contains("</html>", html);
     }
 
@@ -99,7 +102,7 @@ public class ReportServiceHtmlPropertyTests
 
         // Assert
         Assert.Contains("系统性能分析", html); // Health section title
-        Assert.Contains(health.ToString("F0"), html); // Health score value rendered as {0:F0}
+        Assert.Contains(health.ToString("F0", CultureInfo.InvariantCulture), html); // Health score value rendered as {0:F0}
     }
 
     [Property]
