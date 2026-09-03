@@ -14,7 +14,7 @@
 
 ### 方式一：下载安装包（推荐）
 
-从 [GitHub Releases](https://github.com/LessUp/dig-your-windows/releases) 下载最新版本：
+从 [GitHub Releases](https://github.com/build-workbench/dig-your-windows/releases) 下载最新版本：
 
 | 版本 | 大小 | 环境要求 | 适用场景 |
 |------|------|----------|----------|
@@ -33,7 +33,7 @@
 
 ```powershell
 # 克隆仓库
-git clone https://github.com/LessUp/dig-your-windows.git
+git clone https://github.com/build-workbench/dig-your-windows.git
 cd dig-your-windows
 
 # 还原依赖

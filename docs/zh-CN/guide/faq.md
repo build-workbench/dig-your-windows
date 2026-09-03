@@ -197,7 +197,7 @@ reportgenerator -reports:**/coverage.cobertura.xml -targetdir:coverage_report
 
 **方法一**：GitHub Releases（推荐）
 ```
-https://github.com/LessUp/dig-your-windows/releases/latest
+https://github.com/build-workbench/dig-your-windows/releases/latest
 ```
 
 **方法二**：从源码构建
@@ -211,8 +211,8 @@ dotnet run
 
 | 渠道 | 用途 | 链接 |
 |------|------|------|
-| GitHub Issues | Bug 报告、功能请求 | [创建 Issue](https://github.com/LessUp/dig-your-windows/issues/new/choose) |
-| GitHub Discussions | 一般讨论 | [Discussions](https://github.com/LessUp/dig-your-windows/discussions) |
+| GitHub Issues | Bug 报告、功能请求 | [创建 Issue](https://github.com/build-workbench/dig-your-windows/issues/new/choose) |
+| GitHub Discussions | 一般讨论 | [Discussions](https://github.com/build-workbench/dig-your-windows/discussions) |
 
 **Bug 报告应包含**:
 - 操作系统版本
@@ -244,4 +244,4 @@ dotnet run
 
 ---
 
-**没找到答案？** [创建 Issue](https://github.com/LessUp/dig-your-windows/issues/new) 或查看[完整文档](/zh-CN/guide/)。
+**没找到答案？** [创建 Issue](https://github.com/build-workbench/dig-your-windows/issues/new) 或查看[完整文档](/zh-CN/guide/)。

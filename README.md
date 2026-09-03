@@ -1,10 +1,10 @@
 # DigYourWindows
 
-[![CI](https://github.com/LessUp/dig-your-windows/actions/workflows/ci.yml/badge.svg)](https://github.com/LessUp/dig-your-windows/actions/workflows/ci.yml)
+[![CI](https://github.com/build-workbench/dig-your-windows/actions/workflows/ci.yml/badge.svg)](https://github.com/build-workbench/dig-your-windows/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Release](https://img.shields.io/github/v/release/LessUp/dig-your-windows)](https://github.com/LessUp/dig-your-windows/releases)
+[![Release](https://img.shields.io/github/v/release/build-workbench/dig-your-windows)](https://github.com/build-workbench/dig-your-windows/releases)
 
-> 📖 **文档站**: [https://lessup.github.io/dig-your-windows/](https://lessup.github.io/dig-your-windows/)
+> 📖 **文档站**: [https://build-workbench.github.io/dig-your-windows/](https://build-workbench.github.io/dig-your-windows/)
 
 **Windows 深度诊断工具** — 一键采集硬件信息、分析事件日志、查看可靠性记录、计算系统健康评分并给出优化建议。
 
@@ -37,7 +37,7 @@
 
 **方式一：下载发布版（推荐）**
 
-从 [Releases](https://github.com/LessUp/dig-your-windows/releases) 下载安装包：
+从 [Releases](https://github.com/build-workbench/dig-your-windows/releases) 下载安装包：
 
 | 版本 | 大小 | 说明 |
 |------|------|------|
@@ -48,7 +48,7 @@
 **方式二：源码构建**
 
 ```powershell
-git clone https://github.com/LessUp/dig-your-windows.git
+git clone https://github.com/build-workbench/dig-your-windows.git
 cd dig-your-windows
 dotnet restore
 dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj

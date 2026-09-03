@@ -15,7 +15,7 @@ layout: home
     <a href="./whitepaper/">技术白皮书</a>
     <a href="./architecture/">架构设计</a>
     <a href="./scoring/">健康评分</a>
-    <a href="https://github.com/AICL-Lab/dig-your-windows">GitHub</a>
+    <a href="https://github.com/build-workbench/dig-your-windows">GitHub</a>
   </div>
 </div>
 
@@ -62,7 +62,7 @@ layout: home
     </div>
     <div class="feature-tags">
       <a href="./architecture/" class="feature-tag">技术选型</a>
-      <a href="https://github.com/AICL-Lab/dig-your-windows/releases/latest" class="feature-tag">下载</a>
+      <a href="https://github.com/build-workbench/dig-your-windows/releases/latest" class="feature-tag">下载</a>
     </div>
   </div>
 
@@ -73,7 +73,7 @@ layout: home
     </div>
     <div class="feature-tags">
       <a href="./guide/testing" class="feature-tag">测试指南</a>
-      <a href="https://github.com/AICL-Lab/dig-your-windows/actions" class="feature-tag">CI/CD</a>
+      <a href="https://github.com/build-workbench/dig-your-windows/actions" class="feature-tag">CI/CD</a>
     </div>
   </div>
 
@@ -84,7 +84,7 @@ layout: home
     </div>
     <div class="feature-tags">
       <a href="./reference/data-schema" class="feature-tag">数据 Schema</a>
-      <a href="https://aicl-lab.github.io/dig-your-windows/data-schema.json" class="feature-tag">JSON Schema</a>
+      <a href="https://build-workbench.github.io/dig-your-windows/data-schema.json" class="feature-tag">JSON Schema</a>
     </div>
   </div>
 </div>
@@ -94,7 +94,7 @@ layout: home
   <div class="quick-start-title">快速开始</div>
   <div class="quick-start-content">
     <div class="command-block">
-      <code>git clone https://github.com/AICL-Lab/dig-your-windows.git</code>
+      <code>git clone https://github.com/build-workbench/dig-your-windows.git</code>
     </div>
     克隆仓库后，运行 <code>dotnet run --project src/DigYourWindows.UI</code> 即可启动应用。
   </div>
@@ -151,9 +151,9 @@ layout: home
 
 ## 开源许可
 
-本项目采用 <a href="https://github.com/AICL-Lab/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener"><strong>MIT License</strong></a> 开源协议
+本项目采用 <a href="https://github.com/build-workbench/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener"><strong>MIT License</strong></a> 开源协议
 
-Copyright © 2025-2026 <a href="https://github.com/AICL-Lab" target="_blank" rel="noopener">AICL-Lab</a>
+Copyright © 2025-2026 <a href="https://github.com/build-workbench" target="_blank" rel="noopener">build-workbench</a>
 
 </div>
 

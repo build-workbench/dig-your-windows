@@ -96,7 +96,7 @@ outline: deep
 ## 完整变更日志
 
 - [中文完整版 →](/zh-CN/changelog)
-- [GitHub Releases →](https://github.com/LessUp/dig-your-windows/releases)
+- [GitHub Releases →](https://github.com/build-workbench/dig-your-windows/releases)
 
 ## 版本规范
 

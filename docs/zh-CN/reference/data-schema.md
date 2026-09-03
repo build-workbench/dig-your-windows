@@ -1,6 +1,6 @@
 # 数据 Schema
 
-DigYourWindows 的诊断数据遵循 JSON Schema 规范。完整定义见 [`diagnostic-data-schema.json`](https://github.com/LessUp/dig-your-windows/blob/main/docs/diagnostic-data-schema.json)。
+DigYourWindows 的诊断数据遵循 JSON Schema 规范。完整定义见 [`diagnostic-data-schema.json`](https://github.com/build-workbench/dig-your-windows/blob/main/docs/diagnostic-data-schema.json)。
 
 ## 顶层结构
 
