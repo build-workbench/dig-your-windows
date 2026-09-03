@@ -53,7 +53,7 @@ dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj
    - 使用 `dotnet run`
 
 2. **运行诊断**：
-   - 点击"运行诊断"按钮
+   - 点击"刷新数据"按钮
    - 等待数据采集完成（通常 5-15 秒）
 
 3. **查看结果**：
@@ -63,9 +63,8 @@ dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj
    - 查看健康评分和优化建议
 
 4. **导出报告**（可选）：
-   - 点击"导出"按钮
-   - 选择 JSON 或 HTML 格式
-   - 选择保存位置
+   - 点击"导出报告"（HTML）或"导出JSON"按钮
+   - 报告自动保存到桌面并打开
 
 ## 管理员权限
 
@@ -94,7 +93,7 @@ dotnet run --project src/DigYourWindows.UI/DigYourWindows.UI.csproj
 
 - **系统信息**：计算机名、操作系统版本、处理器、内存
 - **实时数据**：当前 CPU/GPU 指标
-- **操作按钮**：运行诊断、导出、设置
+- **操作按钮**：刷新数据、导出报告、导出JSON、导入JSON、切换主题
 
 ### 查看硬件信息
 

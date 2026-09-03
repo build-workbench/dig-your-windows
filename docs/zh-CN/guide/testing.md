@@ -16,15 +16,25 @@
 
 ```
 DigYourWindows.Tests/
-├── Unit/                           # 单元测试
-│   ├── ReportServiceTests.cs       # 报告服务测试
-│   ├── DiagnosticCollectorServiceTests.cs
-│   └── PerformanceServiceTests.cs  # 性能分析测试
-├── Property/                       # 属性测试
+├── Unit/                                    # 单元测试
+│   ├── ConvertersTests.cs                   # 值转换器测试
+│   ├── NullConvertersTests.cs               # 空值转换器测试
+│   ├── LogServiceTests.cs                   # 日志服务测试（注入临时目录）
+│   ├── NetworkMonitorServiceTests.cs        # 网络监控测试
+│   ├── ReportServiceTests.cs                # 报告服务测试
+│   ├── DiagnosticCollectorServiceTests.cs   # 采集编排测试
+│   ├── PerformanceServiceTests.cs           # 性能分析测试
+│   ├── ReliabilityTrendBuilderTests.cs      # 可靠性趋势聚合测试
+│   └── SqliteHistoryStoreServiceTests.cs    # 历史存储测试
+├── PropertyTests/                           # FsCheck 属性测试
+│   ├── DiagnosticDataPropertyTests.cs
+│   ├── PerformanceServicePropertyTests.cs
+│   ├── ReportServiceHtmlPropertyTests.cs
 │   └── ReportServicePropertyTests.cs
-├── Integration/                    # 集成测试（预留）
-├── FsCheckConfig.cs               # FsCheck 配置
-├── Usings.cs                      # 全局 using
+├── Integration/                             # 集成测试
+│   └── ServiceIntegrationTests.cs
+├── FsCheckConfig.cs                         # FsCheck 配置
+├── Usings.cs                                # 全局 using
 └── DigYourWindows.Tests.csproj
 ```
 

@@ -13,6 +13,16 @@ DigYourWindows.Core        →  Business logic (services, models, exceptions) �
 DigYourWindows.Tests       →  xUnit 2.9 + FsCheck 2.16 (Unit/ PropertyTests/ Integration/)
 ```
 
+## UI Services (DigYourWindows.UI/Services/)
+
+Framework concerns wrapped as injectable services so ViewModels stay testable and UI-framework-agnostic (pattern borrowed from the WPF-UI Gallery reference app):
+
+| Service | Responsibility |
+|---------|----------------|
+| `MonitorPlotService` | Owns the two ScottPlot `WpfPlot` controls and all rendering (theme, series, date axes, CJK fonts) |
+| `ApplicationThemeService` | Wraps WPF-UI `ApplicationThemeManager` for dark/light toggling |
+| `FileDialogService` | File pickers and shell reveal (`Process.Start`) — never used directly in ViewModels |
+
 ## Core Services (DigYourWindows.Core/Services/)
 
 | Service | Responsibility | Key Dependency |
@@ -30,6 +40,7 @@ DigYourWindows.Tests       →  xUnit 2.9 + FsCheck 2.16 (Unit/ PropertyTests/ I
 | `HardwareMonitorProvider` | Thread-safe singleton wrapping `LibreHardwareMonitor.Computer` | `LibreHardwareMonitorLib 0.9.4` |
 | `SqliteHistoryStoreService` | Diagnostic history persistence | `Microsoft.Data.Sqlite` |
 | `LogService` | Buffered file logging with rotation | `StreamWriter` |
+| `ReliabilityTrendBuilder` | Pure per-day reliability trend aggregation (testable) | — |
 
 ## Data Models (DigYourWindows.Core/Models/)
 
@@ -49,9 +60,9 @@ DigYourWindows.Tests       →  xUnit 2.9 + FsCheck 2.16 (Unit/ PropertyTests/ I
 
 | Exception | Factory Methods | Key Properties |
 |-----------|----------------|----------------|
-| `ServiceException` | `ServiceException.OperationFailed(...)` | `ErrorType`, `ServiceName` |
-| `ReportException` | `ReportException.InvalidData(...)`, `.FileAccessError(...)` | `ErrorType`, `MissingField`, `Path` |
-| `WmiException` | `WmiException.QueryFailed(...)` | `ErrorType`, `Resource`, `Query` |
+| `ReportException` | `ReportException.Serialization(...)`, `.InvalidData(...)` | `ErrorType` (ReportErrorType enum) |
+
+`ReportErrorType`: `Unknown`, `Serialization`, `InvalidData`.
 
 ## Build Commands
 
