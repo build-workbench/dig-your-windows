@@ -34,7 +34,7 @@ const baseConfig = defineConfig({
 
   // Sitemap configuration
   sitemap: {
-    hostname: 'https://aicl-lab.github.io/dig-your-windows/',
+    hostname: 'https://build-workbench.github.io/dig-your-windows/',
     lastmodDateOnly: false,
     changefreq: 'weekly',
     priority: 0.7,
@@ -64,7 +64,7 @@ const baseConfig = defineConfig({
     ['meta', { name: 'color-scheme', content: 'light dark' }],
     ['meta', { name: 'theme-color', content: '#0078d4', media: '(prefers-color-scheme: light)' }],
     ['meta', { name: 'theme-color', content: '#0078d4', media: '(prefers-color-scheme: dark)' }],
-    ['link', { rel: 'canonical', href: 'https://aicl-lab.github.io/dig-your-windows/' }],
+    ['link', { rel: 'canonical', href: 'https://build-workbench.github.io/dig-your-windows/' }],
     ['link', { rel: 'icon', href: '/favicon.ico', sizes: 'any' }],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
     ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }],
@@ -72,7 +72,7 @@ const baseConfig = defineConfig({
     ['link', { rel: 'dns-prefetch', href: 'https://api.github.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-    ['meta', { name: 'author', content: 'AICL-Lab' }],
+    ['meta', { name: 'author', content: 'build-workbench' }],
     ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }],
     ['meta', { name: 'googlebot', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' }],
     ['meta', { name: 'bingbot', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' }],
@@ -82,8 +82,8 @@ const baseConfig = defineConfig({
     ['meta', { property: 'og:locale', content: 'zh_CN' }],
     ['meta', { property: 'og:title', content: 'DigYourWindows - Windows Deep Diagnostics Tool' }],
     ['meta', { property: 'og:description', content: 'One-click hardware info collection, event log analysis, reliability records, system health scoring, and optimization recommendations.' }],
-    ['meta', { property: 'og:url', content: 'https://aicl-lab.github.io/dig-your-windows/' }],
-    ['meta', { property: 'og:image', content: 'https://aicl-lab.github.io/dig-your-windows/og-image.png' }],
+    ['meta', { property: 'og:url', content: 'https://build-workbench.github.io/dig-your-windows/' }],
+    ['meta', { property: 'og:image', content: 'https://build-workbench.github.io/dig-your-windows/og-image.png' }],
     ['meta', { property: 'og:image:width', content: '1200' }],
     ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:image:alt', content: 'DigYourWindows - Windows Deep Diagnostics Tool' }],
@@ -91,7 +91,7 @@ const baseConfig = defineConfig({
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:title', content: 'DigYourWindows - Windows Deep Diagnostics Tool' }],
     ['meta', { name: 'twitter:description', content: 'One-click hardware info collection, event log analysis, reliability records, system health scoring, and optimization recommendations.' }],
-    ['meta', { name: 'twitter:image', content: 'https://aicl-lab.github.io/dig-your-windows/og-image.png' }],
+    ['meta', { name: 'twitter:image', content: 'https://build-workbench.github.io/dig-your-windows/og-image.png' }],
     // Mobile App
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }],
@@ -115,16 +115,16 @@ const baseConfig = defineConfig({
       applicationCategory: 'UtilitiesApplication',
       operatingSystem: 'Windows 10, Windows 11',
       softwareVersion: '1.2.0',
-      license: 'https://github.com/AICL-Lab/dig-your-windows/blob/master/LICENSE',
-      url: 'https://aicl-lab.github.io/dig-your-windows/',
-      downloadUrl: 'https://github.com/AICL-Lab/dig-your-windows/releases/latest',
-      codeRepository: 'https://github.com/AICL-Lab/dig-your-windows',
+      license: 'https://github.com/build-workbench/dig-your-windows/blob/master/LICENSE',
+      url: 'https://build-workbench.github.io/dig-your-windows/',
+      downloadUrl: 'https://github.com/build-workbench/dig-your-windows/releases/latest',
+      codeRepository: 'https://github.com/build-workbench/dig-your-windows',
       programmingLanguage: ['C#', '.NET', 'WPF'],
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-      author: { '@type': 'Organization', name: 'AICL-Lab', url: 'https://github.com/AICL-Lab' },
-      publisher: { '@type': 'Organization', name: 'AICL-Lab', logo: { '@type': 'ImageObject', url: 'https://aicl-lab.github.io/dig-your-windows/logo.png' } },
-      sameAs: ['https://github.com/AICL-Lab/dig-your-windows'],
-      image: 'https://aicl-lab.github.io/dig-your-windows/og-image.png',
+      author: { '@type': 'Organization', name: 'build-workbench', url: 'https://github.com/build-workbench' },
+      publisher: { '@type': 'Organization', name: 'build-workbench', logo: { '@type': 'ImageObject', url: 'https://build-workbench.github.io/dig-your-windows/logo.png' } },
+      sameAs: ['https://github.com/build-workbench/dig-your-windows'],
+      image: 'https://build-workbench.github.io/dig-your-windows/og-image.png',
       featureList: ['Hardware information collection', 'Real-time CPU/GPU monitoring', 'Event log analysis', 'Windows reliability records', 'System health scoring', 'SMART data reading'],
       aggregateRating: {
         '@type': 'AggregateRating',
@@ -137,11 +137,11 @@ const baseConfig = defineConfig({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'DigYourWindows',
-      url: 'https://aicl-lab.github.io/dig-your-windows/',
+      url: 'https://build-workbench.github.io/dig-your-windows/',
       inLanguage: 'zh-CN',
       potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://aicl-lab.github.io/dig-your-windows/search?q={search_term_string}',
+        target: 'https://build-workbench.github.io/dig-your-windows/search?q={search_term_string}',
         'query-input': 'required name=search_term_string'
       }
     })],
@@ -149,10 +149,10 @@ const baseConfig = defineConfig({
     ['script', { type: 'application/ld+json' }, JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'AICL-Lab',
-      url: 'https://github.com/AICL-Lab',
-      logo: 'https://aicl-lab.github.io/dig-your-windows/logo.png',
-      sameAs: ['https://github.com/AICL-Lab']
+      name: 'build-workbench',
+      url: 'https://github.com/build-workbench',
+      logo: 'https://build-workbench.github.io/dig-your-windows/logo.png',
+      sameAs: ['https://github.com/build-workbench']
     })],
   ],
 
@@ -219,15 +219,15 @@ const baseConfig = defineConfig({
       },
     },
     editLink: {
-      pattern: 'https://github.com/AICL-Lab/dig-your-windows/edit/master/docs/:path',
+      pattern: 'https://github.com/build-workbench/dig-your-windows/edit/master/docs/:path',
       text: 'Edit this page on GitHub',
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/AICL-Lab/dig-your-windows' },
+      { icon: 'github', link: 'https://github.com/build-workbench/dig-your-windows' },
     ],
     footer: {
-      message: 'Released under the <a href="https://github.com/AICL-Lab/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>.',
-      copyright: 'Copyright © 2025-2026 <a href="https://github.com/AICL-Lab" target="_blank" rel="noopener">AICL-Lab</a>',
+      message: 'Released under the <a href="https://github.com/build-workbench/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>.',
+      copyright: 'Copyright © 2025-2026 <a href="https://github.com/build-workbench" target="_blank" rel="noopener">build-workbench</a>',
     },
     outline: {
       level: [2, 3],
@@ -266,7 +266,7 @@ const baseConfig = defineConfig({
             { text: '贡献指南', link: '/zh-CN/guide/contributing' },
             { text: 'FAQ', link: '/zh-CN/guide/faq' },
           ]},
-          { text: 'GitHub', link: 'https://github.com/AICL-Lab/dig-your-windows', target: '_blank', rel: 'noopener' },
+          { text: 'GitHub', link: 'https://github.com/build-workbench/dig-your-windows', target: '_blank', rel: 'noopener' },
         ],
         sidebar: {
           '/zh-CN/whitepaper/': [{ text: '技术白皮书', collapsed: false, items: [

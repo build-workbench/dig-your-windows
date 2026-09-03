@@ -1,7 +1,7 @@
 # DigYourWindows — AI Agent Reference
 
 **Project**: Windows 深度诊断工具 | .NET 10 WPF | **Status**: v1.2.0 归档稳定版
-**Repo**: `LessUp/dig-your-windows` | **Docs**: `https://lessup.github.io/dig-your-windows/`
+**Repo**: `build-workbench/dig-your-windows` | **Docs**: `https://build-workbench.github.io/dig-your-windows/`
 
 ---
 

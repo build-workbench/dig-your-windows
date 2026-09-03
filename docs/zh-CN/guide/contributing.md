@@ -12,7 +12,7 @@
 
 ### 报告 Bug
 
-1. 搜索 [Issues](https://github.com/LessUp/dig-your-windows/issues) 确认问题未被报告
+1. 搜索 [Issues](https://github.com/build-workbench/dig-your-windows/issues) 确认问题未被报告
 2. 使用 Bug 报告模板创建新 Issue
 3. 包含以下信息：
    - 操作系统版本
@@ -32,7 +32,7 @@
 
 ```powershell
 # 克隆仓库
-git clone https://github.com/LessUp/dig-your-windows.git
+git clone https://github.com/build-workbench/dig-your-windows.git
 cd dig-your-windows
 
 # 还原依赖
@@ -155,9 +155,9 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ## 获取帮助
 
-- 查看 [文档](https://lessup.github.io/dig-your-windows/)
-- 在 [Discussions](https://github.com/LessUp/dig-your-windows/discussions) 提问
-- 创建 [Issue](https://github.com/LessUp/dig-your-windows/issues)
+- 查看 [文档](https://build-workbench.github.io/dig-your-windows/)
+- 在 [Discussions](https://github.com/build-workbench/dig-your-windows/discussions) 提问
+- 创建 [Issue](https://github.com/build-workbench/dig-your-windows/issues)
 
 ## 许可证
 

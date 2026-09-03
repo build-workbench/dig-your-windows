@@ -63,7 +63,7 @@ export default {
           // Update canonical URL
           const canonical = document.querySelector('link[rel="canonical"]')
           if (canonical) {
-            const baseUrl = 'https://lessup.github.io/dig-your-windows'
+            const baseUrl = 'https://build-workbench.github.io/dig-your-windows'
             const cleanPath = route.path.replace(/\.html$/, '').replace(/\/index$/, '/')
             canonical.setAttribute('href', `${baseUrl}${cleanPath}`)
           }
