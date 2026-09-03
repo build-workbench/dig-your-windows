@@ -2,10 +2,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DigYourWindows.Core.Models;
 using DigYourWindows.Core.Services;
-using Microsoft.Win32;
+using DigYourWindows.UI.Services;
 using ScottPlot.WPF;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Threading;
@@ -13,6 +12,11 @@ using Wpf.Ui.Appearance;
 
 namespace DigYourWindows.UI.ViewModels;
 
+/// <summary>
+/// Orchestrates diagnostic data flow: collection, import/export, real-time
+/// monitoring state and history. Rendering, dialogs and theme application are
+/// delegated to injected UI services.
+/// </summary>
 public partial class MainViewModel : ObservableObject, IDisposable
 {
     private readonly IDiagnosticCollectorService _collectorService;
@@ -21,6 +25,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly INetworkMonitorService _networkMonitorService;
     private readonly IHistoryStoreService _historyStoreService;
     private readonly ILogService _log;
+    private readonly IMonitorPlotService _plots;
+    private readonly IApplicationThemeService _themeService;
+    private readonly IFileDialogService _dialogs;
     private readonly DispatcherTimer _cpuMonitorTimer;
     private CancellationTokenSource? _loadCts;
     private DiagnosticData? _currentData;
@@ -63,16 +70,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private DiagnosticHistorySummary? _recentHistoryEntry;
 
     [ObservableProperty]
-    private IReadOnlyList<DiagnosticHistorySummary> _historyList = Array.Empty<DiagnosticHistorySummary>();
-
-    [ObservableProperty]
     private HistoryListViewModel? _historyListViewModel;
 
     public List<int> AvailableDays { get; } = new() { 1, 3, 7, 30 };
 
-    public WpfPlot ReliabilityTrendPlot { get; } = new();
+    public WpfPlot ReliabilityTrendPlot => _plots.ReliabilityTrendPlot;
 
-    public WpfPlot NetworkTrafficPlot { get; } = new();
+    public WpfPlot NetworkTrafficPlot => _plots.NetworkTrafficPlot;
 
     public MainViewModel(
         IDiagnosticCollectorService collectorService,
@@ -80,7 +84,11 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ICpuMonitorService cpuMonitorService,
         INetworkMonitorService networkMonitorService,
         IHistoryStoreService historyStoreService,
-        ILogService log)
+        ILogService log,
+        IMonitorPlotService plots,
+        IApplicationThemeService themeService,
+        IFileDialogService dialogs,
+        HistoryListViewModel historyListViewModel)
     {
         _collectorService = collectorService;
         _reportService = reportService;
@@ -88,6 +96,11 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _networkMonitorService = networkMonitorService;
         _historyStoreService = historyStoreService;
         _log = log;
+        _plots = plots;
+        _themeService = themeService;
+        _dialogs = dialogs;
+        HistoryListViewModel = historyListViewModel;
+        historyListViewModel.EntrySelected += OnHistoryEntrySelected;
 
         _cpuMonitorTimer = new DispatcherTimer
         {
@@ -100,9 +113,6 @@ public partial class MainViewModel : ObservableObject, IDisposable
         UpdateNetworkTraffic();
         UpdateReliabilityTrendPlot();
         UpdateNetworkTrafficPlot();
-
-        // Initialize history ViewModel
-        HistoryListViewModel = new HistoryListViewModel(_historyStoreService, _log);
     }
 
     private void CpuMonitorTimer_Tick(object? sender, EventArgs e)
@@ -126,41 +136,35 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     private void UpdateNetworkTrafficPlot()
     {
-        var plot = NetworkTrafficPlot.Plot;
-        plot.Clear();
-        plot.Title("网络流量 (最近60秒)");
-        plot.XLabel("时间");
-        plot.YLabel("MB/s");
+        _plots.RenderNetworkTraffic(
+            _networkMonitorService.HistoryTimes,
+            _networkMonitorService.HistoryDownload,
+            _networkMonitorService.HistoryUpload,
+            IsDarkTheme);
+    }
 
-        ApplyPlotTheme(plot);
-
-        var historyTimes = _networkMonitorService.HistoryTimes;
-        if (historyTimes.Count == 0)
+    private void UpdateReliabilityTrendPlot()
+    {
+        if (ReliabilityRecords.Count == 0)
         {
-            NetworkTrafficPlot.Refresh();
+            _plots.RenderReliabilityTrend(Array.Empty<ReliabilityTrendDayCounts>(), IsDarkTheme);
             return;
         }
 
-        var xs = historyTimes.Select(time => time.ToOADate()).ToArray();
-        var downYs = _networkMonitorService.HistoryDownload.ToArray();
-        var upYs = _networkMonitorService.HistoryUpload.ToArray();
-
-        var downScatter = plot.Add.Scatter(xs, downYs);
-        downScatter.LegendText = "下载";
-        downScatter.Color = ScottPlot.Color.FromHex("#2196F3");
-
-        var upScatter = plot.Add.Scatter(xs, upYs);
-        upScatter.LegendText = "上传";
-        upScatter.Color = ScottPlot.Color.FromHex("#4CAF50");
-
-        plot.Legend.IsVisible = true;
-        NetworkTrafficPlot.Refresh();
+        var trend = ReliabilityTrendBuilder.BuildDailyCounts(ReliabilityRecords, SelectedDaysBack);
+        _plots.RenderReliabilityTrend(trend, IsDarkTheme);
     }
+
+    private bool IsDarkTheme => CurrentTheme == ApplicationTheme.Dark;
 
     public void Dispose()
     {
         _cpuMonitorTimer.Stop();
         _cpuMonitorTimer.Tick -= CpuMonitorTimer_Tick;
+        if (HistoryListViewModel is not null)
+        {
+            HistoryListViewModel.EntrySelected -= OnHistoryEntrySelected;
+        }
         _loadCts?.Cancel();
         _loadCts?.Dispose();
         // WpfPlot does not implement IDisposable, so no explicit disposal needed
@@ -246,13 +250,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private async Task ImportFromJsonAsync()
     {
-        var dialog = new OpenFileDialog
-        {
-            Filter = "JSON 文件 (*.json)|*.json|所有文件 (*.*)|*.*",
-            DefaultExt = ".json"
-        };
-
-        if (dialog.ShowDialog() != true)
+        var fileName = _dialogs.PickJsonFileToOpen();
+        if (string.IsNullOrEmpty(fileName))
         {
             return;
         }
@@ -262,7 +261,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             StatusMessage = "正在导入JSON报告...";
             IsLoading = true;
 
-            var json = await Task.Run(() => File.ReadAllText(dialog.FileName, Encoding.UTF8));
+            var json = await Task.Run(() => File.ReadAllText(fileName, Encoding.UTF8));
             var data = _reportService.DeserializeFromJson(json);
 
             if (data == null)
@@ -392,7 +391,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             await WriteExportFileAsync(filePath, content);
 
             StatusMessage = BuildExportSuccessStatus(successPrefix, fileName);
-            OpenExportedFile(filePath);
+            _dialogs.RevealFile(filePath);
         }
         catch (Exception ex)
         {
@@ -417,20 +416,6 @@ public partial class MainViewModel : ObservableObject, IDisposable
         return Task.Run(() => File.WriteAllText(filePath, content, Encoding.UTF8));
     }
 
-    private static void OpenExportedFile(string filePath)
-    {
-        try
-        {
-            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
-        }
-        catch (Exception ex)
-        {
-            // Ignore if we can't open the file - the user can navigate to it manually
-            // Common causes: file association missing, permission denied, or file locked
-            Debug.WriteLine($"Failed to open exported file: {ex.Message}");
-        }
-    }
-
     private static string BuildLoadCompletedStatus(DiagnosticCollectionResult result)
     {
         var performanceScore = result.Data.Performance.SystemHealthScore;
@@ -451,11 +436,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void ToggleTheme()
     {
-        CurrentTheme = CurrentTheme == ApplicationTheme.Dark
-            ? ApplicationTheme.Light
-            : ApplicationTheme.Dark;
-
-        ApplicationThemeManager.Apply(CurrentTheme);
+        CurrentTheme = _themeService.ToggleTheme();
         UpdateReliabilityTrendPlot();
         UpdateNetworkTrafficPlot();
         StatusMessage = BuildThemeChangedStatus();
@@ -466,128 +447,20 @@ public partial class MainViewModel : ObservableObject, IDisposable
         return $"主题已切换为: {(CurrentTheme == ApplicationTheme.Dark ? "深色" : "浅色")}";
     }
 
-    private void UpdateReliabilityTrendPlot()
+    private void OnHistoryEntrySelected(DiagnosticHistorySummary entry)
     {
-        var plot = ReliabilityTrendPlot.Plot;
-        plot.Clear();
-        plot.Title("可靠性趋势");
-        plot.XLabel("日期");
-        plot.YLabel("记录数");
-
-        var records = ReliabilityRecords.ToList();
-        if (records.Count == 0)
-        {
-            ApplyPlotTheme(plot);
-            ReliabilityTrendPlot.Refresh();
-            return;
-        }
-
-        var days = BuildReliabilityTimeline(records);
-        var xs = days.Select(day => day.ToOADate()).ToArray();
-        var totalYs = BuildReliabilitySeries(days, records, null);
-
-        var totalScatter = plot.Add.Scatter(xs, totalYs);
-        totalScatter.LegendText = "总计";
-        totalScatter.Color = ScottPlot.Color.FromHex("#9E9E9E");
-        totalScatter.LineWidth = 2;
-
-        var categories = new[]
-        {
-            new { Key = (int?)1, Name = "应用程序故障", Color = "#F44336" },
-            new { Key = (int?)2, Name = "Windows 故障", Color = "#FF9800" },
-            new { Key = (int?)3, Name = "其他故障", Color = "#FFC107" },
-            new { Key = (int?)null, Name = "未知", Color = "#9C27B0" }
-        };
-
-        foreach (var category in categories)
-        {
-            var ys = BuildReliabilitySeries(days, records, category.Key);
-            if (ys.All(y => y == 0))
-            {
-                continue;
-            }
-
-            var scatter = plot.Add.Scatter(xs, ys);
-            scatter.LegendText = category.Name;
-            scatter.Color = ScottPlot.Color.FromHex(category.Color);
-        }
-
-        plot.Legend.IsVisible = true;
-        ApplyPlotTheme(plot);
-        ReliabilityTrendPlot.Refresh();
-    }
-
-    private DateTime[] BuildReliabilityTimeline(List<ReliabilityRecordData> records)
-    {
-        var endDate = DateTime.Today;
-        DateTime startDate;
-
-        if (SelectedDaysBack <= 0)
-        {
-            startDate = records.Count > 0
-                ? records.Min(x => x.Timestamp.Date)
-                : endDate;
-        }
-        else
-        {
-            startDate = endDate.AddDays(-(SelectedDaysBack - 1));
-        }
-
-        return Enumerable
-            .Range(0, (endDate - startDate).Days + 1)
-            .Select(i => startDate.AddDays(i))
-            .ToArray();
-    }
-
-    private static double[] BuildReliabilitySeries(
-        IReadOnlyList<DateTime> days,
-        List<ReliabilityRecordData> records,
-        int? category)
-    {
-        return days
-            .Select(day => (double)records.Count(r => MatchesReliabilityCategory(r, category) && r.Timestamp.Date == day.Date))
-            .ToArray();
-    }
-
-    private static bool MatchesReliabilityCategory(ReliabilityRecordData record, int? category)
-    {
-        if (category is null)
-        {
-            return !record.RecordType.HasValue || (record.RecordType is not 1 and not 2 and not 3);
-        }
-
-        return record.RecordType == category;
-    }
-
-    private void ApplyPlotTheme(ScottPlot.Plot plot)
-    {
-        var isDarkTheme = CurrentTheme == ApplicationTheme.Dark;
-        var backgroundColor = isDarkTheme ? ScottPlot.Color.FromHex("#1E1E1E") : ScottPlot.Color.FromHex("#FFFFFF");
-        var textColor = isDarkTheme ? ScottPlot.Color.FromHex("#FFFFFF") : ScottPlot.Color.FromHex("#212529");
-        var gridColor = isDarkTheme ? ScottPlot.Color.FromHex("#3E3E3E") : ScottPlot.Color.FromHex("#E0E0E0");
-
-        plot.FigureBackground.Color = backgroundColor;
-        plot.Axes.Color(textColor);
-        plot.Grid.MajorLineColor = gridColor;
-
-        foreach (var axis in plot.Axes.GetAxes())
-        {
-            axis.Label.ForeColor = textColor;
-            axis.TickLabelStyle.ForeColor = textColor;
-        }
+        ReloadHistoryEntryCommand.Execute(entry.Id);
     }
 
     /// <summary>
     /// Initialize history loading on app startup.
-    /// Called from App.xaml.cs after MainViewModel is created.
+    /// Called from MainWindow after the view is loaded.
     /// </summary>
     public async Task InitializeHistoryAsync()
     {
         try
         {
             RecentHistoryEntry = await _historyStoreService.GetMostRecentSummaryAsync();
-            var allSummaries = await _historyStoreService.ListSummariesAsync();
-            HistoryList = allSummaries;
         }
         catch (Exception ex)
         {
