@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows;
 using DigYourWindows.Core.Services;
+using DigYourWindows.UI.Services;
 using DigYourWindows.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -80,5 +81,11 @@ public partial class App : Application
         services.AddSingleton<IEventLogService, EventLogService>();
         services.AddSingleton<ISystemInfoProvider, WmiSystemInfoProvider>();
         services.AddSingleton<IPerformanceService, PerformanceService>();
+
+        // UI concerns wrapped as services so ViewModels stay framework-agnostic
+        services.AddSingleton<IMonitorPlotService, MonitorPlotService>();
+        services.AddSingleton<IApplicationThemeService, ApplicationThemeService>();
+        services.AddSingleton<IFileDialogService, FileDialogService>();
+        services.AddSingleton<ViewModels.HistoryListViewModel>();
     }
 }
