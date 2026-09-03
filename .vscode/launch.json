@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "dotnet: build",
-            "program": "${workspaceFolder}/src/DigYourWindows.UI/bin/Debug/net10.0-windows/DigYourWindows.UI.dll",
+            "program": "${workspaceFolder}/src/DigYourWindows.UI/bin/Debug/net10.0-windows10.0.19041.0/DigYourWindows.UI.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
