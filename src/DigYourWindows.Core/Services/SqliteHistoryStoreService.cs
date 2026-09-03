@@ -12,15 +12,22 @@ namespace DigYourWindows.Core.Services;
 /// </summary>
 public sealed class SqliteHistoryStoreService : IHistoryStoreService
 {
+    private const int MaxHistoryRecords = 50;
+
+    private static readonly string ToolVersion =
+        typeof(SqliteHistoryStoreService).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
+
     private readonly string _dbPath;
     private readonly ILogService _logService;
+    private readonly int _maxHistoryRecords;
     private SqliteConnection? _connection;
     private bool _disposed;
 
-    public SqliteHistoryStoreService(string dbPath, ILogService logService)
+    public SqliteHistoryStoreService(string dbPath, ILogService logService, int maxHistoryRecords = MaxHistoryRecords)
     {
         _dbPath = dbPath ?? throw new ArgumentNullException(nameof(dbPath));
         _logService = logService ?? throw new ArgumentNullException(nameof(logService));
+        _maxHistoryRecords = maxHistoryRecords;
     }
 
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -37,6 +44,9 @@ public sealed class SqliteHistoryStoreService : IHistoryStoreService
                 DataSource = _dbPath,
                 Mode = SqliteOpenMode.ReadWriteCreate,
                 Cache = SqliteCacheMode.Shared,
+                // Pooling keeps the native file handle open after Dispose; the single
+                // long-lived connection gains nothing from it.
+                Pooling = false,
             }.ToString();
 
             _connection = new SqliteConnection(connectionString);
@@ -94,11 +104,13 @@ public sealed class SqliteHistoryStoreService : IHistoryStoreService
                 cmd.Parameters.AddWithValue("@systemHealthScore", data.Performance.SystemHealthScore);
                 cmd.Parameters.AddWithValue("@healthGrade", data.Performance.HealthGrade ?? "Unknown");
                 cmd.Parameters.AddWithValue("@warningCount", (int)data.Performance.WarningsCount);
-                cmd.Parameters.AddWithValue("@toolVersion", "1.2.0");
+                cmd.Parameters.AddWithValue("@toolVersion", ToolVersion);
                 cmd.Parameters.AddWithValue("@snapshotJson", snapshotJson);
 
                 await cmd.ExecuteNonQueryAsync(cancellationToken);
             }
+
+            await PruneOldRecordsAsync(cancellationToken);
 
             _logService.Info($"Diagnostic saved to history with id: {historyId}");
             return true;
@@ -107,6 +119,29 @@ public sealed class SqliteHistoryStoreService : IHistoryStoreService
         {
             _logService.LogError($"Failed to save diagnostic to history: {ex.Message}", ex);
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Keeps the newest <see cref="MaxHistoryRecords"/> records; each snapshot embeds a
+    /// full diagnostic payload (hundreds of KB), so the store must not grow unbounded.
+    /// </summary>
+    private async Task PruneOldRecordsAsync(CancellationToken cancellationToken)
+    {
+        // _connection is null-checked at the start of SaveAsync
+        using var cmd = _connection!.CreateCommand();
+        cmd.CommandText = @"
+                DELETE FROM diagnostic_history
+                WHERE id NOT IN (
+                    SELECT id FROM diagnostic_history
+                    ORDER BY collected_at_utc DESC
+                    LIMIT @maxRecords)";
+        cmd.Parameters.AddWithValue("@maxRecords", _maxHistoryRecords);
+
+        var deleted = await cmd.ExecuteNonQueryAsync(cancellationToken);
+        if (deleted > 0)
+        {
+            _logService.Info($"History retention removed {deleted} old record(s).");
         }
     }
 

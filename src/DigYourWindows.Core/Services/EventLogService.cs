@@ -102,6 +102,13 @@ public class EventLogService : IEventLogService
         {
             return record.FormatDescription() ?? string.Empty;
         }
+        catch (EventLogException)
+        {
+            // FormatDescription throws EventLogException (e.g. "resource type not found")
+            // for providers with broken message resources; continue with an empty message
+            // instead of aborting the whole log scan.
+            return string.Empty;
+        }
         catch (System.ComponentModel.Win32Exception)
         {
             // FormatDescription may fail if the provider DLL is not available

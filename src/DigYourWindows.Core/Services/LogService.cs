@@ -19,25 +19,30 @@ public sealed class FileLogService : ILogService, IDisposable
     private const int MaxLogFiles = 7;
     private const long MaxLogFileSizeBytes = 10 * 1024 * 1024; // 10 MB
 
-    public FileLogService()
+    public FileLogService() : this(logDirectory: null)
     {
-        var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        _logDirectory = Path.Combine(appData, "DigYourWindows", "logs");
+    }
+
+    /// <summary>
+    /// Creates a file logger. Pass <paramref name="logDirectory"/> to redirect output
+    /// (used by tests); null defaults to %APPDATA%\DigYourWindows\logs.
+    /// </summary>
+    public FileLogService(string? logDirectory)
+    {
+        _logDirectory = logDirectory ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "DigYourWindows", "logs");
         Directory.CreateDirectory(_logDirectory);
 
         _currentLogFileDate = DateTime.Today;
-        var logFilePath = GetLogFilePath(_currentLogFileDate);
-        _writer = CreateWriter(logFilePath);
+        _writer = CreateWriter(GetLogFilePath(_currentLogFileDate));
 
         CleanupOldLogs();
     }
 
-    private static string GetLogFilePath(DateTime date)
+    private string GetLogFilePath(DateTime date)
     {
-        return Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "DigYourWindows", "logs",
-            $"digyourwindows_{date:yyyyMMdd}.log");
+        return Path.Combine(_logDirectory, $"digyourwindows_{date:yyyyMMdd}.log");
     }
 
     private static StreamWriter CreateWriter(string path)
