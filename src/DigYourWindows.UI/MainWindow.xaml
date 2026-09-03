@@ -50,12 +50,19 @@
                               Command="{Binding ToggleThemeCommand}"
                               Icon="{ui:SymbolIcon WeatherMoon24}"
                               Margin="10,0,0,0"/>
+                    <ui:Button Content="设置"
+                              Click="OpenSettingsClicked"
+                              Icon="{ui:SymbolIcon Options24}"
+                              Margin="10,0,0,0"/>
                 </StackPanel>
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
         <!-- Main Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer.LayoutTransform>
+                <ScaleTransform x:Name="ContentScale" ScaleX="1" ScaleY="1"/>
+            </ScrollViewer.LayoutTransform>
             <StackPanel Margin="20">
 
                 <!-- System Overview -->

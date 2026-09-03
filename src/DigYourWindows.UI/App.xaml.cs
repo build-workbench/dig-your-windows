@@ -86,6 +86,7 @@ public partial class App : Application
         services.AddSingleton<IMonitorPlotService, MonitorPlotService>();
         services.AddSingleton<IApplicationThemeService, ApplicationThemeService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
+        services.AddSingleton<IAppSettingsService, AppSettingsService>();
         services.AddSingleton<ViewModels.HistoryListViewModel>();
     }
 }
