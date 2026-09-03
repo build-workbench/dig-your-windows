@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -115,7 +115,7 @@ public class ReportService : IReportService
         sb.AppendLine(CultureInfo.InvariantCulture, $"                <div class='col-md-3'><strong>计算机名:</strong> {WebUtility.HtmlEncode(hardware.ComputerName)}</div>");
         sb.AppendLine(CultureInfo.InvariantCulture, $"                <div class='col-md-3'><strong>操作系统:</strong> {WebUtility.HtmlEncode(hardware.OsVersion)}</div>");
         sb.AppendLine(CultureInfo.InvariantCulture, $"                <div class='col-md-3'><strong>CPU:</strong> {WebUtility.HtmlEncode(hardware.CpuName)}</div>");
-        sb.AppendLine(CultureInfo.InvariantCulture, $"                <div class='col-md-3'><strong>内存:</strong> {hardware.TotalMemoryMB} MB</div>");
+        sb.AppendLine(CultureInfo.InvariantCulture, $"                <div class='col-md-3'><strong>内存:</strong> {hardware.TotalMemoryMB / 1024.0:F1} GB</div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </div>");

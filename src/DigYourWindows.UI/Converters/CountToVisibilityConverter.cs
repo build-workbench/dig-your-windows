@@ -24,4 +24,25 @@ namespace DigYourWindows.UI.Converters
             throw new System.NotImplementedException();
         }
     }
+
+    /// <summary>
+    /// 将集合计数反转为 Visibility，计数为0时返回 Visible，否则返回 Collapsed（用于空状态占位）
+    /// </summary>
+    public class InverseCountToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, System.Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, System.Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }

@@ -16,6 +16,7 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <conv:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
+            <conv:InverseCountToVisibilityConverter x:Key="InverseCountToVisibilityConverter"/>
             <conv:StringToBrushConverter x:Key="StringToBrushConverter"/>
             <conv:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
             <conv:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
@@ -24,6 +25,9 @@
             <conv:NullToEmptyStringConverter x:Key="NullToEmptyStringConverter"/>
             <conv:NullToPlaceholderConverter x:Key="NullToPlaceholderConverter"/>
             <conv:NullableDoubleToStringConverter x:Key="NullableDoubleToStringConverter"/>
+            <conv:NaNSafeConverter x:Key="NaNSafeConverter"/>
+            <conv:ZeroAsMissingConverter x:Key="ZeroAsMissingConverter"/>
+            <conv:MegabytesToGigabytesConverter x:Key="MegabytesToGigabytesConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

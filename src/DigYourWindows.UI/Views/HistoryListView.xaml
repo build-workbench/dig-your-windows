@@ -9,23 +9,21 @@
     d:DesignWidth="800">
 
     <Grid>
-        <StackPanel Orientation="Vertical" Margin="16">
-            <TextBlock Text="诊断历史记录" FontSize="18" FontWeight="Bold" Margin="0,0,0,16" />
-
+        <StackPanel Orientation="Vertical">
             <!-- Empty State -->
             <TextBlock
                 x:Name="EmptyStateText"
                 Text="无可用的诊断历史记录。"
                 Visibility="{Binding IsHistoryEmpty, Converter={StaticResource BoolToVisibilityConverter}}"
-                Foreground="Gray"
-                Margin="0,16" />
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Margin="0,8" />
 
             <!-- Loading State -->
             <TextBlock
                 Text="正在加载历史记录..."
                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
-                Foreground="Gray"
-                Margin="0,16" />
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Margin="0,8" />
 
             <!-- History List -->
             <ListBox
@@ -33,16 +31,40 @@
                 ItemsSource="{Binding HistoryEntries}"
                 SelectedItem="{Binding SelectedEntry}"
                 Visibility="{Binding IsHistoryEmpty, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-                Margin="0,16">
+                Background="Transparent"
+                BorderThickness="0"
+                Margin="0,4">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <!-- Friendly automation name instead of the record's ToString dump -->
+                        <Setter Property="AutomationProperties.Name" Value="{Binding ComputerName}"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Padding="8" Background="White" Margin="0,4" CornerRadius="4">
+                        <Border
+                            Padding="12,8"
+                            Margin="0,3"
+                            CornerRadius="4"
+                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding ComputerName, StringFormat='计算机: {0}'}" FontWeight="Bold" />
-                                <TextBlock Text="{Binding CollectedAtUtc, StringFormat='收集时间: {0:G}'}" Foreground="Gray" FontSize="12" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding ComputerName}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" Text="{Binding CollectedAtUtc, StringFormat='yyyy-MM-dd HH:mm'}"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                </Grid>
                                 <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                    <TextBlock Text="{Binding HealthGrade, StringFormat='等级: {0}'}" Foreground="DarkGreen" FontWeight="Bold" Margin="0,0,16,0" />
-                                    <TextBlock Text="{Binding SystemHealthScore, StringFormat='分数: {0:F1}'}" Foreground="DarkBlue" />
+                                    <TextBlock Text="{Binding HealthGrade, StringFormat='健康等级 {0}'}"
+                                               Foreground="{DynamicResource SystemFillColorSuccessBrush}"
+                                               FontWeight="SemiBold" FontSize="12" Margin="0,0,16,0" />
+                                    <TextBlock Text="{Binding SystemHealthScore, StringFormat='健康评分 {0:F1}'}"
+                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontSize="12" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>
