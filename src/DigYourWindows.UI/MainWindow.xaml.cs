@@ -1,4 +1,6 @@
 using System.Windows;
+using System.Windows.Media;
+using DigYourWindows.UI.Services;
 using DigYourWindows.UI.ViewModels;
 using Wpf.Ui.Controls;
 
@@ -9,12 +11,17 @@ namespace DigYourWindows.UI;
 /// </summary>
 public partial class MainWindow : FluentWindow
 {
-    public MainWindow(MainViewModel viewModel)
+    private readonly IAppSettingsService _settings;
+
+    public MainWindow(MainViewModel viewModel, IAppSettingsService settings)
     {
         InitializeComponent();
         DataContext = viewModel;
+        _settings = settings;
         Loaded += MainWindow_Loaded;
         Closed += MainWindow_Closed;
+
+        ApplySettings(_settings.Current);
     }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -47,6 +54,28 @@ public partial class MainWindow : FluentWindow
         if (DataContext is IDisposable disposable)
         {
             disposable.Dispose();
+        }
+    }
+
+    private void OpenSettingsClicked(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SettingsWindow(_settings);
+        dialog.Owner = this;
+        if (dialog.ShowDialog() == true && dialog.Result is { } settings)
+        {
+            ApplySettings(settings);
+        }
+    }
+
+    private void ApplySettings(AppSettings settings)
+    {
+        var scale = settings.ScalePercent / 100d;
+        ContentScale.ScaleX = scale;
+        ContentScale.ScaleY = scale;
+
+        if (!string.IsNullOrWhiteSpace(settings.FontFamily))
+        {
+            FontFamily = new FontFamily(settings.FontFamily);
         }
     }
 }
