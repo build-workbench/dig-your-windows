@@ -1,4 +1,4 @@
-using DigYourWindows.Core.Models;
+﻿using DigYourWindows.Core.Models;
 using LibreHardwareMonitor.Hardware;
 
 namespace DigYourWindows.Core.Services;
@@ -40,29 +40,32 @@ public class CpuMonitorService : ICpuMonitorService
     {
         try
         {
-            var cpu = _provider.Computer.Hardware.FirstOrDefault(h => h.HardwareType == HardwareType.Cpu);
-            if (cpu is null)
+            lock (_provider.SyncRoot)
             {
-                return new CpuInfoData();
+                var cpu = _provider.Computer.Hardware.FirstOrDefault(h => h.HardwareType == HardwareType.Cpu);
+                if (cpu is null)
+                {
+                    return new CpuInfoData();
+                }
+
+                cpu.Update();
+
+                var sensors = GetAllSensors(cpu).ToList();
+
+                var temperature = GetPreferredSensorValue(sensors, SensorType.Temperature, TemperatureSensorNames);
+
+                var load = GetPreferredSensorValue(sensors, SensorType.Load, LoadSensorNames);
+
+                var clock = GetClockMHz(sensors);
+
+                return new CpuInfoData
+                {
+                    Name = cpu.Name,
+                    Temperature = temperature,
+                    Load = load,
+                    Clock = clock
+                };
             }
-
-            cpu.Update();
-
-            var sensors = GetAllSensors(cpu).ToList();
-
-            var temperature = GetPreferredSensorValue(sensors, SensorType.Temperature, TemperatureSensorNames);
-
-            var load = GetPreferredSensorValue(sensors, SensorType.Load, LoadSensorNames);
-
-            var clock = GetClockMHz(sensors);
-
-            return new CpuInfoData
-            {
-                Name = cpu.Name,
-                Temperature = temperature,
-                Load = load,
-                Clock = clock
-            };
         }
         catch (Exception ex)
         {

@@ -1,4 +1,4 @@
-using DigYourWindows.Core.Models;
+﻿using DigYourWindows.Core.Models;
 using LibreHardwareMonitor.Hardware;
 
 namespace DigYourWindows.Core.Services;
@@ -25,30 +25,33 @@ public class GpuMonitorService : IGpuMonitorService
 
         try
         {
-            foreach (var hardware in _provider.Computer.Hardware)
+            lock (_provider.SyncRoot)
             {
-                if (hardware.HardwareType == HardwareType.GpuNvidia ||
-                    hardware.HardwareType == HardwareType.GpuAmd ||
-                    hardware.HardwareType == HardwareType.GpuIntel)
+                foreach (var hardware in _provider.Computer.Hardware)
                 {
-                    hardware.Update();
-
-                    var gpuInfo = new GpuInfoData
+                    if (hardware.HardwareType == HardwareType.GpuNvidia ||
+                        hardware.HardwareType == HardwareType.GpuAmd ||
+                        hardware.HardwareType == HardwareType.GpuIntel)
                     {
-                        Name = hardware.Name,
-                        DriverVersion = null,
-                        VideoMemory = null,
-                        Temperature = GetSensorValue(hardware, SensorType.Temperature, "GPU Core"),
-                        Load = GetSensorValue(hardware, SensorType.Load, "GPU Core"),
-                        MemoryUsed = GetSensorValue(hardware, SensorType.SmallData, "GPU Memory Used"),
-                        MemoryTotal = GetSensorValue(hardware, SensorType.SmallData, "GPU Memory Total"),
-                        CoreClock = GetSensorValue(hardware, SensorType.Clock, "GPU Core"),
-                        MemoryClock = GetSensorValue(hardware, SensorType.Clock, "GPU Memory"),
-                        FanSpeed = GetSensorValue(hardware, SensorType.Control, "GPU Fan"),
-                        Power = GetSensorValue(hardware, SensorType.Power, "GPU Package")
-                    };
+                        hardware.Update();
 
-                    gpuList.Add(gpuInfo);
+                        var gpuInfo = new GpuInfoData
+                        {
+                            Name = hardware.Name,
+                            DriverVersion = null,
+                            VideoMemory = null,
+                            Temperature = GetSensorValue(hardware, SensorType.Temperature, "GPU Core"),
+                            Load = GetSensorValue(hardware, SensorType.Load, "GPU Core"),
+                            MemoryUsed = GetSensorValue(hardware, SensorType.SmallData, "GPU Memory Used"),
+                            MemoryTotal = GetSensorValue(hardware, SensorType.SmallData, "GPU Memory Total"),
+                            CoreClock = GetSensorValue(hardware, SensorType.Clock, "GPU Core"),
+                            MemoryClock = GetSensorValue(hardware, SensorType.Clock, "GPU Memory"),
+                            FanSpeed = GetSensorValue(hardware, SensorType.Control, "GPU Fan"),
+                            Power = GetSensorValue(hardware, SensorType.Power, "GPU Package")
+                        };
+
+                        gpuList.Add(gpuInfo);
+                    }
                 }
             }
         }

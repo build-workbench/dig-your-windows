@@ -7,7 +7,7 @@ namespace DigYourWindows.Tests.Unit;
 /// <summary>
 /// Unit tests for SqliteHistoryStoreService.
 /// </summary>
-public sealed class SqliteHistoryStoreServiceTests : IAsyncLifetime
+public sealed class SqliteHistoryStoreServiceTests : IAsyncLifetime, IDisposable
 {
     private string _tempDbPath = string.Empty;
     private MockLogService _logService = null!;
@@ -28,6 +28,12 @@ public sealed class SqliteHistoryStoreServiceTests : IAsyncLifetime
         {
             File.Delete(_tempDbPath);
         }
+    }
+
+    // xUnit orders this relative to DisposeAsync is unspecified; SqliteConnection.Dispose is idempotent.
+    public void Dispose()
+    {
+        _service?.Dispose();
     }
 
     [Fact]
@@ -119,6 +125,40 @@ public sealed class SqliteHistoryStoreServiceTests : IAsyncLifetime
 
         // Assert
         Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task SaveAsync_BeyondRetentionLimit_RemovesOldestRecords()
+    {
+        // Arrange - small store so the retention cap is reachable
+        var retentionPath = Path.Combine(Path.GetTempPath(), $"test-history-{Guid.NewGuid()}.db");
+        using var store = new SqliteHistoryStoreService(retentionPath, _logService, maxHistoryRecords: 2);
+        await store.InitializeAsync();
+
+        try
+        {
+            // Act - save three records
+            await store.SaveAsync(CreateTestDiagnosticData("PC1"));
+            await Task.Delay(10); // Ensure distinct timestamps for ordering
+            await store.SaveAsync(CreateTestDiagnosticData("PC2"));
+            await Task.Delay(10);
+            await store.SaveAsync(CreateTestDiagnosticData("PC3"));
+
+            var summaries = await store.ListSummariesAsync();
+
+            // Assert - only the two newest remain, oldest is pruned
+            Assert.Equal(2, summaries.Count);
+            Assert.Equal("PC3", summaries[0].ComputerName);
+            Assert.Equal("PC2", summaries[1].ComputerName);
+        }
+        finally
+        {
+            store.Dispose();
+            if (File.Exists(retentionPath))
+            {
+                File.Delete(retentionPath);
+            }
+        }
     }
 
     private static DiagnosticData CreateTestDiagnosticData(string computerName = "TEST-PC")

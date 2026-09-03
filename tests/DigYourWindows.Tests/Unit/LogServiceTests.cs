@@ -24,11 +24,22 @@ public class LogServiceTests : IDisposable
         _logService = CreateTestLogService();
     }
 
-    private static FileLogService CreateTestLogService()
+    private FileLogService CreateTestLogService()
     {
-        // Use reflection to set the log directory since the constructor uses a fixed path
-        var service = new FileLogService();
-        return service;
+        // Route log output into the per-test temporary directory so tests never
+        // touch (or race with) the real application log in %APPDATA%.
+        return new FileLogService(_testLogDirectory);
+    }
+
+    [Fact]
+    public void LogFileShouldBeCreatedInInjectedDirectory()
+    {
+        // Act
+        _logService.Info("isolation check");
+
+        // Assert - the injected directory (not %APPDATA%) receives the log file
+        var files = Directory.GetFiles(_testLogDirectory, "digyourwindows_*.log");
+        Assert.NotEmpty(files);
     }
 
     [Fact]

@@ -1,4 +1,4 @@
-using LibreHardwareMonitor.Hardware;
+﻿using LibreHardwareMonitor.Hardware;
 
 namespace DigYourWindows.Core.Services;
 
@@ -9,6 +9,13 @@ namespace DigYourWindows.Core.Services;
 public interface IHardwareMonitorProvider : IDisposable
 {
     Computer Computer { get; }
+
+    /// <summary>
+    /// Lock that must be held while updating/reading hardware sensors:
+    /// LibreHardwareMonitor does not guarantee thread-safe concurrent updates
+    /// (ring0 MSR access, driver handles) across hardware instances.
+    /// </summary>
+    object SyncRoot { get; }
 }
 
 public sealed class HardwareMonitorProvider : IHardwareMonitorProvider
@@ -28,6 +35,8 @@ public sealed class HardwareMonitorProvider : IHardwareMonitorProvider
             }
         }
     }
+
+    public object SyncRoot => _lock;
 
     public HardwareMonitorProvider()
     {
