@@ -158,7 +158,7 @@ public class ReportServiceTests
         Assert.Contains(data.Hardware.ComputerName, html);
         Assert.Contains(data.Hardware.OsVersion, html);
         Assert.Contains(data.Hardware.CpuName, html);
-        Assert.Contains($"{data.Hardware.TotalMemoryMB} MB", html);
+        Assert.Contains(FormattableString.Invariant($"{data.Hardware.TotalMemoryMB / 1024.0:F1} GB"), html);
 
         Assert.Contains("系统性能分析", html);
         Assert.Contains(data.Performance.HealthGrade, html);
