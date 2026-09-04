@@ -15,15 +15,21 @@
 x64/
 x86/
 bld/
+artifacts/
+publish/
 [Bb]in/
 [Oo]bj/
 
 # Visual Studio cache/options directory
 .vs/
 
-# MSTest test Results
+# MSTest / VSTest test Results and Coverage
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
+coverage/
+*.trx
+*.coverage
+
 
 # NuGet Packages
 *.nupkg

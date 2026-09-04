@@ -1,4 +1,4 @@
-<Page x:Class="DigYourWindows.UI.Views.DashboardPage"
+<Page x:Class="DigYourWindows.UI.Views.Pages.DashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -33,8 +33,14 @@
                         <TextBlock Text="采样周期" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" Margin="6,0,6,0"/>
                         <ComboBox ItemsSource="{Binding AvailableDays}"
                                   SelectedItem="{Binding SelectedDaysBack}"
-                                  Width="70" Height="30" FontSize="12"
-                                  Margin="0,0,8,0"/>
+                                  Width="80" Height="30" FontSize="12"
+                                  Margin="0,0,8,0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding StringFormat='{}{0} 天'}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
                         <ui:Button Content="刷新诊断"
                                    Command="{Binding LoadDataCommand}"
@@ -81,7 +87,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Computer Name -->
-                <ui:Card Grid.Column="0" Margin="0,0,8,0" Padding="16">
+                <ui:Card Grid.Column="0" Margin="0,0,8,0" Padding="16" ToolTip="{Binding HardwareInfo.ComputerName}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -99,7 +105,7 @@
                 </ui:Card>
 
                 <!-- CPU -->
-                <ui:Card Grid.Column="1" Margin="4,0,4,0" Padding="16">
+                <ui:Card Grid.Column="1" Margin="4,0,4,0" Padding="16" ToolTip="{Binding HardwareInfo.CpuName}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -120,7 +126,7 @@
                 </ui:Card>
 
                 <!-- Memory -->
-                <ui:Card Grid.Column="2" Margin="4,0,4,0" Padding="16">
+                <ui:Card Grid.Column="2" Margin="4,0,4,0" Padding="16" ToolTip="{Binding HardwareInfo.MemoryUsagePercentage, StringFormat='已用内存占比: {0:F1}%'}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -145,7 +151,7 @@
                 </ui:Card>
 
                 <!-- OS -->
-                <ui:Card Grid.Column="3" Margin="8,0,0,0" Padding="16">
+                <ui:Card Grid.Column="3" Margin="8,0,0,0" Padding="16" ToolTip="{Binding HardwareInfo.OsVersion}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -388,7 +394,7 @@
                 </ui:Card>
 
                 <!-- CPU Live Snapshot -->
-                <ui:Card Grid.Column="3" Margin="8,0,0,0" Padding="14">
+                <ui:Card Grid.Column="3" Margin="8,0,0,0" Padding="14" ToolTip="实时 CPU 负载、核心温度与运行主频">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>

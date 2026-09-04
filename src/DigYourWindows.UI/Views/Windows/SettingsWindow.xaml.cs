@@ -3,7 +3,7 @@ using System.Windows;
 using DigYourWindows.UI.Services;
 using Wpf.Ui.Controls;
 
-namespace DigYourWindows.UI;
+namespace DigYourWindows.UI.Views.Windows;
 
 /// <summary>
 /// Settings dialog: font family and UI scale.

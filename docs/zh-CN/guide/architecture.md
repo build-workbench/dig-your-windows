@@ -51,23 +51,35 @@ dig-your-windows/
 │   │       ├── ReportException.cs
 │   │       └── WmiException.cs
 │   └── DigYourWindows.UI/       # WPF 用户界面
-│       ├── ViewModels/          # MVVM 视图模型
-│       │   ├── MainViewModel.cs
-│       │   └── HistoryListViewModel.cs
-│       ├── Views/               # 用户控件
-│       │   └── HistoryListView.xaml(.cs)
-│       ├── Services/            # 框架关注点包装（供 ViewModel 注入）
-│       │   ├── MonitorPlotService.cs
-│       │   ├── ApplicationThemeService.cs
-│       │   └── FileDialogService.cs
 │       ├── Converters/          # 值转换器
 │       │   ├── CountToVisibilityConverter.cs
 │       │   ├── NullConverters.cs
-│       │   ├── SensorConverters.cs
 │       │   ├── ObjectToVisibilityConverter.cs
+│       │   ├── SensorConverters.cs
 │       │   └── StringToBrushConverter.cs
-│       ├── App.xaml.cs          # 应用入口 + DI 组合根
-│       └── MainWindow.xaml.cs   # 主窗口
+│       ├── Services/            # 框架关注点包装（供 ViewModel 注入）
+│       │   ├── AppSettingsService.cs
+│       │   ├── ApplicationThemeService.cs
+│       │   ├── FileDialogService.cs
+│       │   ├── MonitorPlotService.cs
+│       │   └── PageService.cs
+│       ├── ViewModels/          # MVVM 视图模型
+│       │   ├── MainViewModel.cs
+│       │   └── HistoryListViewModel.cs
+│       ├── Views/               # 视图与控件（按类型分层）
+│       │   ├── Controls/        # 可复用用户控件
+│       │   │   └── HistoryListView.xaml(.cs)
+│       │   ├── Pages/           # 功能导航页面
+│       │   │   ├── DashboardPage.xaml(.cs)
+│       │   │   ├── HardwarePage.xaml(.cs)
+│       │   │   ├── HistoryPage.xaml(.cs)
+│       │   │   ├── LogsPage.xaml(.cs)
+│       │   │   └── MonitoringPage.xaml(.cs)
+│       │   └── Windows/         # 顶级窗口
+│       │       ├── MainWindow.xaml(.cs)
+│       │       └── SettingsWindow.xaml(.cs)
+│       ├── App.xaml(.cs)        # 应用入口 + DI 组合根
+│       └── AssemblyInfo.cs      # 程序集信息
 ├── tests/
 │   └── DigYourWindows.Tests/    # 测试项目
 │       ├── Unit/                # 单元测试
@@ -79,6 +91,7 @@ dig-your-windows/
 ├── installer/                   # Inno Setup 安装脚本
 ├── scripts/                     # 构建和发布脚本
 ├── Directory.Build.props        # 共享 MSBuild 属性
+├── Directory.Packages.props     # 统一 NuGet 集中包管理 (CPM)
 └── DigYourWindows.slnx          # Solution 文件
 ```
 
@@ -254,7 +267,16 @@ private static void ConfigureServices(IServiceCollection services)
     services.AddSingleton<IMonitorPlotService, MonitorPlotService>();
     services.AddSingleton<IApplicationThemeService, ApplicationThemeService>();
     services.AddSingleton<IFileDialogService, FileDialogService>();
+    services.AddSingleton<IAppSettingsService, AppSettingsService>();
     services.AddSingleton<ViewModels.HistoryListViewModel>();
+
+    // 导航服务与视图页面
+    services.AddSingleton<INavigationViewPageProvider, PageService>();
+    services.AddSingleton<DashboardPage>();
+    services.AddSingleton<MonitoringPage>();
+    services.AddSingleton<LogsPage>();
+    services.AddSingleton<HardwarePage>();
+    services.AddSingleton<HistoryPage>();
 }
 ```
 

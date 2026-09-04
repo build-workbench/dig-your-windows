@@ -161,8 +161,16 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     private bool IsDarkTheme => CurrentTheme == ApplicationTheme.Dark;
 
+    private bool _disposed;
+
     public void Dispose()
     {
+        if (_disposed)
+        {
+            return;
+        }
+        _disposed = true;
+
         _themeService.ThemeChanged -= OnThemeChanged;
         _cpuMonitorTimer.Stop();
         _cpuMonitorTimer.Tick -= CpuMonitorTimer_Tick;
@@ -170,8 +178,19 @@ public partial class MainViewModel : ObservableObject, IDisposable
         {
             HistoryListViewModel.EntrySelected -= OnHistoryEntrySelected;
         }
-        _loadCts?.Cancel();
+
+        try
+        {
+            _loadCts?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            // Ignored if CTS already disposed
+        }
+
         _loadCts?.Dispose();
+        _loadCts = null;
+
         // WpfPlot does not implement IDisposable, so no explicit disposal needed
         GC.SuppressFinalize(this);
     }

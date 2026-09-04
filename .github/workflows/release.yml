@@ -31,6 +31,7 @@ jobs:
           cache-dependency-path: |
             src/**/*.csproj
             tests/**/*.csproj
+            Directory.Packages.props
             NuGet.Config
 
       - name: Extract version from tag
@@ -50,25 +51,9 @@ jobs:
       - name: Test
         run: dotnet test DigYourWindows.slnx -c Release --no-restore
 
-      - name: Publish (framework-dependent)
+      - name: Publish & Package Release
         run: |
-          dotnet publish src/DigYourWindows.UI/DigYourWindows.UI.csproj `
-            -c Release -r win-x64 --self-contained false `
-            -p:Version=${{ steps.version.outputs.VERSION }} `
-            -o publish/fdd
-
-      - name: Publish (self-contained)
-        run: |
-          dotnet publish src/DigYourWindows.UI/DigYourWindows.UI.csproj `
-            -c Release -r win-x64 --self-contained true `
-            -p:Version=${{ steps.version.outputs.VERSION }} `
-            -o publish/scd
-
-      - name: Package artifacts
-        run: |
-          $ver = "${{ steps.version.outputs.VERSION }}"
-          Compress-Archive -Path publish/fdd/* -DestinationPath "DigYourWindows_${ver}_win-x64_portable.zip"
-          Compress-Archive -Path publish/scd/* -DestinationPath "DigYourWindows_${ver}_win-x64_standalone.zip"
+          ./scripts/publish.ps1 -Configuration Release -Runtime win-x64 -Version ${{ steps.version.outputs.VERSION }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -77,5 +62,6 @@ jobs:
           name: DigYourWindows ${{ steps.version.outputs.TAG }}
           generate_release_notes: true
           files: |
-            DigYourWindows_*_win-x64_portable.zip
-            DigYourWindows_*_win-x64_standalone.zip
+            artifacts/release/DigYourWindows_*_win-x64_portable.zip
+            artifacts/release/DigYourWindows_*_win-x64_standalone.zip
+            artifacts/release/SHA256SUMS.txt

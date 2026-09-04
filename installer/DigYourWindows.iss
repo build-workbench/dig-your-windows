@@ -43,6 +43,7 @@ Compression=lzma
 SolidCompression=yes
 OutputDir={#OutputDir}
 OutputBaseFilename={#OutputBaseFilename}
+SetupIconFile=app.ico
 
 [Tasks]
 Name: "desktopicon"; Description: "创建桌面快捷方式"; GroupDescription: "附加任务"; Flags: unchecked

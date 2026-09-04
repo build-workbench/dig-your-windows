@@ -1,11 +1,11 @@
 using System.Windows.Controls;
 using DigYourWindows.UI.ViewModels;
 
-namespace DigYourWindows.UI.Views;
+namespace DigYourWindows.UI.Views.Pages;
 
-public partial class HistoryPage : Page
+public partial class LogsPage : Page
 {
-    public HistoryPage(MainViewModel viewModel)
+    public LogsPage(MainViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;

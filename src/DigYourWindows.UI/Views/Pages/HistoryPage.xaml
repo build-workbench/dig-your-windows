@@ -1,10 +1,10 @@
-<Page x:Class="DigYourWindows.UI.Views.HistoryPage"
+<Page x:Class="DigYourWindows.UI.Views.Pages.HistoryPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      xmlns:local="clr-namespace:DigYourWindows.UI.Views"
+      xmlns:controls="clr-namespace:DigYourWindows.UI.Views.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1100"
       Title="诊断历史记录">
@@ -49,7 +49,7 @@
                         <ui:SymbolIcon Symbol="DocumentBulletList24" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,8,0"/>
                         <TextBlock Text="历史快照数据库" FontSize="15" FontWeight="SemiBold"/>
                     </StackPanel>
-                    <local:HistoryListView DataContext="{Binding HistoryListViewModel}"/>
+                    <controls:HistoryListView DataContext="{Binding HistoryListViewModel}"/>
                 </StackPanel>
             </ui:Card>
         </StackPanel>
