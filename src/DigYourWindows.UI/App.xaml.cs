@@ -3,6 +3,8 @@ using System.Windows;
 using DigYourWindows.Core.Services;
 using DigYourWindows.UI.Services;
 using DigYourWindows.UI.ViewModels;
+using DigYourWindows.UI.Views.Pages;
+using DigYourWindows.UI.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DigYourWindows.UI;
@@ -55,7 +57,7 @@ public partial class App : Application
             if (e.Args.Contains("--capture-preview"))
             {
                 var outputDir = e.Args.SkipWhile(a => a != "--capture-preview").Skip(1).FirstOrDefault()
-                                ?? @"C:\Users\shoum\.gemini\antigravity-cli\brain\ba672ece-91cf-4418-89fe-41c21c892539";
+                                ?? Path.Combine(AppContext.BaseDirectory, "previews");
                 _ = CapturePreviewsAsync(mainWindow, outputDir, log);
             }
         }
@@ -81,19 +83,19 @@ public partial class App : Application
                 log.Info("Captured dashboard_preview.png");
 
                 // Switch to MonitoringPage
-                mainWindow.RootNavigation.Navigate(typeof(Views.MonitoringPage));
+                mainWindow.RootNavigation.Navigate(typeof(MonitoringPage));
                 await Task.Delay(1000);
                 SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "monitoring_preview.png"));
                 log.Info("Captured monitoring_preview.png");
 
                 // Switch to LogsPage
-                mainWindow.RootNavigation.Navigate(typeof(Views.LogsPage));
+                mainWindow.RootNavigation.Navigate(typeof(LogsPage));
                 await Task.Delay(1000);
                 SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "logs_preview.png"));
                 log.Info("Captured logs_preview.png");
 
                 // Switch to HardwarePage
-                mainWindow.RootNavigation.Navigate(typeof(Views.HardwarePage));
+                mainWindow.RootNavigation.Navigate(typeof(HardwarePage));
                 await Task.Delay(1000);
                 SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "hardware_preview.png"));
                 log.Info("Captured hardware_preview.png");
@@ -168,10 +170,10 @@ public partial class App : Application
 
         // Navigation page provider and page views
         services.AddSingleton<Wpf.Ui.Abstractions.INavigationViewPageProvider, PageService>();
-        services.AddSingleton<Views.DashboardPage>();
-        services.AddSingleton<Views.MonitoringPage>();
-        services.AddSingleton<Views.LogsPage>();
-        services.AddSingleton<Views.HardwarePage>();
-        services.AddSingleton<Views.HistoryPage>();
+        services.AddSingleton<DashboardPage>();
+        services.AddSingleton<MonitoringPage>();
+        services.AddSingleton<LogsPage>();
+        services.AddSingleton<HardwarePage>();
+        services.AddSingleton<HistoryPage>();
     }
 }

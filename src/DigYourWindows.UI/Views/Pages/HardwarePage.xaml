@@ -1,4 +1,4 @@
-<Page x:Class="DigYourWindows.UI.Views.HardwarePage"
+<Page x:Class="DigYourWindows.UI.Views.Pages.HardwarePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -60,15 +60,15 @@
             </ui:CardExpander>
 
             <!-- SMART Health Section -->
-            <ui:CardExpander Header="磁盘 SMART 健康诊断" Icon="{ui:SymbolIcon HeartPulse24}" IsExpanded="True" Margin="0,0,0,16"
-                             Visibility="{Binding HardwareInfo.DiskSmart.Count, Converter={StaticResource CountToVisibilityConverter}}">
+            <ui:CardExpander Header="磁盘 SMART 健康诊断" Icon="{ui:SymbolIcon HeartPulse24}" IsExpanded="True" Margin="0,0,0,16">
                 <Grid Margin="10">
                     <DataGrid ItemsSource="{Binding HardwareInfo.DiskSmart}"
                              AutoGenerateColumns="False"
                              IsReadOnly="True"
                              HeadersVisibility="Column"
                              GridLinesVisibility="Horizontal"
-                             MaxHeight="260">
+                             MaxHeight="260"
+                             Visibility="{Binding HardwareInfo.DiskSmart.Count, Converter={StaticResource CountToVisibilityConverter}}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="驱动器名称" Binding="{Binding FriendlyName}" Width="*"/>
                             <DataGridTextColumn Header="介质" Binding="{Binding MediaTypeDescription}" Width="80"/>
@@ -80,6 +80,23 @@
                             <DataGridTextColumn Header="容量" Binding="{Binding SizeGB, StringFormat='{}{0} GB'}" Width="90"/>
                         </DataGrid.Columns>
                     </DataGrid>
+
+                    <!-- Non-admin fallback notice -->
+                    <ui:Card Padding="20" Visibility="{Binding HardwareInfo.DiskSmart.Count, Converter={StaticResource InverseCountToVisibilityConverter}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="8" Background="#180078D4" Margin="0,0,14,0">
+                                <ui:SymbolIcon Symbol="ShieldPerson20" FontSize="20" Foreground="{DynamicResource AccentFillColorDefaultBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="当前权限无法读取底层磁盘 SMART 遥测传感器" FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Text="读取 NVMe 与 SATA 存储设备的健康寿命、磨损百分比与芯片温度需要 Windows 管理员提权。请尝试以管理员身份重新运行。" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+                    </ui:Card>
                 </Grid>
             </ui:CardExpander>
 

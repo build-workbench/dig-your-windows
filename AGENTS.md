@@ -13,7 +13,16 @@ DigYourWindows.Core        →  Business logic (services, models, exceptions) �
 DigYourWindows.Tests       →  xUnit 2.9 + FsCheck 2.16 (Unit/ PropertyTests/ Integration/)
 ```
 
-## UI Services (DigYourWindows.UI/Services/)
+## UI Structure (DigYourWindows.UI/)
+
+- **`Views/Windows/`**: `MainWindow`, `SettingsWindow`
+- **`Views/Pages/`**: `DashboardPage`, `HardwarePage`, `HistoryPage`, `LogsPage`, `MonitoringPage`
+- **`Views/Controls/`**: `HistoryListView`
+- **`ViewModels/`**: `MainViewModel`, `HistoryListViewModel`
+- **`Converters/`**: XAML value converters
+- **`Services/`**: Framework concerns wrapped as injectable services
+
+### UI Services (DigYourWindows.UI/Services/)
 
 Framework concerns wrapped as injectable services so ViewModels stay testable and UI-framework-agnostic (pattern borrowed from the WPF-UI Gallery reference app):
 
@@ -22,6 +31,8 @@ Framework concerns wrapped as injectable services so ViewModels stay testable an
 | `MonitorPlotService` | Owns the two ScottPlot `WpfPlot` controls and all rendering (theme, series, date axes, CJK fonts) |
 | `ApplicationThemeService` | Wraps WPF-UI `ApplicationThemeManager` for dark/light toggling |
 | `FileDialogService` | File pickers and shell reveal (`Process.Start`) — never used directly in ViewModels |
+| `AppSettingsService` | User-editable preferences (font family, scale) persisted under AppData |
+| `PageService` | `INavigationViewPageProvider` adapter resolving DI pages for WPF-UI |
 
 ## Core Services (DigYourWindows.Core/Services/)
 
@@ -64,9 +75,16 @@ Framework concerns wrapped as injectable services so ViewModels stay testable an
 
 `ReportErrorType`: `Unknown`, `Serialization`, `InvalidData`.
 
-## Build Commands
+## Build & Automation Scripts
 
 ```powershell
+# Standardized scripts (Artifacts & Release Topology)
+./scripts/build.ps1 -Configuration Release                 # Restore, build and run tests
+./scripts/build.ps1 -Coverage                              # Collect code coverage to artifacts/reports/coverage
+./scripts/publish.ps1 -Configuration Release               # Publish FDD/SCD and package release zips with SHA-256
+./scripts/build-installer.ps1 -Configuration Release       # Build Inno Setup installer into artifacts/release
+
+# Direct dotnet CLI commands
 dotnet restore DigYourWindows.slnx
 dotnet build DigYourWindows.slnx -c Release --no-restore
 dotnet test DigYourWindows.slnx -c Release --no-restore

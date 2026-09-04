@@ -35,6 +35,7 @@ jobs:
           cache-dependency-path: |
             src/**/*.csproj
             tests/**/*.csproj
+            Directory.Packages.props
             NuGet.Config
 
       - name: Restore
@@ -44,12 +45,12 @@ jobs:
         run: dotnet build DigYourWindows.slnx -c Release --no-restore
 
       - name: Test
-        run: dotnet test DigYourWindows.slnx -c Release --no-restore --collect:"XPlat Code Coverage" --results-directory coverage
+        run: dotnet test DigYourWindows.slnx -c Release --no-restore --collect:"XPlat Code Coverage" --results-directory artifacts/reports/coverage
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: coverage-report
-          path: coverage/
+          path: artifacts/reports/coverage/
           retention-days: 7

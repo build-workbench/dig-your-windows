@@ -2,7 +2,7 @@ using System.Windows.Controls;
 using DigYourWindows.Core.Models;
 using DigYourWindows.UI.ViewModels;
 
-namespace DigYourWindows.UI.Views;
+namespace DigYourWindows.UI.Views.Controls;
 
 /// <summary>
 /// Code-behind for HistoryListView.

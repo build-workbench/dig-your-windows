@@ -1,11 +1,11 @@
 using System.Windows.Controls;
 using DigYourWindows.UI.ViewModels;
 
-namespace DigYourWindows.UI.Views;
+namespace DigYourWindows.UI.Views.Pages;
 
-public partial class MonitoringPage : Page
+public partial class DashboardPage : Page
 {
-    public MonitoringPage(MainViewModel viewModel)
+    public DashboardPage(MainViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;

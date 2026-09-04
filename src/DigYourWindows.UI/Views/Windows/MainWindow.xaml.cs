@@ -5,9 +5,10 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using DigYourWindows.UI.Services;
 using DigYourWindows.UI.ViewModels;
+using DigYourWindows.UI.Views.Pages;
 using Wpf.Ui.Controls;
 
-namespace DigYourWindows.UI;
+namespace DigYourWindows.UI.Views.Windows;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -47,7 +48,7 @@ public partial class MainWindow : FluentWindow
             // Automatically adapt to and watch Windows system theme changes
             Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
 
-            RootNavigation.Navigate(typeof(Views.DashboardPage));
+            RootNavigation.Navigate(typeof(DashboardPage));
 
             if (DataContext is MainViewModel viewModel)
             {
@@ -95,7 +96,15 @@ public partial class MainWindow : FluentWindow
             source?.RemoveHook(WndProc);
         }
 
-        Wpf.Ui.Appearance.SystemThemeWatcher.UnWatch(this);
+        try
+        {
+            Wpf.Ui.Appearance.SystemThemeWatcher.UnWatch(this);
+        }
+        catch (InvalidOperationException)
+        {
+            // Window handle may already be released by WPF during window teardown.
+        }
+
         if (DataContext is IDisposable disposable)
         {
             disposable.Dispose();
