@@ -58,5 +58,8 @@ CLAUDE.local.md
 # CommandCode state
 .commandcode/
 
+# Claude Code local (personal) settings
+.claude/settings.local.json
+
 # Temporary audit files
 PHASE1_AUDIT_FINDINGS.md
