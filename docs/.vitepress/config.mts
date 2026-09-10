@@ -115,7 +115,7 @@ const baseConfig = defineConfig({
       applicationCategory: 'UtilitiesApplication',
       operatingSystem: 'Windows 10, Windows 11',
       softwareVersion: '1.2.0',
-      license: 'https://github.com/build-workbench/dig-your-windows/blob/master/LICENSE',
+      license: 'https://github.com/build-workbench/dig-your-windows/blob/main/LICENSE',
       url: 'https://build-workbench.github.io/dig-your-windows/',
       downloadUrl: 'https://github.com/build-workbench/dig-your-windows/releases/latest',
       codeRepository: 'https://github.com/build-workbench/dig-your-windows',
@@ -219,14 +219,14 @@ const baseConfig = defineConfig({
       },
     },
     editLink: {
-      pattern: 'https://github.com/build-workbench/dig-your-windows/edit/master/docs/:path',
+      pattern: 'https://github.com/build-workbench/dig-your-windows/edit/main/docs/:path',
       text: 'Edit this page on GitHub',
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/build-workbench/dig-your-windows' },
     ],
     footer: {
-      message: 'Released under the <a href="https://github.com/build-workbench/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>.',
+      message: 'Released under the <a href="https://github.com/build-workbench/dig-your-windows/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>.',
       copyright: 'Copyright © 2025-2026 <a href="https://github.com/build-workbench" target="_blank" rel="noopener">build-workbench</a>',
     },
     outline: {

@@ -151,7 +151,7 @@ layout: home
 
 ## 开源许可
 
-本项目采用 <a href="https://github.com/build-workbench/dig-your-windows/blob/master/LICENSE" target="_blank" rel="noopener"><strong>MIT License</strong></a> 开源协议
+本项目采用 <a href="https://github.com/build-workbench/dig-your-windows/blob/main/LICENSE" target="_blank" rel="noopener"><strong>MIT License</strong></a> 开源协议
 
 Copyright © 2025-2026 <a href="https://github.com/build-workbench" target="_blank" rel="noopener">build-workbench</a>
 
