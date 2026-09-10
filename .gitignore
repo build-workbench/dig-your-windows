@@ -55,11 +55,12 @@ CLAUDE.local.md
 # OMC (oh-my-claudecode) state
 .omc/
 
-# CommandCode state
+# AI tools (local only)
 .commandcode/
-
-# Claude Code local (personal) settings
-.claude/settings.local.json
+.claude/
+.codex/
+.agents/
+.superpowers/
 
 # Temporary audit files
 PHASE1_AUDIT_FINDINGS.md
