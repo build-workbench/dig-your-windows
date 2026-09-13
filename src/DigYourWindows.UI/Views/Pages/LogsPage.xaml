@@ -35,7 +35,10 @@
                              HeadersVisibility="Column"
                              GridLinesVisibility="Horizontal"
                              RowHeight="36"
-                             MaxHeight="450">
+                             MaxHeight="450"
+                             Background="Transparent"
+                             RowBackground="Transparent"
+                             AlternatingRowBackground="{DynamicResource SubtleFillColorSecondaryBrush}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="发生时间" Binding="{Binding TimeGenerated, StringFormat='yyyy-MM-dd HH:mm:ss'}" Width="160"/>
                             <DataGridTemplateColumn Header="级别" Width="95">
@@ -124,6 +127,9 @@
                              GridLinesVisibility="Horizontal"
                              RowHeight="36"
                              MaxHeight="350"
+                             Background="Transparent"
+                             RowBackground="Transparent"
+                             AlternatingRowBackground="{DynamicResource SubtleFillColorSecondaryBrush}"
                              Visibility="{Binding ReliabilityRecords.Count, Converter={StaticResource CountToVisibilityConverter}}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="发生时间" Binding="{Binding TimeGenerated, StringFormat='yyyy-MM-dd HH:mm:ss'}" Width="160"/>

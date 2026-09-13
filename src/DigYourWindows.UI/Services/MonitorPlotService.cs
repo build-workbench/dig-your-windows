@@ -112,11 +112,14 @@ public sealed class MonitorPlotService : IMonitorPlotService
 
     private static void ApplyTheme(ScottPlot.Plot plot, bool darkTheme)
     {
-        var backgroundColor = darkTheme ? ScottPlot.Color.FromHex("#1E1E1E") : ScottPlot.Color.FromHex("#FFFFFF");
+        // Transparent figure/data background lets the WPF card fill show through,
+        // so charts blend into their container instead of a white rectangle patch.
+        plot.FigureBackground.Color = ScottPlot.Colors.Transparent;
+        plot.DataBackground.Color = ScottPlot.Colors.Transparent;
+
         var textColor = darkTheme ? ScottPlot.Color.FromHex("#FFFFFF") : ScottPlot.Color.FromHex("#212529");
         var gridColor = darkTheme ? ScottPlot.Color.FromHex("#3E3E3E") : ScottPlot.Color.FromHex("#E0E0E0");
 
-        plot.FigureBackground.Color = backgroundColor;
         plot.Axes.Color(textColor);
         plot.Grid.MajorLineColor = gridColor;
         // 标题/轴标签/图例含中文，默认字体渲染为方块，需自动选择支持的字体
