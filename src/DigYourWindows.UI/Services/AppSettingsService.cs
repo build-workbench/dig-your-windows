@@ -8,8 +8,14 @@ namespace DigYourWindows.UI.Services;
 /// </summary>
 public sealed record AppSettings
 {
-    /// <summary>UI font family name (a system-installed font).</summary>
-    public string FontFamily { get; init; } = "Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI";
+    /// <summary>
+    /// The "follow Windows" font chain: Segoe UI Variable on Windows 11,
+    /// falling back to Microsoft YaHei UI for CJK and Segoe UI elsewhere.
+    /// </summary>
+    public const string SystemFontFamily = "Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI";
+
+    /// <summary>UI font family name (a system-installed font or a fallback chain).</summary>
+    public string FontFamily { get; init; } = SystemFontFamily;
 
     /// <summary>UI scale as a percentage: 100 = no scaling.</summary>
     public int ScalePercent { get; init; } = 100;

@@ -13,6 +13,7 @@ public partial class SettingsWindow : FluentWindow
 {
     private static readonly IReadOnlyList<FontOption> Fonts =
     [
+        new("系统默认（跟随 Windows）", AppSettings.SystemFontFamily),
         new("微软雅黑", "Microsoft YaHei UI"),
         new("等线", "DengXian"),
         new("宋体", "SimSun"),
