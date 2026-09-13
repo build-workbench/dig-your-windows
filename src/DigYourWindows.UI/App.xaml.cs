@@ -114,6 +114,12 @@ public partial class App : Application
         SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "hardware_preview.png"));
         log.Info("Captured hardware_preview.png");
 
+        // Switch to HistoryPage
+        mainWindow.RootNavigation.Navigate(typeof(HistoryPage));
+        await Task.Delay(1000);
+        SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "history_preview.png"));
+        log.Info("Captured history_preview.png");
+
         log.Info("All previews captured successfully. Shutting down.");
         Shutdown();
     }

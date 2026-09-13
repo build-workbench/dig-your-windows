@@ -58,6 +58,7 @@ public sealed class MonitorPlotService : IMonitorPlotService
 
         plot.Legend.IsVisible = true;
         plot.Axes.DateTimeTicksBottom();
+        ApplyDateTimeTickRotation(plot);
         ApplyTheme(plot, darkTheme);
         ReliabilityTrendPlot.Refresh();
     }
@@ -89,7 +90,19 @@ public sealed class MonitorPlotService : IMonitorPlotService
 
         plot.Legend.IsVisible = true;
         plot.Axes.DateTimeTicksBottom();
+        ApplyDateTimeTickRotation(plot);
         NetworkTrafficPlot.Refresh();
+    }
+
+    /// <summary>
+    /// Rotates bottom datetime tick labels 45° so dense time ranges stay readable
+    /// instead of rendering overlapping horizontal stamps.
+    /// </summary>
+    private static void ApplyDateTimeTickRotation(ScottPlot.Plot plot)
+    {
+        var bottom = plot.Axes.Bottom;
+        bottom.TickLabelStyle.Rotation = 45;
+        bottom.TickLabelStyle.Alignment = ScottPlot.Alignment.MiddleLeft;
     }
 
     private static void AddSeries(

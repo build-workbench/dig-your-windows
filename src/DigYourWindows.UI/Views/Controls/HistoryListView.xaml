@@ -38,6 +38,10 @@
                     <Style TargetType="ListBoxItem">
                         <!-- Friendly automation name instead of the record's ToString dump -->
                         <Setter Property="AutomationProperties.Name" Value="{Binding ComputerName}"/>
+                        <!-- Stretch item cards to the full list width so the timestamp
+                             column right-aligns instead of hugging the computer name -->
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>

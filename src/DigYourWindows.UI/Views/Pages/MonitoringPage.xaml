@@ -71,14 +71,20 @@
             <!-- Reliability Trend Section -->
             <ui:CardExpander Header="系统可靠性走势" Icon="{ui:SymbolIcon ChartMultiple24}" IsExpanded="True" Margin="0,0,0,16">
                 <Grid Margin="10">
-                    <Border Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="6">
+                    <Border Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="6"
+                            Visibility="{Binding ReliabilityRecords.Count, Converter={StaticResource CountToVisibilityConverter}}">
                         <ContentControl Content="{Binding ReliabilityTrendPlot, Mode=OneTime}" Height="230"/>
                     </Border>
-                    <TextBlock Text="暂无可靠性趋势数据"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                               FontSize="14"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               Visibility="{Binding ReliabilityRecords.Count, Converter={StaticResource InverseCountToVisibilityConverter}}"/>
+                    <ui:Card Padding="32" HorizontalAlignment="Center" VerticalAlignment="Center"
+                             Visibility="{Binding ReliabilityRecords.Count, Converter={StaticResource InverseCountToVisibilityConverter}}">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Border Width="50" Height="50" CornerRadius="12" Background="#182ED573" HorizontalAlignment="Center" Margin="0,0,0,14">
+                                <ui:SymbolIcon Symbol="ChartMultiple24" FontSize="26" Foreground="#2ED573" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="暂无可靠性趋势数据" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                            <TextBlock Text="Windows 稳定性监视器尚未产生可绘制的历史记录。" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </ui:Card>
                 </Grid>
             </ui:CardExpander>
 
