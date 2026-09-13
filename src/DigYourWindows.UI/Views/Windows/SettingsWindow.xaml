@@ -22,8 +22,13 @@
         <StackPanel Grid.Row="1" Margin="28,16,28,24">
             <TextBlock Text="界面外观与排版" FontSize="16" FontWeight="SemiBold"/>
 
-            <TextBlock Text="界面字体" Margin="0,16,0,6" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-            <ComboBox x:Name="FontComboBox"
+            <TextBlock Text="英文字体（西文与数字）" Margin="0,16,0,6" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+            <ComboBox x:Name="EnglishFontComboBox"
+                      DisplayMemberPath="DisplayName"
+                      SelectedValuePath="FontName"/>
+
+            <TextBlock Text="中文字体（汉字与中文标点）" Margin="0,14,0,6" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+            <ComboBox x:Name="ChineseFontComboBox"
                       DisplayMemberPath="DisplayName"
                       SelectedValuePath="FontName"/>
 

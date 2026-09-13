@@ -6,12 +6,24 @@ using Wpf.Ui.Controls;
 namespace DigYourWindows.UI.Views.Windows;
 
 /// <summary>
-/// Settings dialog: font family and UI scale.
+/// Settings dialog: separate English/Chinese font families and UI scale.
 /// Returns the chosen settings via <see cref="Result"/> when confirmed.
 /// </summary>
 public partial class SettingsWindow : FluentWindow
 {
-    private static readonly IReadOnlyList<FontOption> Fonts =
+    private static readonly IReadOnlyList<FontOption> EnglishFonts =
+    [
+        new("系统默认（跟随 Windows）", AppSettings.SystemFontFamily),
+        new("Segoe UI", "Segoe UI"),
+        new("Arial", "Arial"),
+        new("Calibri", "Calibri"),
+        new("Consolas（等宽）", "Consolas"),
+        new("Cascadia Code（等宽）", "Cascadia Code"),
+        new("Verdana", "Verdana"),
+        new("Times New Roman", "Times New Roman"),
+    ];
+
+    private static readonly IReadOnlyList<FontOption> ChineseFonts =
     [
         new("系统默认（跟随 Windows）", AppSettings.SystemFontFamily),
         new("微软雅黑", "Microsoft YaHei UI"),
@@ -19,7 +31,7 @@ public partial class SettingsWindow : FluentWindow
         new("宋体", "SimSun"),
         new("黑体", "SimHei"),
         new("楷体", "KaiTi"),
-        new("Segoe UI", "Segoe UI"),
+        new("仿宋", "FangSong"),
     ];
 
     private static readonly IReadOnlyList<int> ScaleOptions = [100, 110, 125, 150];
@@ -33,24 +45,39 @@ public partial class SettingsWindow : FluentWindow
         InitializeComponent();
         _settings = settings;
 
-        FontComboBox.ItemsSource = Fonts;
-        FontComboBox.SelectedValue = _settings.Current.FontFamily;
+        EnglishFontComboBox.ItemsSource = EnglishFonts;
+        EnglishFontComboBox.SelectedValue = EffectiveSelection(settings.Current.EnglishFontFamily);
+        ChineseFontComboBox.ItemsSource = ChineseFonts;
+        ChineseFontComboBox.SelectedValue = EffectiveSelection(settings.Current.ChineseFontFamily);
         ScaleComboBox.ItemsSource = ScaleOptions;
-        ScaleComboBox.SelectedValue = _settings.Current.ScalePercent;
+        ScaleComboBox.SelectedValue = settings.Current.ScalePercent;
+    }
+
+    /// <summary>
+    /// Map a persisted font to the matching dropdown option; system-default chain
+    /// (or unknown font) maps to the "follow Windows" entry.
+    /// </summary>
+    private static string EffectiveSelection(string font)
+    {
+        return string.IsNullOrWhiteSpace(font) || font == AppSettings.SystemFontFamily
+            ? AppSettings.SystemFontFamily
+            : font;
     }
 
     private void OnOkClicked(object sender, RoutedEventArgs e)
     {
-        var fontName = FontComboBox.SelectedValue as string;
-        var scaleText = ScaleComboBox.SelectedValue?.ToString();
-        if (!int.TryParse(scaleText, out var scalePercent))
+        var english = EnglishFontComboBox.SelectedValue as string;
+        var chinese = ChineseFontComboBox.SelectedValue as string;
+        if (!int.TryParse(ScaleComboBox.SelectedValue?.ToString(), out var scalePercent))
         {
             return;
         }
 
         var settings = new AppSettings
         {
-            FontFamily = string.IsNullOrWhiteSpace(fontName) ? _settings.Current.FontFamily : fontName,
+            // "系统默认" maps to the system chain marker; empty strings mean follow system.
+            EnglishFontFamily = english == AppSettings.SystemFontFamily ? string.Empty : english ?? string.Empty,
+            ChineseFontFamily = chinese == AppSettings.SystemFontFamily ? string.Empty : chinese ?? string.Empty,
             ScalePercent = scalePercent
         };
 

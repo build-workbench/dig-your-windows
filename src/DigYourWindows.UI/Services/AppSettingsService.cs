@@ -14,11 +14,42 @@ public sealed record AppSettings
     /// </summary>
     public const string SystemFontFamily = "Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI";
 
-    /// <summary>UI font family name (a system-installed font or a fallback chain).</summary>
-    public string FontFamily { get; init; } = SystemFontFamily;
+    /// <summary>
+    /// Font for Latin/Greek/Cyrillic text. Empty = follow the system default chain.
+    /// </summary>
+    public string EnglishFontFamily { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Font for CJK text (Chinese characters and CJK punctuation).
+    /// Empty = follow the system default chain.
+    /// </summary>
+    public string ChineseFontFamily { get; init; } = string.Empty;
 
     /// <summary>UI scale as a percentage: 100 = no scaling.</summary>
     public int ScalePercent { get; init; } = 100;
+
+    /// <summary>
+    /// Legacy single-font settings stored the chosen font in <see cref="FontFamily"/>.
+    /// Migrate it into the Chinese slot (the legacy value was typically a CJK-capable
+    /// font), then clear it so migration happens exactly once.
+    /// </summary>
+    public AppSettings MigrateLegacyFontFamily()
+    {
+        if (string.IsNullOrEmpty(FontFamily))
+        {
+            return this;
+        }
+
+        var legacy = FontFamily;
+        return this with
+        {
+            ChineseFontFamily = legacy == SystemFontFamily ? string.Empty : legacy,
+            FontFamily = string.Empty
+        };
+    }
+
+    /// <summary>Legacy single-font field kept only for settings-file migration.</summary>
+    public string FontFamily { get; init; } = string.Empty;
 }
 
 /// <summary>
@@ -90,7 +121,7 @@ public sealed class AppSettingsService : IAppSettingsService
                 var settings = JsonSerializer.Deserialize<AppSettings>(json);
                 if (settings is not null && IsValid(settings))
                 {
-                    return settings;
+                    return settings.MigrateLegacyFontFamily();
                 }
             }
         }
@@ -112,7 +143,6 @@ public sealed class AppSettingsService : IAppSettingsService
 
     private static bool IsValid(AppSettings settings)
     {
-        return !string.IsNullOrWhiteSpace(settings.FontFamily) &&
-               settings.ScalePercent is >= 80 and <= 250;
+        return settings.ScalePercent is >= 80 and <= 250;
     }
 }

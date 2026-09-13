@@ -4,7 +4,8 @@ using DigYourWindows.UI.Services;
 namespace DigYourWindows.Tests.Unit;
 
 /// <summary>
-/// Unit tests for AppSettingsService persistence (save/load and corrupt fallback).
+/// Unit tests for AppSettingsService persistence (save/load, corrupt fallback
+/// and legacy single-font migration).
 /// </summary>
 public class AppSettingsServiceTests
 {
@@ -22,11 +23,17 @@ public class AppSettingsServiceTests
         try
         {
             var service = new AppSettingsService(dir);
-            service.Save(new AppSettings { FontFamily = "SimSun", ScalePercent = 125 });
+            service.Save(new AppSettings
+            {
+                EnglishFontFamily = "Consolas",
+                ChineseFontFamily = "SimSun",
+                ScalePercent = 125
+            });
 
             var reloaded = new AppSettingsService(dir);
 
-            Assert.Equal("SimSun", reloaded.Current.FontFamily);
+            Assert.Equal("Consolas", reloaded.Current.EnglishFontFamily);
+            Assert.Equal("SimSun", reloaded.Current.ChineseFontFamily);
             Assert.Equal(125, reloaded.Current.ScalePercent);
         }
         finally
@@ -43,7 +50,8 @@ public class AppSettingsServiceTests
         {
             var service = new AppSettingsService(dir);
 
-            Assert.Equal("Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI", service.Current.FontFamily);
+            Assert.Equal(string.Empty, service.Current.EnglishFontFamily);
+            Assert.Equal(string.Empty, service.Current.ChineseFontFamily);
             Assert.Equal(100, service.Current.ScalePercent);
         }
         finally
@@ -62,7 +70,8 @@ public class AppSettingsServiceTests
 
             var service = new AppSettingsService(dir);
 
-            Assert.Equal("Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI", service.Current.FontFamily);
+            Assert.Equal(string.Empty, service.Current.EnglishFontFamily);
+            Assert.Equal(string.Empty, service.Current.ChineseFontFamily);
             Assert.Equal(100, service.Current.ScalePercent);
         }
         finally
@@ -77,11 +86,78 @@ public class AppSettingsServiceTests
         var dir = CreateTempDir();
         try
         {
-            File.WriteAllText(Path.Combine(dir, "settings.json"), """{"FontFamily":"X","ScalePercent":999}""");
+            File.WriteAllText(Path.Combine(dir, "settings.json"),
+                """{"EnglishFontFamily":"Arial","ChineseFontFamily":"SimSun","ScalePercent":999}""");
 
             var service = new AppSettingsService(dir);
 
             Assert.Equal(100, service.Current.ScalePercent);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void LegacyFontFamily_MigratesToChineseFont()
+    {
+        var dir = CreateTempDir();
+        try
+        {
+            // Old settings stored a single font in FontFamily
+            File.WriteAllText(Path.Combine(dir, "settings.json"),
+                """{"FontFamily":"SimSun","ScalePercent":110}""");
+
+            var service = new AppSettingsService(dir);
+
+            Assert.Equal("SimSun", service.Current.ChineseFontFamily);
+            Assert.Equal(string.Empty, service.Current.EnglishFontFamily);
+            Assert.Equal(string.Empty, service.Current.FontFamily);
+            Assert.Equal(110, service.Current.ScalePercent);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void LegacySystemFontFamily_MigratesToEmptyFollowSystem()
+    {
+        var dir = CreateTempDir();
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "settings.json"),
+                $$"""{"FontFamily":"{{AppSettings.SystemFontFamily}}","ScalePercent":100}""");
+
+            var service = new AppSettingsService(dir);
+
+            Assert.Equal(string.Empty, service.Current.ChineseFontFamily);
+            Assert.Equal(string.Empty, service.Current.FontFamily);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void MigratedSettings_PersistWithoutReMigration()
+    {
+        var dir = CreateTempDir();
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "settings.json"),
+                """{"FontFamily":"SimSun","ScalePercent":110}""");
+
+            var first = new AppSettingsService(dir);
+            first.Save(first.Current);
+
+            var second = new AppSettingsService(dir);
+
+            Assert.Equal("SimSun", second.Current.ChineseFontFamily);
+            Assert.Equal(string.Empty, second.Current.EnglishFontFamily);
         }
         finally
         {

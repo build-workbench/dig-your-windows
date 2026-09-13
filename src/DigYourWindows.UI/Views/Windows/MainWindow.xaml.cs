@@ -213,9 +213,43 @@ public partial class MainWindow : FluentWindow
         ContentScale.ScaleX = scale;
         ContentScale.ScaleY = scale;
 
-        if (!string.IsNullOrWhiteSpace(settings.FontFamily))
+        FontFamily = BuildCompositeFontFamily(settings.EnglishFontFamily, settings.ChineseFontFamily);
+    }
+
+    /// <summary>
+    /// Builds a composite font: Latin/Greek/Cyrillic characters render with the chosen
+    /// English font, CJK characters with the chosen Chinese font, and everything else
+    /// falls through to the system default chain. Empty selections = follow system.
+    /// </summary>
+    private static FontFamily BuildCompositeFontFamily(string? englishFont, string? chineseFont)
+    {
+        if (string.IsNullOrWhiteSpace(englishFont) && string.IsNullOrWhiteSpace(chineseFont))
         {
-            FontFamily = new FontFamily(settings.FontFamily);
+            return new FontFamily(AppSettings.SystemFontFamily);
         }
+
+        var family = new FontFamily();
+
+        if (!string.IsNullOrWhiteSpace(englishFont))
+        {
+            // Basic Latin, Latin-1/Extended, Greek, Cyrillic
+            family.FamilyMaps.Add(new FontFamilyMap
+            {
+                Unicode = "U+0000-U+04FF, U+1E00-U+1EFF, U+2000-U+206F",
+                Target = englishFont
+            });
+        }
+
+        if (!string.IsNullOrWhiteSpace(chineseFont))
+        {
+            // CJK radicals/punctuation, CJK ideographs, compatibility forms, full-width
+            family.FamilyMaps.Add(new FontFamilyMap
+            {
+                Unicode = "U+2E80-U+9FFF, U+F900-U+FAFF, U+FF00-U+FFEF",
+                Target = chineseFont
+            });
+        }
+
+        return family;
     }
 }
