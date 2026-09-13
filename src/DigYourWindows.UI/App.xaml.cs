@@ -75,40 +75,47 @@ public partial class App : Application
             // Wait for initial data collection and UI rendering
             await Task.Delay(4000);
 
-            await Dispatcher.InvokeAsync(async () =>
-            {
-                Directory.CreateDirectory(outputDir);
-
-                SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "dashboard_preview.png"));
-                log.Info("Captured dashboard_preview.png");
-
-                // Switch to MonitoringPage
-                mainWindow.RootNavigation.Navigate(typeof(MonitoringPage));
-                await Task.Delay(1000);
-                SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "monitoring_preview.png"));
-                log.Info("Captured monitoring_preview.png");
-
-                // Switch to LogsPage
-                mainWindow.RootNavigation.Navigate(typeof(LogsPage));
-                await Task.Delay(1000);
-                SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "logs_preview.png"));
-                log.Info("Captured logs_preview.png");
-
-                // Switch to HardwarePage
-                mainWindow.RootNavigation.Navigate(typeof(HardwarePage));
-                await Task.Delay(1000);
-                SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "hardware_preview.png"));
-                log.Info("Captured hardware_preview.png");
-
-                log.Info("All previews captured successfully. Shutting down.");
-                Shutdown();
-            });
+            // CapturePreviewsCore runs via InvokeAsync so each step executes on the
+            // dispatcher; InvokeAsync returns DispatcherOperation<Task> which only
+            // tracks the delegate up to its first await — .Task.Unwrap() chains the
+            // inner Task so the whole sequence is awaited and failures propagate.
+            var operation = Dispatcher.InvokeAsync(() => CapturePreviewsCore(mainWindow, outputDir, log));
+            await operation.Task.Unwrap();
         }
         catch (Exception ex)
         {
             log.LogError($"Failed to capture visual previews: {ex.Message}", ex);
             Shutdown();
         }
+    }
+
+    private async Task CapturePreviewsCore(MainWindow mainWindow, string outputDir, ILogService log)
+    {
+        Directory.CreateDirectory(outputDir);
+
+        SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "dashboard_preview.png"));
+        log.Info("Captured dashboard_preview.png");
+
+        // Switch to MonitoringPage
+        mainWindow.RootNavigation.Navigate(typeof(MonitoringPage));
+        await Task.Delay(1000);
+        SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "monitoring_preview.png"));
+        log.Info("Captured monitoring_preview.png");
+
+        // Switch to LogsPage
+        mainWindow.RootNavigation.Navigate(typeof(LogsPage));
+        await Task.Delay(1000);
+        SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "logs_preview.png"));
+        log.Info("Captured logs_preview.png");
+
+        // Switch to HardwarePage
+        mainWindow.RootNavigation.Navigate(typeof(HardwarePage));
+        await Task.Delay(1000);
+        SaveVisualSnapshot(mainWindow.Content as FrameworkElement ?? mainWindow, Path.Combine(outputDir, "hardware_preview.png"));
+        log.Info("Captured hardware_preview.png");
+
+        log.Info("All previews captured successfully. Shutting down.");
+        Shutdown();
     }
 
     private static void SaveVisualSnapshot(FrameworkElement element, string filePath)

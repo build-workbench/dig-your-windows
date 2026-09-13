@@ -188,8 +188,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
             // Ignored if CTS already disposed
         }
 
-        _loadCts?.Dispose();
-        _loadCts = null;
+        // Deliberately NOT disposing the CTS here: a background CollectAsync still
+        // holds its Token, and CancellationToken.ThrowIfCancellationRequested would
+        // throw ObjectDisposedException after disposal. CTS holds no critical
+        // unmanaged resources, so leaving it to the GC is safe.
 
         // WpfPlot does not implement IDisposable, so no explicit disposal needed
         GC.SuppressFinalize(this);
@@ -229,7 +231,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
         IsLoading = true;
         StatusMessage = "正在加载数据...";
 
+        // Safe to dispose the previous CTS here: the IsLoading guard guarantees
+        // no earlier CollectAsync is still holding its token.
         _loadCts?.Cancel();
+        _loadCts?.Dispose();
         _loadCts = new CancellationTokenSource();
 
         try
@@ -274,6 +279,11 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private async Task ImportFromJsonAsync()
     {
+        if (IsLoading)
+        {
+            return;
+        }
+
         var fileName = _dialogs.PickJsonFileToOpen();
         if (string.IsNullOrEmpty(fileName))
         {
@@ -398,6 +408,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
         string successPrefix,
         Func<DiagnosticData, string> contentFactory)
     {
+        // Guard against double-click re-entry: two exports in the same second would
+        // write to the identical timestamped file name and fail with IOException.
+        if (IsLoading)
+        {
+            return;
+        }
+
         try
         {
             StatusMessage = loadingMessage;
@@ -478,6 +495,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     private void OnThemeChanged(ApplicationTheme newTheme)
     {
+        // The service fires ThemeChanged both from its own invoke and from
+        // ApplicationThemeManager.Changed; ignore the duplicate notification.
+        if (newTheme == CurrentTheme)
+        {
+            return;
+        }
+
         CurrentTheme = newTheme;
         UpdateReliabilityTrendPlot();
         UpdateNetworkTrafficPlot();

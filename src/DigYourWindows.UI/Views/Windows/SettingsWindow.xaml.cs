@@ -46,22 +46,27 @@ public partial class SettingsWindow : FluentWindow
         _settings = settings;
 
         EnglishFontComboBox.ItemsSource = EnglishFonts;
-        EnglishFontComboBox.SelectedValue = EffectiveSelection(settings.Current.EnglishFontFamily);
+        EnglishFontComboBox.SelectedValue = EffectiveSelection(settings.Current.EnglishFontFamily, EnglishFonts);
         ChineseFontComboBox.ItemsSource = ChineseFonts;
-        ChineseFontComboBox.SelectedValue = EffectiveSelection(settings.Current.ChineseFontFamily);
+        ChineseFontComboBox.SelectedValue = EffectiveSelection(settings.Current.ChineseFontFamily, ChineseFonts);
         ScaleComboBox.ItemsSource = ScaleOptions;
         ScaleComboBox.SelectedValue = settings.Current.ScalePercent;
     }
 
     /// <summary>
     /// Map a persisted font to the matching dropdown option; system-default chain
-    /// (or unknown font) maps to the "follow Windows" entry.
+    /// (empty) or a font name that is not among the options (e.g. a hand-edited or
+    /// uninstalled font) maps to the "follow Windows" entry so the picker never
+    /// shows a blank selection.
     /// </summary>
-    private static string EffectiveSelection(string font)
+    private static string EffectiveSelection(string font, IReadOnlyList<FontOption> options)
     {
-        return string.IsNullOrWhiteSpace(font) || font == AppSettings.SystemFontFamily
-            ? AppSettings.SystemFontFamily
-            : font;
+        if (string.IsNullOrWhiteSpace(font) || font == AppSettings.SystemFontFamily)
+        {
+            return AppSettings.SystemFontFamily;
+        }
+
+        return options.Any(o => o.FontName == font) ? font : AppSettings.SystemFontFamily;
     }
 
     private void OnOkClicked(object sender, RoutedEventArgs e)
