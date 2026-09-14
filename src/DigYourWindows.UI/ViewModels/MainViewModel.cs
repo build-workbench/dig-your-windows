@@ -28,6 +28,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly IMonitorPlotService _plots;
     private readonly IApplicationThemeService _themeService;
     private readonly IFileDialogService _dialogs;
+    private readonly IBatteryService _batteryService;
+    private readonly IProcessMonitorService _processMonitorService;
     private readonly DispatcherTimer _cpuMonitorTimer;
     private CancellationTokenSource? _loadCts;
     private DiagnosticData? _currentData;
@@ -81,6 +83,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private string _appVersion = $"v{typeof(MainViewModel).Assembly.GetName().Version?.ToString(3) ?? "1.2.0"}";
 
+    [ObservableProperty]
+    private BatteryInfoData _batteryInfo = new();
+
+    [ObservableProperty]
+    private IReadOnlyList<ProcessInfoData> _topProcesses = Array.Empty<ProcessInfoData>();
+
     public MainViewModel(
         IDiagnosticCollectorService collectorService,
         IReportService reportService,
@@ -91,6 +99,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         IMonitorPlotService plots,
         IApplicationThemeService themeService,
         IFileDialogService dialogs,
+        IBatteryService batteryService,
+        IProcessMonitorService processMonitorService,
         HistoryListViewModel historyListViewModel)
     {
         _collectorService = collectorService;
@@ -102,6 +112,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _plots = plots;
         _themeService = themeService;
         _dialogs = dialogs;
+        _batteryService = batteryService;
+        _processMonitorService = processMonitorService;
         HistoryListViewModel = historyListViewModel;
         historyListViewModel.EntrySelected += OnHistoryEntrySelected;
         _themeService.ThemeChanged += OnThemeChanged;
@@ -117,12 +129,20 @@ public partial class MainViewModel : ObservableObject, IDisposable
         UpdateNetworkTraffic();
         UpdateReliabilityTrendPlot();
         UpdateNetworkTrafficPlot();
+        UpdateBatteryInfo();
     }
 
     private void CpuMonitorTimer_Tick(object? sender, EventArgs e)
     {
         UpdateCpuInfo();
         UpdateNetworkTraffic();
+        UpdateBatteryInfo();
+        TopProcesses = _processMonitorService.GetTopProcesses(10);
+    }
+
+    private void UpdateBatteryInfo()
+    {
+        BatteryInfo = _batteryService.GetBatteryInfo();
     }
 
     private void UpdateCpuInfo()
@@ -400,6 +420,16 @@ public partial class MainViewModel : ObservableObject, IDisposable
             extension: "html",
             successPrefix: "报告已导出",
             contentFactory: data => _reportService.GenerateHtmlReport(data, SelectedDaysBack));
+    }
+
+    [RelayCommand]
+    private Task ExportToCsvAsync()
+    {
+        return ExportReportAsync(
+            loadingMessage: "正在导出CSV报告...",
+            extension: "csv",
+            successPrefix: "CSV已导出",
+            contentFactory: _reportService.GenerateCsvReport);
     }
 
     private async Task ExportReportAsync(

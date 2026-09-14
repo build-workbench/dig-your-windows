@@ -172,6 +172,40 @@
                                Visibility="{Binding HardwareInfo.Gpus.Count, Converter={StaticResource InverseCountToVisibilityConverter}}"/>
                 </StackPanel>
             </ui:CardExpander>
+
+            <!-- Top Processes Section -->
+            <ui:CardExpander Header="进程资源占用 TOP 10" Icon="{ui:SymbolIcon TaskListSquareLtr24}" IsExpanded="False" Margin="0,0,0,16">
+                <StackPanel Margin="10">
+                    <TextBlock Text="按 CPU 使用率排序（首次采样后生效），CPU 百分比已按逻辑核心数归一化"
+                               FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,10"/>
+                    <DataGrid ItemsSource="{Binding TopProcesses}"
+                             AutoGenerateColumns="False"
+                             IsReadOnly="True"
+                             HeadersVisibility="Column"
+                             GridLinesVisibility="Horizontal"
+                             RowHeight="30"
+                             MaxHeight="360"
+                             Background="Transparent"
+                             RowBackground="Transparent"
+                             AlternatingRowBackground="{DynamicResource SubtleFillColorSecondaryBrush}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="进程" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTemplateColumn Header="CPU" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding CpuPercent, StringFormat='{}{0:F0}%'}" FontSize="12" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                                            <ProgressBar Value="{Binding CpuPercent}" Maximum="100" Width="80" Height="5" Foreground="#0078D4"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="内存" Binding="{Binding MemoryMB, StringFormat='{}{0:F0} MB'}" Width="110"/>
+                            <DataGridTextColumn Header="PID" Binding="{Binding Id}" Width="70"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </ui:CardExpander>
         </StackPanel>
     </ScrollViewer>
 </Page>

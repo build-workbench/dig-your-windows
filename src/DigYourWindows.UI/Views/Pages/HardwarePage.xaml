@@ -14,6 +14,31 @@
             <TextBlock Text="硬件设备与健康详情" FontSize="24" FontWeight="Bold" Margin="0,0,0,4"/>
             <TextBlock Text="查看存储驱动器、NVMe/SATA SMART 健康诊断、网络接口与 USB 总线资产" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,20"/>
 
+            <!-- Power / Battery Section -->
+            <ui:CardExpander Header="电源与电池状态" Icon="{ui:SymbolIcon BatteryCharge24}" IsExpanded="True" Margin="0,0,0,16">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Width="52" Height="52" CornerRadius="12" Background="#18E67E22" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="BatteryCharge24" FontSize="26" Foreground="#F2A33C" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding BatteryInfo.PowerState}" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding BatteryInfo.ChargePercent, StringFormat='{}{0}%', Mode=OneWay}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource SystemFillColorSuccessBrush}"/>
+                            <TextBlock Text=" 剩余电量" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Bottom" Margin="4,0,16,3"/>
+                            <TextBlock Text="{Binding BatteryInfo.EstimatedRunTimeMinutes, StringFormat='{}{0} 分钟', Mode=OneWay}"
+                                       FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Bottom" Margin="0,0,0,3"/>
+                        </StackPanel>
+                        <TextBlock Text="未检测到电池（台式机或无电池设备）"
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   Visibility="{Binding BatteryInfo.HasBattery, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                    </StackPanel>
+                </Grid>
+            </ui:CardExpander>
+
             <!-- Disks Section -->
             <ui:CardExpander Header="存储磁盘与驱动器" Icon="{ui:SymbolIcon HardDrive24}" IsExpanded="True" Margin="0,0,0,16">
                 <StackPanel Margin="10">

@@ -65,6 +65,11 @@
                                             <ui:SymbolIcon Symbol="Code20"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
+                                    <MenuItem Header="导出 CSV 摘要数据" Command="{Binding ExportToCsvCommand}">
+                                        <MenuItem.Icon>
+                                            <ui:SymbolIcon Symbol="TextBulletListSquare20"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                 </ContextMenu>
                             </ui:DropDownButton.Flyout>
                         </ui:DropDownButton>

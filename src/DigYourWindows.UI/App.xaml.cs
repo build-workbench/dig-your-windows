@@ -173,6 +173,8 @@ public partial class App : Application
         services.AddSingleton<IEventLogService, EventLogService>();
         services.AddSingleton<ISystemInfoProvider, WmiSystemInfoProvider>();
         services.AddSingleton<IPerformanceService, PerformanceService>();
+        services.AddSingleton<IBatteryService, BatteryService>();
+        services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
 
         // UI concerns wrapped as services so ViewModels stay framework-agnostic
         services.AddSingleton<IMonitorPlotService, MonitorPlotService>();

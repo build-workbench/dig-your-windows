@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -12,6 +12,7 @@ public interface IReportService
     string SerializeToJson(DiagnosticData data, bool indented = true);
     DiagnosticData? DeserializeFromJson(string json);
     string GenerateHtmlReport(DiagnosticData data, int daysBackForEvents, int maxEvents = 100);
+    string GenerateCsvReport(DiagnosticData data);
 }
 
 public class ReportService : IReportService
@@ -49,6 +50,46 @@ public class ReportService : IReportService
         {
             throw ReportException.Serialization(ex.Message);
         }
+    }
+
+    public string GenerateCsvReport(DiagnosticData data)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine(CultureInfo.InvariantCulture, $"项目,数值");
+
+        void Row(string key, string value) =>
+            sb.AppendLine(CultureInfo.InvariantCulture, $"{CsvEscape(key)},{CsvEscape(value)}");
+
+        Row("计算机名", data.Hardware.ComputerName);
+        Row("操作系统", data.Hardware.OsVersion);
+        Row("CPU", data.Hardware.CpuBrand);
+        Row("逻辑核心数", data.Hardware.CpuCores.ToString(CultureInfo.InvariantCulture));
+        Row("物理内存 (GB)", (data.Hardware.TotalMemory / 1024d / 1024d / 1024d).ToString("F1", CultureInfo.InvariantCulture));
+        Row("磁盘数量", data.Hardware.Disks.Count.ToString(CultureInfo.InvariantCulture));
+        Row("错误事件数", data.Events.Count.ToString(CultureInfo.InvariantCulture));
+        Row("可靠性记录数", data.Reliability.Count.ToString(CultureInfo.InvariantCulture));
+        Row("系统健康评分", data.Performance.SystemHealthScore.ToString("F1", CultureInfo.InvariantCulture));
+        Row("稳定性评分", data.Performance.StabilityScore.ToString("F1", CultureInfo.InvariantCulture));
+        Row("性能评分", data.Performance.PerformanceScore.ToString("F1", CultureInfo.InvariantCulture));
+        Row("内存评分", data.Performance.MemoryUsageScore.ToString("F1", CultureInfo.InvariantCulture));
+        Row("磁盘健康评分", data.Performance.DiskHealthScore.ToString("F1", CultureInfo.InvariantCulture));
+        Row("严重问题数", data.Performance.CriticalIssuesCount.ToString(CultureInfo.InvariantCulture));
+        Row("警告数量", data.Performance.WarningsCount.ToString(CultureInfo.InvariantCulture));
+        Row("采集时间 (UTC)", data.CollectedAt.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
+
+        return sb.ToString();
+    }
+
+    private static string CsvEscape(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return string.Empty;
+        }
+
+        return value.Contains(',') || value.Contains('"') || value.Contains('\n') || value.Contains('\r')
+            ? $"\"{value.Replace("\"", "\"\"")}\""
+            : value;
     }
 
     public string GenerateHtmlReport(DiagnosticData data, int daysBackForEvents, int maxEvents = 100)
