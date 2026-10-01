@@ -1,3 +1,7 @@
+**English** | [中文](#chinese)
+
+<a id="top"></a>
+
 # DigYourWindows
 
 [![CI](https://github.com/build-workbench/dig-your-windows/actions/workflows/ci.yml/badge.svg)](https://github.com/build-workbench/dig-your-windows/actions/workflows/ci.yml)
@@ -60,6 +64,8 @@ This project is open-sourced under the [MIT License](LICENSE).
 ---
 
 <a id="chinese"></a>
+[English](#top) | **中文**
+
 # DigYourWindows
 
 [![CI](https://github.com/build-workbench/dig-your-windows/actions/workflows/ci.yml/badge.svg)](https://github.com/build-workbench/dig-your-windows/actions/workflows/ci.yml)
