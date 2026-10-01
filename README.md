@@ -24,7 +24,7 @@
 | **Standalone portable edition** | `DigYourWindows-SCD.zip` | ~180 MB | None (complete runtime bundled) | Offline environments, ready to run out of the box, portable on a USB drive |
 | **Framework-dependent edition** | `DigYourWindows-FDD.zip` | ~60 MB | System requires .NET 10 already installed | Size-sensitive users, developers, or users with .NET already set up |
 
-> **Tip**: It is recommended to right-click and "Run as administrator" to fully read low-level hardware data such as GPU sensors and disk SMART.
+> **Tip**: Right-click and "Run as administrator" to fully read low-level hardware data such as GPU sensors and disk SMART.
 
 ### Usage Flow
 
@@ -88,7 +88,7 @@ This project is open-sourced under the [MIT License](LICENSE).
 | **独立免安装版** | `DigYourWindows-SCD.zip` | ~180 MB | 无（已打包完整运行时） | 离线环境、即开即用、U盘便携随身运行 |
 | **框架依赖版** | `DigYourWindows-FDD.zip` | ~60 MB | 系统需已安装 .NET 10 | 体积敏感、开发者或已装 .NET 环境的用户 |
 
-> **提示**：建议右键「以管理员身份运行」，以完整读取 GPU 传感器与磁盘 SMART 等底层底层硬件数据。
+> **提示**：建议右键「以管理员身份运行」，以完整读取 GPU 传感器与磁盘 SMART 等底层硬件数据。
 
 ### 使用流程
 
