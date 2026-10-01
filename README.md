@@ -4,6 +4,68 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Release](https://img.shields.io/github/v/release/build-workbench/dig-your-windows)](https://github.com/build-workbench/dig-your-windows/releases)
 
+> Official docs: [https://build-workbench.github.io/dig-your-windows/](https://build-workbench.github.io/dig-your-windows/)
+
+**DigYourWindows** is an open-source, lightweight, and fully offline Windows deep diagnostics tool. Collect hardware status with one click, monitor performance load in real time, troubleshoot system error logs and reliability records, and output a quantified health score with targeted optimization suggestions.
+
+---
+
+## Quick Start
+
+### Version Selection
+
+| Version | File | Size | Dependency Requirements | Use Case |
+| :--- | :--- | :--- | :--- | :--- |
+| **Installer (recommended)** | `DigYourWindows_Setup.exe` | ~5 MB | Downloads .NET automatically when needed | Daily use, supports desktop shortcuts and automatic uninstall |
+| **Standalone portable edition** | `DigYourWindows-SCD.zip` | ~180 MB | None (complete runtime bundled) | Offline environments, ready to run out of the box, portable on a USB drive |
+| **Framework-dependent edition** | `DigYourWindows-FDD.zip` | ~60 MB | System requires .NET 10 already installed | Size-sensitive users, developers, or users with .NET already set up |
+
+> **Tip**: It is recommended to right-click and "Run as administrator" to fully read low-level hardware data such as GPU sensors and disk SMART.
+
+### Usage Flow
+
+```text
+[ 1. 启动程序 ]  ──>  以管理员身份运行 DigYourWindows.UI.exe
+       │
+[ 2. 一键采集 ]  ──>  点击「刷新数据」，自动提取硬件规格、传感器指标与系统日志
+       │
+[ 3. 监控排查 ]  ──>  在仪表盘查看 CPU/GPU 实时波形、检查事件日志告警与稳定性趋势
+       │
+[ 4. 评估优化 ]  ──>  查看 0~100 系统健康综合评分，并参考下发的系统优化方案
+       │
+[ 5. 导出留存 ]  ──>  一键导出独立单文件 HTML 报告（支持离线浏览）或 JSON 数据
+```
+
+---
+
+## Feature Comparison
+
+| Module | Monitoring & Diagnostic Capabilities | Output & Analytical Value |
+| :--- | :--- | :--- |
+| **Hardware specs** | CPU, GPU, memory slots/frequency, network adapters, USB topology | Clearly lists the detailed hardware inventory and bus connections of the whole machine |
+| **Real-time monitoring** | Real-time CPU/GPU temperature, workload, operating frequency, VRAM, network throughput | Visualized dynamic trend charts to quickly catch high load, frequency drops, or abnormal heating |
+| **Disk health** | NVMe / SATA drive attributes, SMART status, health percentage | Predicts potential drive failures to guard against data loss in advance |
+| **System logs** | Filters and extracts Error and Warning events at the System and Application level | Locates root causes of app crashes, system deadlocks, driver failures, and more |
+| **Stability monitoring** | Taps into the Windows Reliability Monitor reliability history index | Generates daily stability trend charts that objectively reflect recent system behavior |
+| **Health score** | Stability (40%) + Performance (30%) + Memory (15%) + Disk (15%) | An overall 0~100 score that pinpoints system weaknesses and offers fix suggestions |
+| **Report export** | Export a self-contained single-file HTML report, or export structured JSON | Reports are viewable offline and easy to share, and also handy for secondary data analysis |
+| **Offline security** | 100% local computation and local storage (SQLite history) | Zero network upload, zero privacy leakage, secure and auditable |
+
+---
+
+## License
+
+This project is open-sourced under the [MIT License](LICENSE).
+
+---
+
+<a id="chinese"></a>
+# DigYourWindows
+
+[![CI](https://github.com/build-workbench/dig-your-windows/actions/workflows/ci.yml/badge.svg)](https://github.com/build-workbench/dig-your-windows/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Release](https://img.shields.io/github/v/release/build-workbench/dig-your-windows)](https://github.com/build-workbench/dig-your-windows/releases)
+
 > 官方文档: [https://build-workbench.github.io/dig-your-windows/](https://build-workbench.github.io/dig-your-windows/)
 
 **DigYourWindows** 是一款开源、轻量且完全离线的 Windows 深度诊断工具。一键采集硬件状态、实时监测性能负载、排查系统错误日志与可靠性记录，并输出量化健康评分与针对性优化建议。
