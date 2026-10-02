@@ -20,9 +20,10 @@
 
 | Version | File | Size | Dependency Requirements | Use Case |
 | :--- | :--- | :--- | :--- | :--- |
-| **Installer (recommended)** | `DigYourWindows_Setup.exe` | ~5 MB | Downloads .NET automatically when needed | Daily use, supports desktop shortcuts and automatic uninstall |
-| **Standalone portable edition** | `DigYourWindows-SCD.zip` | ~180 MB | None (complete runtime bundled) | Offline environments, ready to run out of the box, portable on a USB drive |
-| **Framework-dependent edition** | `DigYourWindows-FDD.zip` | ~60 MB | System requires .NET 10 already installed | Size-sensitive users, developers, or users with .NET already set up |
+| **Standalone edition (recommended)** | `DigYourWindows_<version>_win-x64_standalone.zip` | ~180 MB | None (complete runtime bundled) | Offline environments, ready to run out of the box, portable on a USB drive |
+| **Framework-dependent edition** | `DigYourWindows_<version>_win-x64_portable.zip` | ~60 MB | System requires .NET 10 already installed | Size-sensitive users, developers, or users with .NET already set up |
+
+> **Note**: Releases also include a `SHA256SUMS.txt` for integrity verification. The Inno Setup installer (`DigYourWindows_Setup.exe`) is not currently published with releases.
 
 > **Tip**: Right-click and "Run as administrator" to fully read low-level hardware data such as GPU sensors and disk SMART.
 
@@ -84,9 +85,10 @@ This project is open-sourced under the [MIT License](LICENSE).
 
 | 版本 | 文件名 | 体积 | 依赖要求 | 适用场景 |
 | :--- | :--- | :--- | :--- | :--- |
-| **安装包（推荐）** | `DigYourWindows_Setup.exe` | ~5 MB | 需要时自动下载 .NET | 日常使用，支持桌面快捷方式与自动卸载 |
-| **独立免安装版** | `DigYourWindows-SCD.zip` | ~180 MB | 无（已打包完整运行时） | 离线环境、即开即用、U盘便携随身运行 |
-| **框架依赖版** | `DigYourWindows-FDD.zip` | ~60 MB | 系统需已安装 .NET 10 | 体积敏感、开发者或已装 .NET 环境的用户 |
+| **独立运行版（推荐）** | `DigYourWindows_<version>_win-x64_standalone.zip` | ~180 MB | 无（已打包完整运行时） | 离线环境、即开即用、U盘便携随身运行 |
+| **框架依赖版** | `DigYourWindows_<version>_win-x64_portable.zip` | ~60 MB | 系统需已安装 .NET 10 | 体积敏感、开发者或已装 .NET 环境的用户 |
+
+> **说明**：Release 同时附有 `SHA256SUMS.txt` 校验文件；Inno Setup 安装包（`DigYourWindows_Setup.exe`）目前未随 Release 发布。
 
 > **提示**：建议右键「以管理员身份运行」，以完整读取 GPU 传感器与磁盘 SMART 等底层硬件数据。
 
